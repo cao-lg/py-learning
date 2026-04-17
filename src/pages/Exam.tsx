@@ -218,6 +218,7 @@ export function ExamPage() {
       instruction: question.instruction,
       initialCode: question.initialCode,
       testConfig: {
+        expected: question.testConfig.expected,
         timeout_ms: question.testConfig.timeout_ms,
       },
     };
