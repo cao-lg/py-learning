@@ -13,6 +13,7 @@
       "instruction": "编写程序，输出 'Hello, World!'",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Hello, World!",
         "timeout_ms": 5000
       },
       "hints": [
@@ -26,6 +27,7 @@
       "instruction": "使用一条 print() 语句输出以下内容：\nHello\nWorld",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Hello\nWorld",
         "timeout_ms": 5000
       },
       "hints": [
@@ -39,6 +41,7 @@
       "instruction": "计算并输出 125 + 378 的结果。",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "503",
         "timeout_ms": 5000
       },
       "hints": [
