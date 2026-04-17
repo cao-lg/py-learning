@@ -109,20 +109,24 @@ export function ExamPage() {
     const userId = await storage.getUserId();
     if (!userId) return;
 
-    const payload: SyncPayload & { exam: Record<string, { answers: Record<string, string>; score: number; status: string }> } = {
-      user_id: userId,
+    const payload: SyncPayload = {
+      userId,
       practice: {},
       exam: {
         [examSet.id]: {
+          examId: examSet.id,
           answers,
           score: calculateScore(),
-          status: 'ongoing',
+          totalQuestions: questions.length,
+          startedAt: startTime,
+          completedAt: Date.now(),
         },
       },
       audit: {
-        [examSet.id]: audit,
+        [examSet.id]: [
+          { type: 'focus_loss', timestamp: Date.now(), data: { count: audit.focus_loss } },
+        ],
       },
-      hashes: {},
     };
 
     await syncQueue.enqueue(payload);
@@ -172,19 +176,24 @@ export function ExamPage() {
     };
 
     const payload = {
-      user_id: userId,
+      userId,
       practice: {},
       exam: {
         [examSet.id]: {
+          examId: examSet.id,
           score,
-          status: 'submitted',
+          totalQuestions: questions.length,
+          startedAt: startTime,
+          completedAt: Date.now(),
+          answers,
         },
       },
       audit: {
-        [examSet.id]: audit,
-      },
-      hashes: {
-        [examSet.id]: submissionHash,
+        [examSet.id]: [
+          { type: 'focus_loss', timestamp: Date.now(), data: { count: audit.focus_loss } },
+          { type: 'paste_attempts', timestamp: Date.now(), data: { count: audit.paste_attempts } },
+          { type: 'fullscreen_change', timestamp: Date.now(), data: { count: audit.fullscreen_change } },
+        ],
       },
     };
 
