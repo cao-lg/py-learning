@@ -53,6 +53,10 @@ export function ExamPage() {
       const existingSession = await storage.getExamSession(data.id, userId);
       if (existingSession && existingSession.status !== 'ongoing') {
         setIsSubmitted(true);
+        setSession(existingSession);
+        if (existingSession.score !== undefined) {
+          setResults({});
+        }
         const draft = await storage.getExamDraft(data.id);
         if (draft) setAnswers(draft);
       } else {
@@ -172,6 +176,7 @@ export function ExamPage() {
     const updatedSession: ExamSession = {
       ...session,
       status: 'submitted',
+      score,
       submitted_at: new Date().toISOString(),
     };
 
@@ -263,7 +268,7 @@ export function ExamPage() {
         </p>
         <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold mb-4">Your Score</h2>
-          <p className="text-5xl font-bold text-purple-600">{Math.round(calculateScore())}%</p>
+          <p className="text-5xl font-bold text-purple-600">{Math.round(session?.score ?? calculateScore())}%</p>
         </div>
         <a href="/" className="btn btn-secondary mt-8 inline-block">
           Back to Home
