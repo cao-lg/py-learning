@@ -7,7 +7,7 @@ import { evaluatorRouter } from '../evaluator/router';
 import { storage } from '../store/idb';
 import { syncQueue } from '../store/sync-queue';
 import { generateDeterministicSeed, shuffleArray } from '../utils/crypto';
-import type { ExamSet, ExamQuestion, ExamSession, EvalResult, SyncPayload, Question } from '../types';
+import type { ExamSet, ExamQuestion, ExamSession, EvalResult, SyncPayload, Question, TestConfig } from '../types';
 
 export function ExamPage() {
   const { examId } = useParams<{ examId?: string }>();
@@ -211,6 +211,7 @@ export function ExamPage() {
 
   const handleShowAnswer = (questionId: string) => {
     const question = questions[currentIndex];
+    const testConfig = question.testConfig as TestConfig;
     const questionForEval: Question = {
       id: question.id,
       type: question.type,
@@ -218,8 +219,8 @@ export function ExamPage() {
       instruction: question.instruction,
       initialCode: question.initialCode,
       testConfig: {
-        expected: question.testConfig.expected,
-        timeout_ms: question.testConfig.timeout_ms,
+        expected: testConfig.expected,
+        timeout_ms: testConfig.timeout_ms,
       },
     };
     evaluatorRouter.evaluate(
