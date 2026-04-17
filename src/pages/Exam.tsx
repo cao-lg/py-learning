@@ -227,6 +227,9 @@ export function ExamPage() {
       questionForEval,
       answers[questionId] || question.initialCode,
       (result) => {
+        if (result.details) {
+          delete result.details.expected;
+        }
         setResults((prev) => ({ ...prev, [questionId]: result }));
       }
     );
