@@ -5,3 +5,6 @@ compatibility_date = "2024-01-01"
 binding = "DB"
 database_name = "py-learning-db"
 database_id = "f1f77c3b-257d-4f33-84ae-5593e36bae33"
+
+[pages]
+build_output_dir = "./dist"
