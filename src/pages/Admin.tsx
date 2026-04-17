@@ -100,11 +100,6 @@ export function AdminPage() {
     URL.revokeObjectURL(url);
   };
 
-  const totalAttempts = filteredStats.reduce((sum, s) => sum + s.attempts, 0);
-  const avgScore = filteredStats.length > 0
-    ? filteredStats.reduce((sum, s) => sum + s.avgScore, 0) / filteredStats.length
-    : 0;
-
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-8">
@@ -153,7 +148,7 @@ export function AdminPage() {
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
           <h3 className="text-sm text-gray-500 mb-3">Recent Activity (Last 7 Days)</h3>
           <div className="flex items-end gap-2 h-32">
-            {stats.recentActivity.map((day, i) => (
+            {stats.recentActivity.map((day) => (
               <div key={day.date} className="flex-1 flex flex-col items-center gap-1">
                 <div
                   className="w-full bg-purple-500 rounded-t"
