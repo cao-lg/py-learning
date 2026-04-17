@@ -8,7 +8,7 @@ import { AdminPage } from './pages/Admin';
 import { HomePage } from './pages/Home';
 import { LearnPage } from './pages/Learn';
 
-function App() {
+export function App() {
   const [isPyodideReady, setIsPyodideReady] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
 

@@ -6,4 +6,7 @@ export default defineConfig({
   server: {
     allowedHosts: ['.monkeycode-ai.online'],
   },
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
 })

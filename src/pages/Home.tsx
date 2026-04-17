@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { storage } from '../store/idb';
+import { evaluatorRouter } from '../evaluator/router';
 
 export function HomePage() {
   const [userName, setUserName] = useState('');
@@ -14,6 +15,7 @@ export function HomePage() {
         setTempName(name);
       }
     });
+    evaluatorRouter.init();
   }, []);
 
   const handleSave = async () => {
