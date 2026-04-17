@@ -1,0 +1,75 @@
+{
+  "id": "ch02_variables",
+  "title": "第二章测验：变量和数据类型",
+  "description": "测试变量声明、赋值和数据类型转换",
+  "duration": 20,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "ex2_q1",
+      "type": "output",
+      "title": "变量存储",
+      "instruction": "创建变量 name 存储你的名字，然后打印它。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "name = 'YourName' 然后 print(name)", "visible": false }
+      ]
+    },
+    {
+      "id": "ex2_q2",
+      "type": "output",
+      "title": "多变量赋值",
+      "instruction": "创建变量 a=10, b=20，交换它们的值，然后打印 a 和 b。\n\n期望输出：20 和 10",
+      "initialCode": "a = 10\nb = 20\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 a, b = b, a", "visible": false }
+      ]
+    },
+    {
+      "id": "ex2_q3",
+      "type": "output",
+      "title": "类型转换",
+      "instruction": "将字符串 '123' 转换为整数，加上 7，打印结果。\n\n期望输出：130",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "int('123') + 7", "visible": false }
+      ]
+    },
+    {
+      "id": "ex2_q4",
+      "type": "output",
+      "title": "布尔运算",
+      "instruction": "判断 10 > 5 和 3 == 3 的与运算结果，打印 True 或 False。\n\n期望输出：True",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "print(10 > 5 and 3 == 3)", "visible": false }
+      ]
+    },
+    {
+      "id": "ex2_q5",
+      "type": "output",
+      "title": "字符串长度",
+      "instruction": "计算字符串 'Python' 的长度并打印。\n\n期望输出：6",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "len('Python')", "visible": false }
+      ]
+    }
+  ]
+}

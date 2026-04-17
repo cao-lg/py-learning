@@ -1,0 +1,287 @@
+{
+  "id": "ch06_data_structures",
+  "title": "Python 基础 - 第六章：数据结构",
+  "description": "学习列表、元组、字典和集合",
+  "questions": [
+    {
+      "id": "ds01_list_basic",
+      "type": "output",
+      "title": "创建和访问列表",
+      "instruction": "创建列表 `fruits = ['apple', 'banana', 'orange']`，打印第一个和最后一个元素。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "apple\norange",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "列表使用方括号，用索引访问元素", "visible": false }
+      ]
+    },
+    {
+      "id": "ds02_list_append",
+      "type": "output",
+      "title": "列表添加元素",
+      "instruction": "创建列表 `numbers = [1, 2, 3]`，在末尾添加 `4`，然后打印整个列表。",
+      "initialCode": "numbers = [1, 2, 3]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 2, 3, 4]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 append() 方法", "visible": false }
+      ]
+    },
+    {
+      "id": "ds03_list_comprehension",
+      "type": "output",
+      "title": "列表推导式",
+      "instruction": "使用列表推导式创建列表，包含 1-5 各数的平方：[1, 4, 9, 16, 25]。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 4, 9, 16, 25]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "[x**2 for x in range(1, 6)]", "visible": false }
+      ]
+    },
+    {
+      "id": "ds04_tuple_index",
+      "type": "output",
+      "title": "元组索引",
+      "instruction": "元组 `point = (10, 20, 30)`，打印第二个元素。",
+      "initialCode": "point = (10, 20, 30)\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "20",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "元组索引从 0 开始", "visible": false }
+      ]
+    },
+    {
+      "id": "ds05_tuple_unpack",
+      "type": "output",
+      "title": "元组解包",
+      "instruction": "元组 `rgb = ('red', 'green', 'blue')`，解包为 r, g, b 三个变量，然后打印 r 和 b。",
+      "initialCode": "rgb = ('red', 'green', 'blue')\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "red\nblue",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "r, g, b = rgb", "visible": false }
+      ]
+    },
+    {
+      "id": "ds06_dict_basic",
+      "type": "output",
+      "title": "创建和访问字典",
+      "instruction": "创建字典 `person = {'name': 'Alice', 'age': 20}`，打印 name 对应的值。",
+      "initialCode": "person = {'name': 'Alice', 'age': 20}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Alice",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "person['name'] 或 person.get('name')", "visible": false }
+      ]
+    },
+    {
+      "id": "ds07_dict_iterate",
+      "type": "output",
+      "title": "遍历字典",
+      "instruction": "字典 `scores = {'math': 95, 'english': 88}`，打印每个键值对，格式：`key: value`。",
+      "initialCode": "scores = {'math': 95, 'english': 88}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "math: 95\nenglish: 88",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "for key, value in scores.items():", "visible": false }
+      ]
+    },
+    {
+      "id": "ds08_dict_get",
+      "type": "output",
+      "title": "字典安全获取",
+      "instruction": "字典 `data = {'a': 1}`，用 get 方法获取 'b'，如果不存在返回默认值 0。",
+      "initialCode": "data = {'a': 1}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "data.get('b', 0)", "visible": false }
+      ]
+    },
+    {
+      "id": "ds09_set_basic",
+      "type": "output",
+      "title": "集合基本操作",
+      "instruction": "创建集合 `s = {1, 2, 3}`，添加元素 4，然后打印集合。",
+      "initialCode": "s = {1, 2, 3}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1, 2, 3, 4}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 add() 方法", "visible": false }
+      ]
+    },
+    {
+      "id": "ds10_set_operations",
+      "type": "output",
+      "title": "集合运算",
+      "instruction": "集合 `a = {1, 2, 3}` 和 `b = {2, 3, 4}`，求交集（&）。",
+      "initialCode": "a = {1, 2, 3}\nb = {2, 3, 4}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{2, 3}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a & b 或 a.intersection(b)", "visible": false }
+      ]
+    },
+    {
+      "id": "ds11_set_union",
+      "type": "output",
+      "title": "集合并集",
+      "instruction": "集合 `a = {1, 2}` 和 `b = {3, 4}`，求并集。",
+      "initialCode": "a = {1, 2}\nb = {3, 4}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1, 2, 3, 4}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a | b 或 a.union(b)", "visible": false }
+      ]
+    },
+    {
+      "id": "ds12_list_insert",
+      "type": "output",
+      "title": "列表插入",
+      "instruction": "列表 `nums = [1, 3, 4]`，在索引 1 处插入 2，打印结果。",
+      "initialCode": "nums = [1, 3, 4]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 2, 3, 4]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 insert(index, value) 方法", "visible": false }
+      ]
+    },
+    {
+      "id": "ds13_list_sort",
+      "type": "output",
+      "title": "列表排序",
+      "instruction": "列表 `nums = [3, 1, 4, 1, 5]`，排序后打印（用 sorted() 函数，不改变原列表）。",
+      "initialCode": "nums = [3, 1, 4, 1, 5]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 1, 3, 4, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "sorted(nums) 返回新列表", "visible": false }
+      ]
+    },
+    {
+      "id": "ds14_list_filter",
+      "type": "output",
+      "title": "列表过滤",
+      "instruction": "列表 `nums = [1, 2, 3, 4, 5, 6]`，筛选出所有偶数。",
+      "initialCode": "nums = [1, 2, 3, 4, 5, 6]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[2, 4, 6]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "[x for x in nums if x % 2 == 0]", "visible": false }
+      ]
+    },
+    {
+      "id": "ds15_dict_update",
+      "type": "output",
+      "title": "字典更新",
+      "instruction": "字典 `a = {'x': 1}`，添加另一个字典 `b = {'y': 2}` 的内容，打印结果。",
+      "initialCode": "a = {'x': 1}\nb = {'y': 2}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{'x': 1, 'y': 2}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a.update(b)", "visible": false }
+      ]
+    },
+    {
+      "id": "ds16_set_difference",
+      "type": "output",
+      "title": "集合差集",
+      "instruction": "集合 `a = {1, 2, 3, 4}` 和 `b = {3, 4, 5}`，求差集 a-b。",
+      "initialCode": "a = {1, 2, 3, 4}\nb = {3, 4, 5}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1, 2}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a - b 或 a.difference(b)", "visible": false }
+      ]
+    },
+    {
+      "id": "ds17_list_reverse",
+      "type": "output",
+      "title": "列表反转",
+      "instruction": "列表 `nums = [1, 2, 3]`，反转后打印（用 reversed()）。",
+      "initialCode": "nums = [1, 2, 3]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[3, 2, 1]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "list(reversed(nums))", "visible": false }
+      ]
+    },
+    {
+      "id": "ds18_nested_list",
+      "type": "output",
+      "title": "嵌套列表",
+      "instruction": "矩阵 `matrix = [[1, 2], [3, 4]]`，打印第一行第一个元素（值为 1）。",
+      "initialCode": "matrix = [[1, 2], [3, 4]]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "matrix[0][0]", "visible": false }
+      ]
+    },
+    {
+      "id": "ds19_dict_comprehension",
+      "type": "output",
+      "title": "字典推导式",
+      "instruction": "使用字典推导式创建 {x: x**2 for x in range(1, 4)}，即 1:1, 2:4, 3:9。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1: 1, 2: 4, 3: 9}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "{x: x**2 for x in range(1, 4)}", "visible": false }
+      ]
+    },
+    {
+      "id": "ds20_list_slice",
+      "type": "output",
+      "title": "列表切片",
+      "instruction": "列表 `nums = [0, 1, 2, 3, 4, 5]`，切片获取中间的 [1, 2, 3]。",
+      "initialCode": "nums = [0, 1, 2, 3, 4, 5]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 2, 3]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "nums[1:4]", "visible": false }
+      ]
+    }
+  ]
+}

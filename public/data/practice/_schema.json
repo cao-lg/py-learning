@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "type": {
+      "enum": ["output", "function", "interactive", "unittest", "constraint", "debug"]
+    },
+    "title": { "type": "string" },
+    "instruction": { "type": "string" },
+    "initialCode": { "type": "string" },
+    "testConfig": {
+      "type": "object",
+      "properties": {
+        "expected": { "type": ["string", "null"] },
+        "mockInputs": { "type": "array", "items": { "type": "string" } },
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "timeout_ms": { "type": "integer", "minimum": 1000 },
+        "constraints": { "type": "object" },
+        "hiddenCases": { "type": "array" }
+      },
+      "required": ["timeout_ms"]
+    },
+    "hints": {
+      "type": "object",
+      "properties": {
+        "text": { "type": "string" },
+        "visible": { "type": "boolean" }
+      }
+    }
+  },
+  "required": ["id", "type", "title", "instruction", "initialCode", "testConfig"]
+}

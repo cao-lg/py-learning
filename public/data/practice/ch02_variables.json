@@ -1,0 +1,288 @@
+{
+  "id": "ch02_variables",
+  "title": "Python 基础 - 第二章：变量和数据类型",
+  "description": "学习变量赋值和基本数据类型",
+  "questions": [
+    {
+      "id": "v01_var_swap",
+      "type": "output",
+      "title": "变量交换",
+      "instruction": "已知 `x = 'hello'`, `y = 'world'`。不使用第三变量，将它们交换，然后打印 `x y`（中间加空格）。",
+      "initialCode": "x = 'hello'\ny = 'world'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "world hello",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "Python 支持元组解包：x, y = y, x", "visible": true }
+      ]
+    },
+    {
+      "id": "v02_compound",
+      "type": "output",
+      "title": "复合赋值运算",
+      "instruction": "已知 `n = 5`，依次执行：\n1. n += 3\n2. n *= 2\n3. n -= 4\n\n最后打印 n 的值。",
+      "initialCode": "n = 5\n# 执行 n += 3\n# 执行 n *= 2\n# 执行 n -= 4\n# 打印 n\n",
+      "testConfig": {
+        "expected": "12",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "复合赋值从左到右执行", "visible": true }
+      ]
+    },
+    {
+      "id": "v03_augmented",
+      "type": "output",
+      "title": "链式赋值",
+      "instruction": "使用链式赋值，同时创建三个变量 `a`, `b`, `c`，它们都等于 `100`。\n\n然后打印 `a + b + c`。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "300",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a = b = c = 100", "visible": true }
+      ]
+    },
+    {
+      "id": "v04_delete_var",
+      "type": "output",
+      "title": "变量删除",
+      "instruction": "已知 `x = 10`，删除 x，然后尝试打印 x（会报错）。\n\n修改代码：先打印 x 的值，再删除它。",
+      "initialCode": "x = 10\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "10",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "先 print(x)，再 del x", "visible": true }
+      ]
+    },
+    {
+      "id": "v05_type_judge",
+      "type": "output",
+      "title": "类型判断",
+      "instruction": "判断并打印以下表达式的结果类型：\n`type(10 / 2)`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "<class 'float'>",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "除法 / 的结果总是浮点数", "visible": true }
+      ]
+    },
+    {
+      "id": "v06_string_index",
+      "type": "output",
+      "title": "字符串索引",
+      "instruction": "已知字符串 `s = 'Python Programming'`，打印：\n1. 字符串长度\n2. 索引为 0 的字符\n3. 索引为 -1 的字符\n4. 索引为 7 的字符",
+      "initialCode": "s = 'Python Programming'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "18\nP\ng\n",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s[-1] 是最后一个字符", "visible": true }
+      ]
+    },
+    {
+      "id": "v07_string_slice",
+      "type": "output",
+      "title": "字符串切片",
+      "instruction": "已知字符串 `s = 'Hello, World!'`，打印：\n1. 前5个字符\n2. 第7个到最后\n3. 倒数5个字符\n4. 每隔一个字符（步长2）",
+      "initialCode": "s = 'Hello, World!'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello\nWorld!\nld!\nHlo ol!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s[0:5], s[6:], s[-5:], s[::2]", "visible": true }
+      ]
+    },
+    {
+      "id": "v08_string_methods",
+      "type": "output",
+      "title": "字符串方法",
+      "instruction": "已知字符串 `s = '  Python  '`，依次执行：\n1. 去除两端空格\n2. 转换为大写\n3. 计算长度\n\n打印长度。",
+      "initialCode": "s = '  Python  '\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "6",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "strip(), upper(), len()", "visible": true }
+      ]
+    },
+    {
+      "id": "v09_string_find",
+      "type": "output",
+      "title": "字符串查找",
+      "instruction": "已知字符串 `s = 'I love Python, Python is great'`，打印：\n1. 'Python' 首次出现的索引\n2. 'Python' 最后一次出现的索引",
+      "initialCode": "s = 'I love Python, Python is great'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "7\n15",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "find() 首次，rfind() 最后", "visible": true }
+      ]
+    },
+    {
+      "id": "v10_string_replace",
+      "type": "output",
+      "title": "字符串替换",
+      "instruction": "已知字符串 `s = 'one two one three one'`，将所有的 'one' 替换为 '1'，然后打印结果。",
+      "initialCode": "s = 'one two one three one'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1 two 1 three 1",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s.replace('one', '1')", "visible": true }
+      ]
+    },
+    {
+      "id": "v11_list_creation",
+      "type": "output",
+      "title": "列表创建",
+      "instruction": "使用两种方法创建列表：\n1. 用 list() 将字符串 'abc' 转换为列表\n2. 直接用方括号\n\n打印两个列表。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "['a', 'b', 'c']\n['a', 'b', 'c']",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "list('abc') 和 ['a','b','c']", "visible": true }
+      ]
+    },
+    {
+      "id": "v12_list_operations",
+      "type": "output",
+      "title": "列表操作",
+      "instruction": "已知列表 `lst = [1, 2, 3]`，依次执行：\n1. 末尾添加 4\n2. 索引0位置插入 0\n3. 删除索引2的元素\n\n打印最终列表。",
+      "initialCode": "lst = [1, 2, 3]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[0, 1, 3, 4]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "append(), insert(), pop()", "visible": true }
+      ]
+    },
+    {
+      "id": "v13_list_comprehension",
+      "type": "output",
+      "title": "列表推导式",
+      "instruction": "使用列表推导式，生成 1-10 各数的平方的列表，打印结果。\n\n格式：[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "[x**2 for x in range(1, 11)]", "visible": true }
+      ]
+    },
+    {
+      "id": "v14_list_filter",
+      "type": "output",
+      "title": "列表过滤",
+      "instruction": "给定列表 `nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`，使用列表推导式筛选出所有偶数，打印结果。",
+      "initialCode": "nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[2, 4, 6, 8, 10]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "[x for x in nums if x % 2 == 0]", "visible": true }
+      ]
+    },
+    {
+      "id": "v15_dict_creation",
+      "type": "output",
+      "title": "字典创建",
+      "instruction": "创建字典存储水果价格：苹果 3.5元，香蕉 2.8元，橙子 4.2元。\n\n然后打印橙子的价格。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "4.2",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "{'苹果': 3.5, '香蕉': 2.8, '橙子': 4.2}", "visible": true }
+      ]
+    },
+    {
+      "id": "v16_dict_methods",
+      "type": "output",
+      "title": "字典方法",
+      "instruction": "已知字典 `d = {'a': 1, 'b': 2, 'c': 3}`，打印：\n1. 所有键\n2. 所有值\n3. 所有键值对",
+      "initialCode": "d = {'a': 1, 'b': 2, 'c': 3}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "dict_keys(['a', 'b', 'c'])\ndict_values([1, 2, 3])\ndict_items([('a', 1), ('b', 2), ('c', 3)])",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "d.keys(), d.values(), d.items()", "visible": true }
+      ]
+    },
+    {
+      "id": "v17_dict_get",
+      "type": "output",
+      "title": "字典安全访问",
+      "instruction": "已知字典 `d = {'name': 'Alice', 'age': 25}`，使用 get 方法获取：\n1. 'name'（存在）\n2. 'city'（不存在，默认值 'Unknown'）",
+      "initialCode": "d = {'name': 'Alice', 'age': 25}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Alice\nUnknown",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "d.get('key', 'default')", "visible": true }
+      ]
+    },
+    {
+      "id": "v18_tuple_unpack",
+      "type": "output",
+      "title": "元组拆包",
+      "instruction": "元组 `(1, 2, 3, 4, 5)` 使用拆包，分别赋值给 a, b, *rest，打印 a, b 和 rest。",
+      "initialCode": "t = (1, 2, 3, 4, 5)\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1\n2\n[3, 4, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a, b, *rest = t", "visible": true }
+      ]
+    },
+    {
+      "id": "v19_set_operations",
+      "type": "output",
+      "title": "集合运算",
+      "instruction": "已知集合 `A = {1, 2, 3, 4, 5}` 和 `B = {4, 5, 6, 7, 8}`，打印：\n1. A ∪ B（并集）\n2. A ∩ B（交集）\n3. A - B（差集）",
+      "initialCode": "A = {1, 2, 3, 4, 5}\nB = {4, 5, 6, 7, 8}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1, 2, 3, 4, 5, 6, 7, 8}\n{4, 5}\n{1, 2, 3}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "A | B, A & B, A - B", "visible": true }
+      ]
+    },
+    {
+      "id": "v20_bool_conversion",
+      "type": "output",
+      "title": "布尔转换",
+      "instruction": "判断以下值作为 bool 时的值并打印：\n1. bool(0)\n2. bool('')\n3. bool([])\n4. bool('False')",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "False\nFalse\nFalse\nTrue",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "空值、0、空字符串/列表/字典都是 False", "visible": true },
+        { "text": "非空字符串包括 'False' 都是 True", "visible": false }
+      ]
+    }
+  ]
+}

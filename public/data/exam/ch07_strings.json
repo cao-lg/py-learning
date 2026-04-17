@@ -1,0 +1,88 @@
+{
+  "id": "ch07_strings",
+  "title": "第七章测验：字符串处理",
+  "description": "测试字符串常用操作和方法",
+  "duration": 20,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "ex7_q1",
+      "type": "output",
+      "title": "字符串切片",
+      "instruction": "字符串 s = 'Hello World'，获取 'World' 部分并打印。\n\n期望输出：World",
+      "initialCode": "s = 'Hello World'\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s[6:]", "visible": false }
+      ]
+    },
+    {
+      "id": "ex7_q2",
+      "type": "output",
+      "title": "大小写转换",
+      "instruction": "字符串 s = 'Hello'，全部转为大写并打印。\n\n期望输出：HELLO",
+      "initialCode": "s = 'Hello'\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s.upper()", "visible": false }
+      ]
+    },
+    {
+      "id": "ex7_q3",
+      "type": "output",
+      "title": "字符串替换",
+      "instruction": "字符串 s = 'Hello World'，将 'World' 替换为 'Python' 并打印。\n\n期望输出：Hello Python",
+      "initialCode": "s = 'Hello World'\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s.replace('World', 'Python')", "visible": false }
+      ]
+    },
+    {
+      "id": "ex7_q4",
+      "type": "output",
+      "title": "字符串分割",
+      "instruction": "字符串 s = 'apple,banana,orange'，按逗号分割成列表。\n\n期望输出：['apple', 'banana', 'orange']",
+      "initialCode": "s = 'apple,banana,orange'\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s.split(',')", "visible": false }
+      ]
+    },
+    {
+      "id": "ex7_q5",
+      "type": "output",
+      "title": "f-string格式化",
+      "instruction": "变量 name='Bob', age=25，用 f-string 打印 'Bob is 25 years old'。\n\n期望输出：Bob is 25 years old",
+      "initialCode": "name = 'Bob'\nage = 25\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "f'{name} is {age} years old'", "visible": false }
+      ]
+    },
+    {
+      "id": "ex7_q6",
+      "type": "output",
+      "title": "字符串反转",
+      "instruction": "字符串 s = 'Python'，反转并打印。\n\n期望输出：nohtyP",
+      "initialCode": "s = 'Python'\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s[::-1]", "visible": false }
+      ]
+    }
+  ]
+}

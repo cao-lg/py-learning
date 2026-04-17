@@ -1,0 +1,287 @@
+{
+  "id": "ch04_control_flow",
+  "title": "Python 基础 - 第四章：控制流",
+  "description": "学习条件语句和循环",
+  "questions": [
+    {
+      "id": "cf01_leap_year",
+      "type": "output",
+      "title": "闰年判断",
+      "instruction": "判断年份 `year = 2024` 是否为闰年。\n闰年条件：\n- 能被4整除但不能被100整除，或\n- 能被400整除\n\n打印 'Leap year' 或 'Common year'。",
+      "initialCode": "year = 2024\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Leap year",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "(year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)", "visible": true }
+      ]
+    },
+    {
+      "id": "cf02_max_of_three",
+      "type": "output",
+      "title": "三个数最大值",
+      "instruction": "给定三个数 `a = 15`, `b = 27`, `c = 9`，不使用 max() 函数，找出并打印最大值。",
+      "initialCode": "a = 15\nb = 27\nc = 9\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "27",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "先比较 a 和 b，取较大者，再与 c 比较", "visible": true }
+      ]
+    },
+    {
+      "id": "cf03_even_odd",
+      "type": "output",
+      "title": "奇偶数判断",
+      "instruction": "判断 `n = 99` 是奇数还是偶数，打印 'Odd' 或 'Even'。",
+      "initialCode": "n = 99\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Odd",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "n % 2 == 0 是偶数", "visible": true }
+      ]
+    },
+    {
+      "id": "cf04_fizzbuzz",
+      "type": "output",
+      "title": "FizzBuzz",
+      "instruction": "打印 1 到 15 的数字：\n- 能被3整除：打印 Fizz\n- 能被5整除：打印 Buzz\n- 能被15整除：打印 FizzBuzz\n- 其他：打印数字",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "先判断是否能被15整除，再判断3或5", "visible": true }
+      ]
+    },
+    {
+      "id": "cf05_prime",
+      "type": "output",
+      "title": "质数判断",
+      "instruction": "判断 `n = 17` 是否为质数（只能被1和自身整除），打印 'Prime' 或 'Not prime'。",
+      "initialCode": "n = 17\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Prime",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "检查从2到√n是否有因子", "visible": true }
+      ]
+    },
+    {
+      "id": "cf06_fibonacci",
+      "type": "output",
+      "title": "斐波那契数列",
+      "instruction": "打印斐波那契数列的前10项，格式：`1, 1, 2, 3, 5, 8, 13, 21, 34, 55`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1, 1, 2, 3, 5, 8, 13, 21, 34, 55",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "斐波那契：前两项之和等于第三项", "visible": true }
+      ]
+    },
+    {
+      "id": "cf07_sum_digits",
+      "type": "output",
+      "title": "数字求和",
+      "instruction": "计算并打印 `n = 12345` 各位数字之和。\n\n1 + 2 + 3 + 4 + 5 = 15",
+      "initialCode": "n = 12345\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "15",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "不断取余和整除", "visible": true }
+      ]
+    },
+    {
+      "id": "cf08_reverse_num",
+      "type": "output",
+      "title": "数字反转",
+      "instruction": "反转 `n = 12345` 的各位数字，打印结果。\n\n预期输出：54321",
+      "initialCode": "n = 12345\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "54321",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "不断取余并累积", "visible": true }
+      ]
+    },
+    {
+      "id": "cf09_palindrome",
+      "type": "output",
+      "title": "回文数判断",
+      "instruction": "判断 `n = 12321` 是否为回文数（正读反读都相同），打印 'Yes' 或 'No'。",
+      "initialCode": "n = 12321\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Yes",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "反转后与原数比较", "visible": true }
+      ]
+    },
+    {
+      "id": "cf10_triangle",
+      "type": "output",
+      "title": "三角形类型",
+      "instruction": "判断三条边能否构成三角形，以及三角形的类型：\n- 等边三角形：三边相等\n- 等腰三角形：两边相等\n- 不等边三角形：三边都不等\n\n边长：`a = 3, b = 3, c = 4`",
+      "initialCode": "a = 3\nb = 3\nc = 4\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Isosceles triangle",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "先判断能否构成三角形（任意两边之和大于第三边）", "visible": true }
+      ]
+    },
+    {
+      "id": "cf11_multiplication",
+      "type": "output",
+      "title": "九九乘法表",
+      "instruction": "打印九九乘法表（前6行）。\n\n格式：1x1=1\n每行末尾不需要空格",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1x1=1\n1x2=2 2x2=4\n1x3=3 2x3=6 3x3=9\n1x4=4 2x4=8 3x4=12 4x4=16\n1x5=5 2x5=10 3x5=15 4x5=20 5x5=25\n1x6=6 2x6=12 3x6=18 4x6=24 5x6=30 6x6=36",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "嵌套循环：外层控制行数，内层控制每行的列数", "visible": true }
+      ]
+    },
+    {
+      "id": "cf12_prime_list",
+      "type": "output",
+      "title": "质数列表",
+      "instruction": "找出并打印 1-30 之间的所有质数，格式：`2, 3, 5, 7, 11, 13, 17, 19, 23, 29`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "2, 3, 5, 7, 11, 13, 17, 19, 23, 29",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "遍历每个数，检查是否为质数", "visible": true }
+      ]
+    },
+    {
+      "id": "cf13_password_strength",
+      "type": "output",
+      "title": "密码强度",
+      "instruction": "判断密码强度（`pwd = 'Abc123!'`）：\n- 长度<8：Weak\n- 含数字+字母：Normal\n- 含数字+字母+特殊字符：Strong\n\n打印密码强度级别。",
+      "initialCode": "pwd = 'Abc123!'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Strong",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "用 isdigit(), isalpha(), 检查特殊字符", "visible": true }
+      ]
+    },
+    {
+      "id": "cf14_find_subs",
+      "type": "output",
+      "title": "子串查找",
+      "instruction": "在字符串 `s = 'Python is a great language'` 中：\n1. 检查 'great' 是否在 s 中\n2. 统计 'a' 出现的次数\n\n打印两个结果。",
+      "initialCode": "s = 'Python is a great language'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True\n2",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "'great' in s, s.count('a')", "visible": true }
+      ]
+    },
+    {
+      "id": "cf15_remove_duplicates",
+      "type": "output",
+      "title": "去除重复元素",
+      "instruction": "已知列表 `lst = [1, 2, 2, 3, 1, 4, 3, 5]`，去除重复元素并保持顺序，打印结果。",
+      "initialCode": "lst = [1, 2, 2, 3, 1, 4, 3, 5]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 2, 3, 4, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 dict.fromkeys() 或 set 但需注意顺序", "visible": true }
+      ]
+    },
+    {
+      "id": "cf16_list_intersection",
+      "type": "output",
+      "title": "列表交集",
+      "instruction": "找出两个列表的交集：\n`A = [1, 2, 3, 4, 5]`\n`B = [4, 5, 6, 7, 8]`\n\n打印交集列表。",
+      "initialCode": "A = [1, 2, 3, 4, 5]\nB = [4, 5, 6, 7, 8]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[4, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "遍历 A，检查元素是否在 B 中", "visible": true }
+      ]
+    },
+    {
+      "id": "cf17_matrix_transpose",
+      "type": "output",
+      "title": "矩阵转置",
+      "instruction": "转置以下矩阵：\n`matrix = [[1, 2, 3], [4, 5, 6]]`\n\n转置后：[[1, 4], [2, 5], [3, 6]]\n\n打印转置后的矩阵。",
+      "initialCode": "matrix = [[1, 2, 3], [4, 5, 6]]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[[1, 4], [2, 5], [3, 6]]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 zip(*matrix) 或嵌套循环", "visible": true }
+      ]
+    },
+    {
+      "id": "cf18_word_count",
+      "type": "output",
+      "title": "单词计数",
+      "instruction": "统计字符串 `s = 'apple banana apple cherry banana apple'` 中各单词出现的次数。\n\n打印：apple 3, banana 2, cherry 1",
+      "initialCode": "s = 'apple banana apple cherry banana apple'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "apple 3\nbanana 2\ncherry 1",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 split() 分割字符串，再用字典计数", "visible": true }
+      ]
+    },
+    {
+      "id": "cf19_nested_list_flatten",
+      "type": "output",
+      "title": "嵌套列表展开",
+      "instruction": "将嵌套列表 `nested = [[1, 2, 3], [4, 5], [6]]` 展开为单一列表。\n\n打印展开后的列表。",
+      "initialCode": "nested = [[1, 2, 3], [4, 5], [6]]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 2, 3, 4, 5, 6]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "列表推导式或双层循环", "visible": true }
+      ]
+    },
+    {
+      "id": "cf20_armstrong",
+      "type": "output",
+      "title": "水仙花数",
+      "instruction": "找出所有 3 位水仙花数。\n水仙花数：一个 n 位数，其各位数字的 n 次方之和等于它本身。\n例如：153 = 1³ + 5³ + 3³\n\n打印所有水仙花数，格式：153, 370, 371, 407",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "153, 370, 371, 407",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "遍历 100-999，检查是否满足条件", "visible": true }
+      ]
+    }
+  ]
+}

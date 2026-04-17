@@ -1,0 +1,75 @@
+{
+  "id": "mid_term",
+  "title": "Python 基础期中考试",
+  "description": "测试 Python 基础语法、数据类型、控制流和函数",
+  "duration": 60,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "em_q1",
+      "type": "output",
+      "title": "温度转换",
+      "instruction": "编写代码，将华氏温度 100 度转换为摄氏度并输出。\n\n公式：C = (F - 32) * 5 / 9\n\n输出格式：一个数字，保留两位小数",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用公式计算", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q2",
+      "type": "function",
+      "title": "阶乘计算",
+      "instruction": "定义函数 `factorial(n)` 计算 n 的阶乘。\n\n注意：0! = 1，1! = 1",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用递归或循环", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q3",
+      "type": "output",
+      "title": "列表操作",
+      "instruction": "创建一个列表包含数字 1-5，计算并输出所有元素的和。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "可以使用 sum() 函数", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q4",
+      "type": "output",
+      "title": "字符串处理",
+      "instruction": "给定字符串 `Python` 反转它并输出。",
+      "initialCode": "text = \"Python\"\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "字符串切片 [::-1] 可以反转", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q5",
+      "type": "function",
+      "title": "判断质数",
+      "instruction": "定义函数 `is_prime(n)` 判断 n 是否为质数，返回 True 或 False。\n\n质数：大于 1 的自然数中，除了 1 和它本身外不能被其他自然数整除。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "检查从 2 到 sqrt(n) 的数是否能整除", "visible": false }
+      ]
+    }
+  ]
+}

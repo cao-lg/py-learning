@@ -1,0 +1,88 @@
+{
+  "id": "ch04_control_flow",
+  "title": "第四章测验：控制流",
+  "description": "测试条件语句和循环结构",
+  "duration": 25,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "ex4_q1",
+      "type": "output",
+      "title": "奇偶判断",
+      "instruction": "判断数字 7 是奇数还是偶数，如果是奇数打印 'odd'，偶数打印 'even'。\n\n期望输出：odd",
+      "initialCode": "num = 7\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 if num % 2 == 1", "visible": false }
+      ]
+    },
+    {
+      "id": "ex4_q2",
+      "type": "output",
+      "title": "循环打印",
+      "instruction": "使用 for 循环打印 1 到 5，每个数字一行。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "for i in range(1, 6)", "visible": false }
+      ]
+    },
+    {
+      "id": "ex4_q3",
+      "type": "output",
+      "title": "break 语句",
+      "instruction": "循环打印 1 到 10，当数字达到 5 时停止（使用 break）。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "for i in range(1, 11): if i == 5: break", "visible": false }
+      ]
+    },
+    {
+      "id": "ex4_q4",
+      "type": "output",
+      "title": "continue 语句",
+      "instruction": "循环打印 1 到 5，跳过数字 3（使用 continue）。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "for i in range(1, 6): if i == 3: continue", "visible": false }
+      ]
+    },
+    {
+      "id": "ex4_q5",
+      "type": "output",
+      "title": "while 循环",
+      "instruction": "使用 while 循环打印 5 到 1，倒计时。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "i = 5; while i >= 1:", "visible": false }
+      ]
+    },
+    {
+      "id": "ex4_q6",
+      "type": "output",
+      "title": "else 子句",
+      "instruction": "循环正常执行完毕（不 break），打印 'completed'。\n\n期望输出：completed",
+      "initialCode": "for i in range(3):\n    pass\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "for ... else: else 会在循环正常结束时执行", "visible": false }
+      ]
+    }
+  ]
+}

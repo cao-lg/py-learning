@@ -1,0 +1,289 @@
+{
+  "id": "ch03_operators",
+  "title": "Python 基础 - 第三章：运算符",
+  "description": "学习算术、比较和逻辑运算符",
+  "questions": [
+    {
+      "id": "op01_floor_div_mod",
+      "type": "output",
+      "title": "整除与取模",
+      "instruction": "给定 `n = 100`，计算并打印：\n1. n 除以 7 的商（整除）\n2. n 除以 7 的余数",
+      "initialCode": "n = 100\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "14\n2",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "// 整除，% 取余", "visible": true }
+      ]
+    },
+    {
+      "id": "op02_power_parentheses",
+      "type": "output",
+      "title": "幂运算与括号",
+      "instruction": "计算 `2 的 3 次方再 + 1`，然后乘以 2。\n\n即：(2³ + 1) × 2",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "18",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "(2**3 + 1) * 2", "visible": true }
+      ]
+    },
+    {
+      "id": "op03_divmod",
+      "type": "output",
+      "title": "divmod 函数",
+      "instruction": "使用 divmod() 函数计算 100 除以 7 的商和余数，打印结果。\n\ndivmod(a, b) 返回 (商, 余数)",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "(14, 2)",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "divmod(100, 7)", "visible": true }
+      ]
+    },
+    {
+      "id": "op04_abs",
+      "type": "output",
+      "title": "绝对值",
+      "instruction": "计算并打印 -15 的绝对值，以及 -3.14 的绝对值。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "15\n3.14",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "abs(-15), abs(-3.14)", "visible": true }
+      ]
+    },
+    {
+      "id": "op05_round",
+      "type": "output",
+      "title": "四舍五入",
+      "instruction": "对以下数值进行四舍五入：\n1. round(3.14159, 2) - 保留2位\n2. round(2.5) - 银行家舍入\n3. round(3.5)",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "3.14\n2\n4",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "round(number, ndigits)", "visible": true }
+      ]
+    },
+    {
+      "id": "op06_min_max",
+      "type": "output",
+      "title": "最小值与最大值",
+      "instruction": "已知数据 `[3, 1, 4, 1, 5, 9, 2, 6]`，打印：\n1. 最小值\n2. 最大值\n3. 最小值和最大值出现的次数",
+      "initialCode": "data = [3, 1, 4, 1, 5, 9, 2, 6]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1\n9\n2",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "min(), max(), data.count()", "visible": true }
+      ]
+    },
+    {
+      "id": "op07_sum_len",
+      "type": "output",
+      "title": "求和与计数",
+      "instruction": "已知列表 `[1, 2, 3, 4, 5]`，不使用 sum() 函数，手动计算并打印所有元素的和。",
+      "initialCode": "nums = [1, 2, 3, 4, 5]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "15",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "用循环累加", "visible": true }
+      ]
+    },
+    {
+      "id": "op08_comparison_chain",
+      "type": "output",
+      "title": "比较运算符链",
+      "instruction": "判断以下表达式的值并打印：\n1 < 2 < 3 < 4\n1 < 2 < 3 > 4\n0 < 1 > -1",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True\nFalse\nTrue",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "链式比较相当于用 and 连接", "visible": true }
+      ]
+    },
+    {
+      "id": "op09_is_not",
+      "type": "output",
+      "title": "is 与 == 的区别",
+      "instruction": "判断并打印：\n1. 1000 is 1000\n2. 1000 == 1000\n3. None is None",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True\nTrue\nTrue",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "小整数池：-5 到 256 会缓存", "visible": true },
+        { "text": "大整数可能 id 不同", "visible": false }
+      ]
+    },
+    {
+      "id": "op10_logical_prio",
+      "type": "output",
+      "title": "逻辑运算符优先级",
+      "instruction": "计算并打印：\n1. True or False and False\n2. (True or False) and False\n3. not True or False",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True\nFalse\nFalse",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "not > and > or", "visible": true }
+      ]
+    },
+    {
+      "id": "op11_short_circuit",
+      "type": "output",
+      "title": "短路求值",
+      "instruction": "已知 `x = 0`，判断并打印以下表达式的值：\n1. x > 0 and 10 / x > 1\n2. x > 0 or 10 / x > 1\n\n观察哪个会报错（除以零）",
+      "initialCode": "x = 0\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "False\nTraceback (division by zero)",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "and 短路：False and 任何 = False", "visible": true },
+        { "text": "or 短路：True or 任何 = True", "visible": false }
+      ]
+    },
+    {
+      "id": "op12_bit_and",
+      "type": "output",
+      "title": "按位与",
+      "instruction": "计算并打印 12 & 25 的结果（二进制位运算）。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "8",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "12=1100, 25=11001, 按位与=01000=8", "visible": true }
+      ]
+    },
+    {
+      "id": "op13_bit_or",
+      "type": "output",
+      "title": "按位或",
+      "instruction": "计算并打印 12 | 25 的结果。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "29",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "12=1100, 25=11001, 按位或=11101=29", "visible": true }
+      ]
+    },
+    {
+      "id": "op14_bit_xor",
+      "type": "output",
+      "title": "按位异或",
+      "instruction": "计算并打印 12 ^ 25 的结果。\n\n异或：相同为0，不同为1",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "21",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "12=1100, 25=11001, 异或=10101=21", "visible": true }
+      ]
+    },
+    {
+      "id": "op15_bit_shift",
+      "type": "output",
+      "title": "位移运算",
+      "instruction": "计算并打印：\n1. 1 << 3（左移3位 = 乘以2³）\n2. 16 >> 2（右移2位 = 除以2²）",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "8\n4",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "左移n位 = 原数 × 2ⁿ，右移n位 = 原数 ÷ 2ⁿ", "visible": true }
+      ]
+    },
+    {
+      "id": "op16_infinite_precision",
+      "type": "output",
+      "title": "大整数运算",
+      "instruction": "计算并打印 `2 的 100 次方` 的值。\n\nPython 支持任意精度整数！",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1267650600228229401496703205376",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "2 ** 100", "visible": true }
+      ]
+    },
+    {
+      "id": "op17_complex_number",
+      "type": "output",
+      "title": "复数运算",
+      "instruction": "已知复数 `z = 3 + 4j`，计算并打印：\n1. z 的模（绝对值）\n2. z 的共轭复数",
+      "initialCode": "z = 3 + 4j\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "5.0\n(3-4j)",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "abs(z), z.conjugate()", "visible": true }
+      ]
+    },
+    {
+      "id": "op18 Walrus",
+      "type": "output",
+      "title": "赋值表达式 Walrus",
+      "instruction": "使用 Walrus 运算符 `:=` 在条件判断中赋值，打印 0 到 10 的偶数。\n\n提示：在 while 条件中使用 Walrus 赋值",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "0\n2\n4\n6\n8\n10",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "while (n := n + 2) <= 10:", "visible": true }
+      ]
+    },
+    {
+      "id": "op19_chained_cmp",
+      "type": "output",
+      "title": "连续比较",
+      "instruction": "判断并打印：\na = 5\nb = 10\nc = 15\na < b == c > a",
+      "initialCode": "a = 5\nb = 10\nc = 15\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "等价于 a < b and b == c and c > a", "visible": true }
+      ]
+    },
+    {
+      "id": "op20_aug_assign",
+      "type": "output",
+      "title": "增强赋值与类型",
+      "instruction": "已知 `x = 5`，执行 `x /= 2`，然后打印 x 及其类型。",
+      "initialCode": "x = 5\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "2.5\n<class 'float'>",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "/= 结果总是浮点数", "visible": true }
+      ]
+    }
+  ]
+}

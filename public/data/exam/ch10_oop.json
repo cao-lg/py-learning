@@ -1,0 +1,88 @@
+{
+  "id": "ch10_oop",
+  "title": "第十章测验：面向对象编程",
+  "description": "测试类和对象的创建与使用",
+  "duration": 30,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "ex10_q1",
+      "type": "output",
+      "title": "创建简单类",
+      "instruction": "定义类 Person，有 name 属性，实例化后打印 name。\n\n期望输出：Alice",
+      "initialCode": "class Person:\n    def __init__(self, name):\n        self.name = name\n\np = Person('Alice')\nprint(p.name)\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__init__ 构造函数设置属性", "visible": false }
+      ]
+    },
+    {
+      "id": "ex10_q2",
+      "type": "output",
+      "title": "实例方法",
+      "instruction": "定义类 Dog，有 bark() 方法打印 'Woof!'，调用该方法。\n\n期望输出：Woof!",
+      "initialCode": "class Dog:\n    def bark(self):\n        print('Woof!')\n\nd = Dog()\nd.bark()\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "self 参数引用实例本身", "visible": false }
+      ]
+    },
+    {
+      "id": "ex10_q3",
+      "type": "output",
+      "title": "__str__方法",
+      "instruction": "定义类 Book，有 title 属性，实现 __str__ 返回书名，print 打印。\n\n期望输出：Python Basics",
+      "initialCode": "class Book:\n    def __init__(self, title):\n        self.title = title\n    \n    def __str__(self):\n        return self.title\n\nb = Book('Python Basics')\nprint(b)\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__str__ 定义 print 时的字符串表示", "visible": false }
+      ]
+    },
+    {
+      "id": "ex10_q4",
+      "type": "output",
+      "title": "继承",
+      "instruction": "父类 Animal 有 name 属性，子类 Cat 继承它，创建 Cat 实例打印 name。\n\n期望输出：Tom",
+      "initialCode": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\nclass Cat(Animal):\n    def __init__(self, name, color):\n        super().__init__(name)\n        self.color = color\n\nc = Cat('Tom', 'Orange')\nprint(c.name)\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "super().__init__() 调用父类构造函数", "visible": false }
+      ]
+    },
+    {
+      "id": "ex10_q5",
+      "type": "output",
+      "title": "类属性",
+      "instruction": "类 Counter 有类属性 count=0，每创建一个实例 count 加 1，创建两个实例后打印 count。\n\n期望输出：2",
+      "initialCode": "class Counter:\n    count = 0\n    def __init__(self):\n        Counter.count += 1\n\nc1 = Counter()\nc2 = Counter()\nprint(Counter.count)\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "类属性被所有实例共享", "visible": false }
+      ]
+    },
+    {
+      "id": "ex10_q6",
+      "type": "output",
+      "title": "__add__方法",
+      "instruction": "定义类 Vector，实现 __add__ 使两个向量相加，返回新的 Vector。\n\n期望输出：(4, 6)",
+      "initialCode": "class Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    \n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n    \n    def __str__(self):\n        return f'({self.x}, {self.y})'\n\nv1 = Vector(1, 2)\nv2 = Vector(3, 4)\nprint(v1 + v2)\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__add__ 定义 + 运算符行为", "visible": false }
+      ]
+    }
+  ]
+}

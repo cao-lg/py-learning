@@ -1,0 +1,112 @@
+{
+  "exams": [
+    {
+      "id": "ch01_basics",
+      "title": "第一章测验",
+      "description": "Python 简介基础测验",
+      "duration": 15,
+      "totalScore": 100,
+      "questionCount": 5,
+      "difficulty": "easy"
+    },
+    {
+      "id": "ch02_variables",
+      "title": "第二章测验",
+      "description": "变量和数据类型测验",
+      "duration": 20,
+      "totalScore": 100,
+      "questionCount": 5,
+      "difficulty": "easy"
+    },
+    {
+      "id": "ch03_operators",
+      "title": "第三章测验",
+      "description": "运算符测验",
+      "duration": 20,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "easy"
+    },
+    {
+      "id": "ch04_control_flow",
+      "title": "第四章测验",
+      "description": "控制流测验",
+      "duration": 25,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "medium"
+    },
+    {
+      "id": "ch05_functions",
+      "title": "第五章测验",
+      "description": "函数测验",
+      "duration": 25,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "medium"
+    },
+    {
+      "id": "ch06_data_structures",
+      "title": "第六章测验",
+      "description": "数据结构测验",
+      "duration": 25,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "medium"
+    },
+    {
+      "id": "ch07_strings",
+      "title": "第七章测验",
+      "description": "字符串处理测验",
+      "duration": 20,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "easy"
+    },
+    {
+      "id": "ch08_file_io",
+      "title": "第八章测验",
+      "description": "文件操作测验",
+      "duration": 20,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "medium"
+    },
+    {
+      "id": "ch09_exception",
+      "title": "第九章测验",
+      "description": "异常处理测验",
+      "duration": 20,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "medium"
+    },
+    {
+      "id": "ch10_oop",
+      "title": "第十章测验",
+      "description": "面向对象编程测验",
+      "duration": 30,
+      "totalScore": 100,
+      "questionCount": 6,
+      "difficulty": "hard"
+    },
+    {
+      "id": "mid_term",
+      "title": "期中考试",
+      "description": "Python 基础语法期中考试",
+      "duration": 60,
+      "totalScore": 100,
+      "questionCount": 5,
+      "difficulty": "medium"
+    },
+    {
+      "id": "final_exam",
+      "title": "期末考试",
+      "description": "Python 基础知识全面考核",
+      "duration": 90,
+      "totalScore": 100,
+      "questionCount": 8,
+      "difficulty": "hard"
+    }
+  ]
+}

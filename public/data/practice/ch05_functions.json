@@ -1,0 +1,245 @@
+{
+  "id": "ch05_functions",
+  "title": "Python 基础 - 第五章：函数",
+  "description": "学习函数定义和调用",
+  "questions": [
+    {
+      "id": "fn01_simple_func",
+      "type": "output",
+      "title": "定义简单函数",
+      "instruction": "定义一个函数 `say_hello()`，无参数，打印 `Hello!`。\n\n注意：定义函数不会执行，需要调用才能看到输出。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 def 关键字定义函数", "visible": false }
+      ]
+    },
+    {
+      "id": "fn02_func_param",
+      "type": "output",
+      "title": "带参数的函数",
+      "instruction": "定义一个函数 `greet(name)`，接收一个参数 name，打印 `Hello, {name}!`。\n\n调用 `greet('Alice')` 测试。",
+      "initialCode": "# 在下方编写代码\n# 调用函数测试\n",
+      "testConfig": {
+        "expected": "Hello, Alice!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "在函数内部使用 print 和 f-string", "visible": false }
+      ]
+    },
+    {
+      "id": "fn03_return_value",
+      "type": "output",
+      "title": "返回值",
+      "instruction": "定义一个函数 `add(a, b)`，返回 a 和 b 的和。\n\n调用 `print(add(3, 5))` 查看结果。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "8",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 return 语句返回计算结果", "visible": false }
+      ]
+    },
+    {
+      "id": "fn04_default_param",
+      "type": "output",
+      "title": "默认参数",
+      "instruction": "定义一个函数 `greet(name='World')`，默认参数 name 为 'World'。\n\n先调用 `greet()`（使用默认值），再调用 `greet('Python')`（传入参数）。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello, World!\nHello, Python!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "默认参数在函数定义时给定默认值", "visible": false }
+      ]
+    },
+    {
+      "id": "fn05_multiple_defaults",
+      "type": "output",
+      "title": "多个默认参数",
+      "instruction": "定义函数 `power(base, exp=2)`，返回 base 的 exp 次方。\n\n调用 `print(power(3))` 和 `print(power(2, 3))`。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "9\n8",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 ** 运算符进行幂运算", "visible": false }
+      ]
+    },
+    {
+      "id": "fn06_var_args",
+      "type": "output",
+      "title": "可变参数 *args",
+      "instruction": "定义函数 `sum_all(*numbers)`，接受任意数量的参数，返回它们的和。\n\n调用 `print(sum_all(1, 2, 3, 4, 5))`。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "15",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "*numbers 会将所有参数收集为元组", "visible": false }
+      ]
+    },
+    {
+      "id": "fn07_kwargs",
+      "type": "output",
+      "title": "关键字参数 **kwargs",
+      "instruction": "定义函数 `print_info(**info)`，打印所有传入的关键字参数。\n\n调用 `print_info(name='Alice', age=25, city='Beijing')`。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "name: Alice\nage: 25\ncity: Beijing",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "**kwargs 收集关键字参数为字典", "visible": false }
+      ]
+    },
+    {
+      "id": "fn08_lambda_basic",
+      "type": "output",
+      "title": "lambda 表达式基础",
+      "instruction": "使用 lambda 表达式创建一个求平方的函数，计算并打印 `square(7)`。\n\n提示：`square = lambda x: x ** 2`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "49",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "lambda 表达式: lambda 参数: 返回值", "visible": false }
+      ]
+    },
+    {
+      "id": "fn09_lambda_with_map",
+      "type": "output",
+      "title": "lambda 与 map",
+      "instruction": "使用 `map()` 和 lambda 将列表 `[1, 2, 3, 4, 5]` 中的每个元素平方，转换为列表并打印。\n\n提示：`list(map(lambda x: x**2, [1,2,3,4,5]))`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 4, 9, 16, 25]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "map() 返回迭代器，需要 list() 转换", "visible": false }
+      ]
+    },
+    {
+      "id": "fn10_lambda_with_filter",
+      "type": "output",
+      "title": "lambda 与 filter",
+      "instruction": "使用 `filter()` 和 lambda 从列表 `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` 中筛选出所有偶数，转换为列表并打印。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[2, 4, 6, 8, 10]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "filter() 需要一个返回布尔值的函数", "visible": false }
+      ]
+    },
+    {
+      "id": "fn11_recursion",
+      "type": "output",
+      "title": "递归函数",
+      "instruction": "定义递归函数 `factorial(n)` 计算 n 的阶乘。\n\n注意：0! = 1，1! = 1，n! = n * (n-1)!",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "120",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "递归需要基线条件（n<=1）和递归调用", "visible": false }
+      ]
+    },
+    {
+      "id": "fn12_fibonacci",
+      "type": "output",
+      "title": "斐波那契数列",
+      "instruction": "定义递归函数 `fib(n)` 返回斐波那契数列第 n 项。\n\n斐波那契：0, 1, 1, 2, 3, 5, 8, 13...\nfib(0)=0, fib(1)=1, fib(n)=fib(n-1)+fib(n-2)\n\n打印 fib(7)。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "13",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "fib(n) = fib(n-1) + fib(n-2)，基线是 n<=1", "visible": false }
+      ]
+    },
+    {
+      "id": "fn13_scope",
+      "type": "output",
+      "title": "变量作用域",
+      "instruction": "已知全局变量 `x = 10`，在函数内部修改 x 为 20 并打印。\n\n使用 `global x` 声明全局变量。",
+      "initialCode": "x = 10\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "20",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 global 关键字声明全局变量", "visible": false }
+      ]
+    },
+    {
+      "id": "fn14_nested_func",
+      "type": "output",
+      "title": "嵌套函数",
+      "instruction": "定义嵌套函数 outer() 和 inner()，inner() 返回 `Hello`，outer() 调用 inner() 并返回结果。\n\n打印 outer() 的返回值。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "嵌套函数可以访问外层函数的变量", "visible": false }
+      ]
+    },
+    {
+      "id": "fn15_decorator",
+      "type": "output",
+      "title": "装饰器基础",
+      "instruction": "定义一个简单的装饰器 `my_decorator`，它打印 'Before'，调用原函数，然后打印 'After'。\n\n用这个装饰器装饰函数 `say()`，say() 返回 'World!'。\n\n最终调用 say() 并打印返回值。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Before\nAfter\nWorld!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "装饰器是一个返回函数的函数", "visible": false }
+      ]
+    },
+    {
+      "id": "fn16_type_hints",
+      "type": "output",
+      "title": "类型提示",
+      "instruction": "定义带类型提示的函数 `def add(a: int, b: int) -> int:`，返回 a + b。\n\n调用并打印 `add(10, 20)`。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "30",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "类型提示语法: 参数: 类型 -> 返回类型", "visible": false }
+      ]
+    },
+    {
+      "id": "fn17_docstring",
+      "type": "output",
+      "title": "文档字符串",
+      "instruction": "定义一个带 docstring 的函数 `def greet(name): \"\"\"返回一个问候语\"\"\"`\n\n使用 `print(greet.__doc__)` 打印文档字符串。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "返回一个问候语",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "docstring 是函数开头的三引号字符串", "visible": false }
+      ]
+    }
+  ]
+}

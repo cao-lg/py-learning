@@ -1,0 +1,88 @@
+{
+  "id": "ch03_operators",
+  "title": "第三章测验：运算符",
+  "description": "测试算术、比较和逻辑运算符",
+  "duration": 20,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "ex3_q1",
+      "type": "output",
+      "title": "整除运算",
+      "instruction": "计算 17 除以 5 的整数部分并打印。\n\n期望输出：3",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 // 运算符", "visible": false }
+      ]
+    },
+    {
+      "id": "ex3_q2",
+      "type": "output",
+      "title": "取模运算",
+      "instruction": "计算 17 除以 5 的余数并打印。\n\n期望输出：2",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 % 运算符", "visible": false }
+      ]
+    },
+    {
+      "id": "ex3_q3",
+      "type": "output",
+      "title": "幂运算",
+      "instruction": "计算 2 的 10 次方并打印。\n\n期望输出：1024",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 ** 运算符", "visible": false }
+      ]
+    },
+    {
+      "id": "ex3_q4",
+      "type": "output",
+      "title": "比较运算",
+      "instruction": "判断 100 是否大于 50 且小于 200，打印 True 或 False。\n\n期望输出：True",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "100 > 50 and 100 < 200", "visible": false }
+      ]
+    },
+    {
+      "id": "ex3_q5",
+      "type": "output",
+      "title": "逻辑非运算",
+      "instruction": "对 False 取非运算并打印结果。\n\n期望输出：True",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "not False", "visible": false }
+      ]
+    },
+    {
+      "id": "ex3_q6",
+      "type": "output",
+      "title": "复合赋值",
+      "instruction": "设 x=5，先加10再乘2，打印最终结果。\n\n期望输出：30",
+      "initialCode": "x = 5\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "x += 10; x *= 2", "visible": false }
+      ]
+    }
+  ]
+}
