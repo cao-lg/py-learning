@@ -1,0 +1,49 @@
+{
+  "id": "quiz_ch01",
+  "title": "第一章测验：Python 简介",
+  "description": "测试 Python 基本概念和 Hello World 程序",
+  "duration": 15,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "q1_q1",
+      "type": "output",
+      "title": "Hello World",
+      "instruction": "编写程序，输出 'Hello, World!'",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 print() 函数", "visible": false }
+      ]
+    },
+    {
+      "id": "q1_q2",
+      "type": "output",
+      "title": "多行输出",
+      "instruction": "使用一条 print() 语句输出以下内容：\nHello\nWorld",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 \\n 转义字符", "visible": false }
+      ]
+    },
+    {
+      "id": "q1_q3",
+      "type": "output",
+      "title": "简单计算",
+      "instruction": "计算并输出 125 + 378 的结果。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "直接在 print 中计算", "visible": false }
+      ]
+    }
+  ]
+}

@@ -1,13 +1,13 @@
 {
   "id": "ch01_basics",
-  "title": "Python 基础 - 第一章",
-  "description": "学习 Python 基本语法、变量和 print 函数",
+  "title": "Python 基础 - 第一章：Python 简介",
+  "description": "学习 Python 基本语法和第一个程序",
   "questions": [
     {
-      "id": "q1_hello_world",
+      "id": "q01_hello",
       "type": "output",
       "title": "Hello World",
-      "instruction": "使用 `print()` 函数输出 `Hello, World!`",
+      "instruction": "编写程序，使用 `print()` 函数输出字符串 `Hello, World!`。\n\n这是你的第一个 Python 程序！",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "Hello, World!",
@@ -19,85 +19,203 @@
       ]
     },
     {
-      "id": "q2_variable",
+      "id": "q02_multiline",
       "type": "output",
-      "title": "变量赋值",
-      "instruction": "创建一个变量 `name` 赋值为你的名字，然后使用 `print()` 输出 `Hello, {name}!`",
+      "title": "多行输出",
+      "instruction": "使用一条 `print()` 语句，输出以下三行：\n第一行：Open\n第二行：the\n第三行：Door",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "Hello, Alice!",
+        "expected": "Open\nthe\nDoor",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用变量存储名字", "visible": true },
-        { "text": "可以在 print 中使用 f-string 或字符串拼接", "visible": false }
+        { "text": "使用 \\\\n 表示换行", "visible": true }
       ]
     },
     {
-      "id": "q3_interactive_input",
-      "type": "interactive",
-      "title": "用户输入",
-      "instruction": "使用 `input()` 函数获取用户输入的名字，并输出 `Hello, {名字}!`",
-      "initialCode": "# 在下方编写代码\n",
-      "testConfig": {
-        "expected": "Hello, Alice!",
-        "mockInputs": ["Alice"],
-        "timeout_ms": 5000
-      },
-      "hints": [
-        { "text": "使用 input() 获取输入", "visible": true },
-        { "text": "input() 返回的是字符串，可以直接使用", "visible": false }
-      ]
-    },
-    {
-      "id": "q4_function",
-      "type": "function",
-      "title": "函数定义",
-      "instruction": "定义一个函数 `add(a, b)`，返回 a 和 b 的和。然后调用它计算 3 + 5 并输出结果。",
-      "initialCode": "# 在下方编写代码\n",
-      "testConfig": {
-        "expected": "8",
-        "mockInputs": [
-          { "args": [3, 5], "expected": 8 }
-        ],
-        "timeout_ms": 5000
-      },
-      "hints": [
-        { "text": "使用 def 关键字定义函数", "visible": true },
-        { "text": "函数需要使用 return 返回值", "visible": false }
-      ]
-    },
-    {
-      "id": "q5_loop",
+      "id": "q03_calc",
       "type": "output",
-      "title": "循环输出",
-      "instruction": "使用 for 循环输出数字 1 到 5，每个数字占一行",
+      "title": "表达式计算",
+      "instruction": "计算 `(15 + 35) * 2 - 100 / 4`，打印结果。",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "1\n2\n3\n4\n5",
+        "expected": "80.0",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用 range(1, 6) 生成数字序列", "visible": true },
-        { "text": "print 函数默认会在末尾换行", "visible": false }
+        { "text": "先算括号，再乘除，后加减", "visible": true }
       ]
     },
     {
-      "id": "q6_constraint",
-      "type": "constraint",
-      "title": "代码规范检查",
-      "instruction": "编写一个函数 `greet(name)` 返回 `Hello, {name}!`。要求：1) 使用 def 定义函数 2) 函数必须包含 docstring",
-      "initialCode": "# 在下方编写代码\n",
+      "id": "q04_mod_calc",
+      "type": "output",
+      "title": "取模运算",
+      "instruction": "一个三位数 369，输出它的百位、十位、个位数字之和。\n\n例如：369 -> 3 + 6 + 9 = 18",
+      "initialCode": "num = 369\n# 在下方编写代码\n",
       "testConfig": {
-        "expected": "Hello, World!",
-        "timeout_ms": 5000,
-        "constraints": {
-          "require_docstring": true,
-          "require_def": true
-        }
+        "expected": "18",
+        "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用三引号 ''' 或 \"\"\" 创建 docstring", "visible": true }
+        { "text": "百位 = num // 100", "visible": true },
+        { "text": "十位 = (num % 100) // 10", "visible": false }
+      ]
+    },
+    {
+      "id": "q05_swap_calc",
+      "type": "output",
+      "title": "交换与计算",
+      "instruction": "已知 `a = 7`, `b = 3`。不使用第三变量，交换它们的值，然后计算 `a的b次方`，打印结果。",
+      "initialCode": "a = 7\nb = 3\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "343",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "先交换，再用 ** 求幂", "visible": true }
+      ]
+    },
+    {
+      "id": "q06_math_expr",
+      "type": "output",
+      "title": "数学表达式",
+      "instruction": "计算 `2的20次方除以17的余数`，打印结果。\n\n提示：这是密码学中常用的模幂运算",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "9",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "先算 2**20，再对 17 取模", "visible": true }
+      ]
+    },
+    {
+      "id": "q07_grade_calc",
+      "type": "output",
+      "title": "成绩等级转换",
+      "instruction": "已知百分制成绩 `score = 87`，将其转换为五分制等级：\n90-100 -> A (4.0)\n80-89 -> B (3.0)\n70-79 -> C (2.0)\n60-69 -> D (1.0)\n60以下 -> F (0.0)\n\n打印对应的绩点。",
+      "initialCode": "score = 87\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "3.0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用多个 if-elif 判断分数区间", "visible": true }
+      ]
+    },
+    {
+      "id": "q08_circle",
+      "type": "output",
+      "title": "圆的相关计算",
+      "instruction": "已知圆的半径 `r = 5`，计算并打印：\n1. 圆的周长 (2 * π * r)\n2. 圆的面积 (π * r²)\n\n使用 `math` 模块的 `pi` 常量。\n\n格式：每行一个数字，保留2位小数",
+      "initialCode": "import math\nr = 5\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "31.42\n78.54",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 math.pi 获取 π 值", "visible": true },
+        { "text": "使用 round(value, 2) 或 f'{value:.2f}' 保留小数", "visible": false }
+      ]
+    },
+    {
+      "id": "q09_temp_conv",
+      "type": "output",
+      "title": "温度转换",
+      "instruction": "编写代码，将摄氏温度 `c = 100` 转换为华氏温度。\n\n公式：F = C × 9/5 + 32\n\n打印转换后的华氏温度，保留1位小数。",
+      "initialCode": "c = 100\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "212.0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "直接套用公式计算", "visible": true }
+      ]
+    },
+    {
+      "id": "q10_time_conv",
+      "type": "output",
+      "title": "时间转换",
+      "instruction": "已知总秒数 `total_seconds = 3723`，将其转换为\"X小时Y分钟Z秒\"的格式并打印。\n\n例如：3723秒 = 1小时2分钟3秒",
+      "initialCode": "total_seconds = 3723\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1:2:3",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "小时 = total_seconds // 3600", "visible": true },
+        { "text": "分钟 = (total_seconds % 3600) // 60", "visible": false }
+      ]
+    },
+    {
+      "id": "q11_string_ops",
+      "type": "output",
+      "title": "字符串运算",
+      "instruction": "已知字符串 `s = 'Python'`，打印：\n1. 字符串长度\n2. 首字母（大写）\n3. 末字母（小写）",
+      "initialCode": "s = 'Python'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "6\nP\nn",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "len(s) 获取长度", "visible": true },
+        { "text": "s[0] 获取首字符", "visible": false }
+      ]
+    },
+    {
+      "id": "q12_fstring_calc",
+      "type": "output",
+      "title": "格式化输出计算结果",
+      "instruction": "计算 `157 / 3`（保留2位小数），然后用 f-string 输出：`商是 XX.XX`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "商是 52.33",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "f-string: f'商是 {result:.2f}'", "visible": true }
+      ]
+    },
+    {
+      "id": "q13_triangle",
+      "type": "output",
+      "title": "三角形面积",
+      "instruction": "计算三角形面积，已知底边 `base = 10`，高 `height = 5`。\n\n公式：面积 = 底 × 高 ÷ 2\n\n打印面积。",
+      "initialCode": "base = 10\nheight = 5\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "25.0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "套用面积公式", "visible": true }
+      ]
+    },
+    {
+      "id": "q14_distance",
+      "type": "output",
+      "title": "两点距离公式",
+      "instruction": "已知平面上两点 A(3, 4) 和 B(0, 0)，计算它们之间的欧几里得距离。\n\n公式：距离 = √((x2-x1)² + (y2-y1)²)\n\n打印距离，保留2位小数。\n\n提示：使用 math.sqrt()",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "5.0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "代入公式：(3**2 + 4**2)**0.5", "visible": true }
+      ]
+    },
+    {
+      "id": "q15_bmi",
+      "type": "output",
+      "title": "BMI计算",
+      "instruction": "计算 BMI 指数。已知体重 `weight = 70` kg，身高 `height = 1.75` m。\n\n公式：BMI = 体重(kg) / 身高(m)²\n\n打印 BMI 值，保留1位小数。",
+      "initialCode": "weight = 70\nheight = 1.75\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "22.9",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "BMI = weight / (height ** 2)", "visible": true }
       ]
     }
   ]

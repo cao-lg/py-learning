@@ -1,0 +1,87 @@
+{
+  "id": "python-basics",
+  "title": "Python 基础系列课程",
+  "description": "从零开始学习 Python 编程",
+  "chapters": [
+    {
+      "id": "ch01-intro",
+      "title": "Python 简介",
+      "order": 1,
+      "path": "ch01-intro.md",
+      "duration": "15分钟",
+      "objectives": ["了解 Python 发展历史", "掌握 Hello World", "理解 Python 特点"]
+    },
+    {
+      "id": "ch02-variables",
+      "title": "变量和数据类型",
+      "order": 2,
+      "path": "ch02-variables.md",
+      "duration": "30分钟",
+      "objectives": ["理解变量概念", "掌握基本数据类型", "学会类型转换"]
+    },
+    {
+      "id": "ch03-operators",
+      "title": "运算符",
+      "order": 3,
+      "path": "ch03-operators.md",
+      "duration": "25分钟",
+      "objectives": ["算术运算符", "比较运算符", "逻辑运算符"]
+    },
+    {
+      "id": "ch04-control-flow",
+      "title": "控制流",
+      "order": 4,
+      "path": "ch04-control-flow.md",
+      "duration": "35分钟",
+      "objectives": ["条件语句", "循环语句", "break和continue"]
+    },
+    {
+      "id": "ch05-functions",
+      "title": "函数",
+      "order": 5,
+      "path": "ch05-functions.md",
+      "duration": "40分钟",
+      "objectives": ["函数定义与调用", "参数和返回值", "lambda 表达式"]
+    },
+    {
+      "id": "ch06-data-structures",
+      "title": "数据结构",
+      "order": 6,
+      "path": "ch06-data-structures.md",
+      "duration": "45分钟",
+      "objectives": ["列表List", "元组Tuple", "字典Dict", "集合Set"]
+    },
+    {
+      "id": "ch07-strings",
+      "title": "字符串处理",
+      "order": 7,
+      "path": "ch07-strings.md",
+      "duration": "35分钟",
+      "objectives": ["字符串索引切片", "格式化方法", "常用方法"]
+    },
+    {
+      "id": "ch08-file-io",
+      "title": "文件操作",
+      "order": 8,
+      "path": "ch08-file-io.md",
+      "duration": "30分钟",
+      "objectives": ["读写文本文件", "JSON 数据处理", "上下文管理器"]
+    },
+    {
+      "id": "ch09-exception",
+      "title": "异常处理",
+      "order": 9,
+      "path": "ch09-exception.md",
+      "duration": "25分钟",
+      "objectives": ["try-except", "自定义异常", "finally用法"]
+    },
+    {
+      "id": "ch10-oop",
+      "title": "面向对象编程",
+      "order": 10,
+      "path": "ch10-oop.md",
+      "duration": "50分钟",
+      "objectives": ["类和对象", "继承多态", "魔术方法"]
+    }
+  ]
+}

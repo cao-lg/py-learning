@@ -1,0 +1,54 @@
+{
+  "chapters": [
+    {
+      "id": "ch01_basics",
+      "title": "第一章：Python 简介",
+      "questionCount": 10
+    },
+    {
+      "id": "ch02_variables",
+      "title": "第二章：变量和数据类型",
+      "questionCount": 15
+    },
+    {
+      "id": "ch03_operators",
+      "title": "第三章：运算符",
+      "questionCount": 20
+    },
+    {
+      "id": "ch04_control_flow",
+      "title": "第四章：控制流",
+      "questionCount": 16
+    },
+    {
+      "id": "ch05_functions",
+      "title": "第五章：函数",
+      "questionCount": 17
+    },
+    {
+      "id": "ch06_data_structures",
+      "title": "第六章：数据结构",
+      "questionCount": 20
+    },
+    {
+      "id": "ch07_strings",
+      "title": "第七章：字符串处理",
+      "questionCount": 15
+    },
+    {
+      "id": "ch08_file_io",
+      "title": "第八章：文件操作",
+      "questionCount": 12
+    },
+    {
+      "id": "ch09_exception",
+      "title": "第九章：异常处理",
+      "questionCount": 12
+    },
+    {
+      "id": "ch10_oop",
+      "title": "第十章：面向对象编程",
+      "questionCount": 15
+    }
+  ]
+}

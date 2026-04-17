@@ -19,7 +19,9 @@ export function Editor({ value, onChange, readOnly = false, theme = 'light' }: E
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
 
-  onChangeRef.current = onChange;
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   const createEditor = useCallback(() => {
     if (!containerRef.current) return null;

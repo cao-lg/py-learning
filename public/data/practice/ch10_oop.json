@@ -1,0 +1,217 @@
+{
+  "id": "ch10_oop",
+  "title": "Python 基础 - 第十章：面向对象编程",
+  "description": "学习类和对象的创建与使用",
+  "questions": [
+    {
+      "id": "oop01_class_basic",
+      "type": "output",
+      "title": "创建简单类",
+      "instruction": "定义类 Person，有 name 属性，实例化后打印 name。",
+      "initialCode": "class Person:\n    def __init__(self, name):\n        self.name = name\n\np = Person('Alice')\nprint(p.name)\n",
+      "testConfig": {
+        "expected": "Alice",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__init__ 构造函数设置属性", "visible": false }
+      ]
+    },
+    {
+      "id": "oop02_instance_method",
+      "type": "output",
+      "title": "实例方法",
+      "instruction": "定义类 Dog，有 name 属性和 bark() 方法（打印 'Woof!'），调用 bark()。",
+      "initialCode": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    \n    def bark(self):\n        print('Woof!')\n\nd = Dog('Buddy')\nd.bark()\n",
+      "testConfig": {
+        "expected": "Woof!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "self 参数引用实例本身", "visible": false }
+      ]
+    },
+    {
+      "id": "oop03_str_method",
+      "type": "output",
+      "title": "__str__方法",
+      "instruction": "定义类 Book，有 title 属性，实现 __str__ 返回书名，print 打印时应显示书名。",
+      "initialCode": "class Book:\n    def __init__(self, title):\n        self.title = title\n    \n    def __str__(self):\n        return self.title\n\nb = Book('Python Basics')\nprint(b)\n",
+      "testConfig": {
+        "expected": "Python Basics",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__str__ 定义 print 时的字符串表示", "visible": false }
+      ]
+    },
+    {
+      "id": "oop04_inheritance",
+      "type": "output",
+      "title": "继承",
+      "instruction": "定义父类 Animal（有 name 属性）和子类 Cat（继承 Animal，添加 color 属性），创建 Cat 实例并打印 name。",
+      "initialCode": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\nclass Cat(Animal):\n    def __init__(self, name, color):\n        super().__init__(name)\n        self.color = color\n\nc = Cat('Tom', 'Orange')\nprint(c.name)\n",
+      "testConfig": {
+        "expected": "Tom",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "super().__init__() 调用父类构造函数", "visible": false }
+      ]
+    },
+    {
+      "id": "oop05_class_attribute",
+      "type": "output",
+      "title": "类属性",
+      "instruction": "定义类 Counter，有类属性 count=0，每创建一个实例 count 加 1，打印创建两个实例后的 count。",
+      "initialCode": "class Counter:\n    count = 0\n    def __init__(self):\n        Counter.count += 1\n\nc1 = Counter()\nc2 = Counter()\nprint(Counter.count)\n",
+      "testConfig": {
+        "expected": "2",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "类属性被所有实例共享", "visible": false }
+      ]
+    },
+    {
+      "id": "oop06_private_attribute",
+      "type": "output",
+      "title": "私有属性",
+      "instruction": "定义类 Account，有私有属性 __balance=100，通过 get_balance() 方法获取并打印。",
+      "initialCode": "class Account:\n    def __init__(self):\n        self.__balance = 100\n    \n    def get_balance(self):\n        return self.__balance\n\nacc = Account()\nprint(acc.get_balance())\n",
+      "testConfig": {
+        "expected": "100",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__balance 会自动改名为 _Account__balance", "visible": false }
+      ]
+    },
+    {
+      "id": "oop07_property",
+      "type": "output",
+      "title": "属性装饰器",
+      "instruction": "定义类 Temperature，有摄氏度属性 celsius，添加 @property 返回华氏度（c*9/5+32）。",
+      "initialCode": "class Temperature:\n    def __init__(self, celsius):\n        self.celsius = celsius\n    \n    @property\n    def fahrenheit(self):\n        return self.celsius * 9/5 + 32\n\nt = Temperature(0)\nprint(t.fahrenheit)\n",
+      "testConfig": {
+        "expected": "32.0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "@property 将方法转为属性访问", "visible": false }
+      ]
+    },
+    {
+      "id": "oop08_add_method",
+      "type": "output",
+      "title": "加法运算符",
+      "instruction": "定义类 Vector，实现 __add__ 方法使两个向量相加，返回新的 Vector。",
+      "initialCode": "class Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    \n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n    \n    def __str__(self):\n        return f'({self.x}, {self.y})'\n\nv1 = Vector(1, 2)\nv2 = Vector(3, 4)\nprint(v1 + v2)\n",
+      "testConfig": {
+        "expected": "(4, 6)",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__add__ 定义 + 运算符行为", "visible": false }
+      ]
+    },
+    {
+      "id": "oop09_len_method",
+      "type": "output",
+      "title": "len方法",
+      "instruction": "定义类 Stack，有 items 列表，实现 __len__ 返回栈中元素个数。",
+      "initialCode": "class Stack:\n    def __init__(self):\n        self.items = []\n    \n    def __len__(self):\n        return len(self.items)\n\ns = Stack()\ns.items.append(1)\ns.items.append(2)\nprint(len(s))\n",
+      "testConfig": {
+        "expected": "2",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__len__ 定义 len() 函数的行为", "visible": false }
+      ]
+    },
+    {
+      "id": "oop10_method_override",
+      "type": "output",
+      "title": "方法重写",
+      "instruction": "父类 Animal 有 greet() 返回 'Animal'，子类 Dog 重写 greet() 返回 'Dog'，创建 Dog 实例并调用 greet()。",
+      "initialCode": "class Animal:\n    def greet(self):\n        return 'Animal'\n\nclass Dog(Animal):\n    def greet(self):\n        return 'Dog'\n\nd = Dog()\nprint(d.greet())\n",
+      "testConfig": {
+        "expected": "Dog",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "子类可以重写父类的方法", "visible": false }
+      ]
+    },
+    {
+      "id": "oop11_class_method",
+      "type": "output",
+      "title": "类方法",
+      "instruction": "定义类 Math，有类方法 add(x, y)，返回 x + y。",
+      "initialCode": "class Math:\n    @classmethod\n    def add(cls, x, y):\n        return x + y\n\nprint(Math.add(3, 4))\n",
+      "testConfig": {
+        "expected": "7",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "@classmethod 装饰器，cls 参数引用类本身", "visible": false }
+      ]
+    },
+    {
+      "id": "oop12_static_method",
+      "type": "output",
+      "title": "静态方法",
+      "instruction": "定义类 Math2，有静态方法 multiply(x, y)，返回 x * y。",
+      "initialCode": "class Math2:\n    @staticmethod\n    def multiply(x, y):\n        return x * y\n\nprint(Math2.multiply(3, 4))\n",
+      "testConfig": {
+        "expected": "12",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "@staticmethod 装饰器，不需要 self 或 cls", "visible": false }
+      ]
+    },
+    {
+      "id": "oop13_getitem",
+      "type": "output",
+      "title": "索引访问",
+      "instruction": "定义类 MyList，有内部列表 [10, 20, 30]，实现 __getitem__ 支持索引访问。",
+      "initialCode": "class MyList:\n    def __init__(self):\n        self.items = [10, 20, 30]\n    \n    def __getitem__(self, index):\n        return self.items[index]\n\nm = MyList()\nprint(m[1])\n",
+      "testConfig": {
+        "expected": "20",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__getitem__ 定义 [] 索引访问", "visible": false }
+      ]
+    },
+    {
+      "id": "oop14_multiple_inheritance",
+      "type": "output",
+      "title": "多重继承",
+      "instruction": "类 A 有方法 foo() 返回 'A'，类 B 有方法 bar() 返回 'B'，类 C 继承 A 和 B，创建 C 实例调用 foo()。",
+      "initialCode": "class A:\n    def foo(self):\n        return 'A'\n\nclass B:\n    def bar(self):\n        return 'B'\n\nclass C(A, B):\n    pass\n\nc = C()\nprint(c.foo())\n",
+      "testConfig": {
+        "expected": "A",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "class C(A, B) 同时继承 A 和 B", "visible": false }
+      ]
+    },
+    {
+      "id": "oop15_callable",
+      "type": "output",
+      "title": "可调用对象",
+      "instruction": "定义类 Counter，有 count 属性，实现 __call__ 使实例可以像函数一样调用（调用时 count 加 1）。",
+      "initialCode": "class Counter:\n    def __init__(self):\n        self.count = 0\n    \n    def __call__(self):\n        self.count += 1\n        return self.count\n\nc = Counter()\nprint(c())\nprint(c())\n",
+      "testConfig": {
+        "expected": "1\n2",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "__call__ 使实例可以像函数一样被调用", "visible": false }
+      ]
+    }
+  ]
+}

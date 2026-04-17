@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import { evaluatorRouter } from './evaluator/router';
 import { PracticePage } from './pages/Practice';
 import { ExamPage } from './pages/Exam';
+import { ExamListPage } from './pages/ExamList';
 import { AdminPage } from './pages/Admin';
 import { HomePage } from './pages/Home';
+import { LearnPage } from './pages/Learn';
 
 function App() {
   const [isPyodideReady, setIsPyodideReady] = useState(false);
@@ -64,16 +66,17 @@ function App() {
             </div>
           </nav>
         </header>
-        <main className="max-w-7xl mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/learn" element={<div className="text-center py-12 text-gray-500">Learn Page - Coming Soon</div>} />
-            <Route path="/practice/*" element={<PracticePage />} />
-            <Route path="/exam/*" element={<ExamPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/learn" element={<Navigate to="/learn/python-basics" replace />} />
+          <Route path="/learn/*" element={<LearnPage />} />
+          <Route path="/practice" element={<Navigate to="/practice/ch01_basics" replace />} />
+          <Route path="/practice/:chapterId" element={<PracticePage />} />
+          <Route path="/exam" element={<ExamListPage />} />
+          <Route path="/exam/:examId" element={<ExamPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </div>
     </BrowserRouter>
   );

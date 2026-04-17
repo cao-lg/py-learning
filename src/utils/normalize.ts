@@ -2,7 +2,8 @@ export const normalizeOutput = (s: string): string => {
   return s
     .split('\n')
     .map((line) => line.replace(/\s+$/, ''))
-    .join('\n');
+    .join('\n')
+    .replace(/\n+$/, '');
 };
 
 export const compareOutputs = (expected: string, actual: string): { matched: boolean; diff: { expected: string; actual: string }[] } => {

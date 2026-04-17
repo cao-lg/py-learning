@@ -6,8 +6,15 @@ import { evaluatorRouter } from '../evaluator/router';
 import { storage } from '../store/idb';
 import type { Question, EvalResult, PracticeSet } from '../types';
 
+interface ChapterInfo {
+  id: string;
+  title: string;
+  questionCount: number;
+}
+
 export function PracticePage() {
   const { chapterId } = useParams<{ chapterId?: string }>();
+  const [chapters, setChapters] = useState<ChapterInfo[]>([]);
   const [practiceSet, setPracticeSet] = useState<PracticeSet | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [code, setCode] = useState('');
@@ -17,21 +24,25 @@ export function PracticePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadPracticeSet();
-  }, [chapterId]);
+  const currentChapterId = chapterId || 'ch01_basics';
 
-  useEffect(() => {
-    if (currentQuestion) {
-      loadSavedCode();
+  const loadChapterIndex = useCallback(async () => {
+    try {
+      const response = await fetch('/data/practice/_index.json');
+      if (response.ok) {
+        const data = await response.json();
+        setChapters(data.chapters);
+      }
+    } catch (e) {
+      console.error('Failed to load chapter index:', e);
     }
-  }, [currentQuestion]);
+  }, []);
 
-  const loadPracticeSet = async () => {
+  const loadPracticeSet = useCallback(async (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/data/practice/${chapterId || 'ch01_basics'}.json`);
+      const response = await fetch(`/data/practice/${id}.json`);
       if (!response.ok) throw new Error('Failed to load practice set');
       const data = await response.json();
       setPracticeSet(data);
@@ -43,9 +54,9 @@ export function PracticePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const loadSavedCode = async () => {
+  const loadSavedCode = useCallback(async () => {
     if (!currentQuestion) return;
     const savedCode = await storage.getPracticeCode(currentQuestion.id);
     if (savedCode) {
@@ -53,7 +64,29 @@ export function PracticePage() {
     } else {
       setCode(currentQuestion.initialCode);
     }
-  };
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    loadChapterIndex();
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [loadChapterIndex]);
+
+  useEffect(() => {
+    if (currentChapterId) {
+      /* eslint-disable react-hooks/set-state-in-effect */
+      loadPracticeSet(currentChapterId);
+      /* eslint-enable react-hooks/set-state-in-effect */
+    }
+  }, [currentChapterId, loadPracticeSet]);
+
+  useEffect(() => {
+    if (currentQuestion) {
+      /* eslint-disable react-hooks/set-state-in-effect */
+      loadSavedCode();
+      /* eslint-enable react-hooks/set-state-in-effect */
+    }
+  }, [currentQuestion, loadSavedCode]);
 
   const saveCode = useCallback(async (newCode: string) => {
     if (!currentQuestion) return;
@@ -93,6 +126,10 @@ export function PracticePage() {
     setResult(null);
   };
 
+  const handleChapterChange = (newChapterId: string) => {
+    window.location.replace(`/practice/${newChapterId}`);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -105,7 +142,7 @@ export function PracticePage() {
     return (
       <div className="text-center py-12">
         <p className="text-red-500">{error}</p>
-        <button onClick={loadPracticeSet} className="btn btn-primary mt-4">
+        <button onClick={() => loadPracticeSet(currentChapterId)} className="btn btn-primary mt-4">
           Retry
         </button>
       </div>
@@ -118,11 +155,27 @@ export function PracticePage() {
 
   return (
     <div className="flex gap-6 h-[calc(100vh-200px)]">
-      <aside className="w-64 flex-shrink-0 overflow-y-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+      <aside className="w-72 flex-shrink-0 overflow-y-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="font-semibold text-gray-900 dark:text-white">{practiceSet.title}</h2>
-          <p className="text-sm text-gray-500 mt-1">{practiceSet.description}</p>
+          <h2 className="font-semibold text-gray-900 dark:text-white mb-3">练习章节</h2>
+          <select
+            value={currentChapterId}
+            onChange={(e) => handleChapterChange(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+          >
+            {chapters.map((ch) => (
+              <option key={ch.id} value={ch.id}>
+                {ch.title} ({ch.questionCount}题)
+              </option>
+            ))}
+          </select>
         </div>
+        
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-2">{practiceSet.title}</h3>
+          <p className="text-sm text-gray-500">{practiceSet.description}</p>
+        </div>
+        
         <nav className="p-2">
           {practiceSet.questions.map((q, index) => (
             <button
@@ -152,7 +205,7 @@ export function PracticePage() {
         </div>
 
         <div className="flex-1 flex gap-4 min-h-0">
-          <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 flex flex-col min-w-0 editor-container">
             <Editor
               value={code}
               onChange={handleCodeChange}

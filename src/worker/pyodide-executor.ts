@@ -1,9 +1,6 @@
 import type { TestConfig, PyodideWorkerMessage, PyodideWorkerResponse, EvalResult } from '../types';
 import { compareOutputs } from '../utils/normalize';
 
-declare function importScripts(...urls: string[]): void;
-declare const loadPyodide: (config: { indexURL: string }) => Promise<PyodideInstance>;
-
 let pyodide: PyodideInstance | null = null;
 const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
 const CACHE_NAME = 'pyodide-wasm-cache-v1';
@@ -29,11 +26,11 @@ async function cachePyodideAssets(): Promise<void> {
 async function initPyodide(): Promise<void> {
   await cachePyodideAssets();
   
-  importScripts(PYODIDE_CDN + 'pyodide.js');
+  const pyodideModule = await import(/* @vite-ignore */ `${PYODIDE_CDN}pyodide.mjs`);
+  const instance = await (pyodideModule as { loadPyodide: (config: { indexURL: string }) => Promise<PyodideInstance> }).loadPyodide({ indexURL: PYODIDE_CDN });
+  pyodide = instance;
   
-  pyodide = await loadPyodide({ indexURL: PYODIDE_CDN });
-  
-  await pyodide.loadPackage(['micropip']);
+  await instance.loadPackage(['micropip']);
 }
 
 function generateMockInputTemplate(mockInputs: string[]): string {
@@ -55,7 +52,7 @@ input = mock_input
 `;
 }
 
-function evaluateOutput(code: string, config: TestConfig): EvalResult {
+async function evaluateOutput(code: string, config: TestConfig): Promise<EvalResult> {
   if (!pyodide) {
     return { passed: false, score: 0, message: 'Pyodide not initialized' };
   }
@@ -72,9 +69,21 @@ sys.stdout = _old_stdout
 _output
 `;
     
-    const result = pyodide.runPythonAsync(wrappedCode);
+    const result = await pyodide.runPythonAsync(wrappedCode);
     const capturedOutput = typeof result === 'string' ? result : String(result || '');
-    const { matched, diff } = compareOutputs(config.expected || '', capturedOutput);
+    
+    if (config.expected === null || config.expected === undefined) {
+      return {
+        passed: true,
+        score: config.weight ?? 1,
+        message: 'Code executed successfully',
+        details: {
+          actual: capturedOutput,
+        }
+      };
+    }
+
+    const { matched, diff } = compareOutputs(config.expected, capturedOutput);
 
     if (matched) {
       return {
@@ -89,7 +98,7 @@ _output
       score: 0,
       message: `Output mismatch. ${diff.length} line(s) differ.`,
       details: {
-        expected: config.expected || '',
+        expected: config.expected,
         actual: capturedOutput,
       }
     };
@@ -103,7 +112,7 @@ _output
   }
 }
 
-function evaluateInteractive(code: string, config: TestConfig): EvalResult {
+async function evaluateInteractive(code: string, config: TestConfig): Promise<EvalResult> {
   if (!pyodide) {
     return { passed: false, score: 0, message: 'Pyodide not initialized' };
   }
@@ -121,7 +130,7 @@ _output = sys.stdout.getvalue()
 _output
 `;
     
-    const result = pyodide.runPythonAsync(wrappedCode);
+    const result = await pyodide.runPythonAsync(wrappedCode);
     const stdout = typeof result === 'string' ? result : String(result || '');
     const { matched, diff } = compareOutputs(config.expected || '', stdout);
 
@@ -152,7 +161,7 @@ _output
   }
 }
 
-function evaluateFunction(code: string, config: TestConfig): EvalResult {
+async function evaluateFunction(code: string, config: TestConfig): Promise<EvalResult> {
   if (!pyodide) {
     return { passed: false, score: 0, message: 'Pyodide not initialized' };
   }
@@ -180,7 +189,7 @@ def _test_function():
 _test_function()
 `;
 
-    const result = pyodide.runPythonAsync(testCode);
+    const result = await pyodide.runPythonAsync(testCode);
     
     if (Array.isArray(result) && result.every((r: unknown) => r === true)) {
       return {
@@ -229,16 +238,16 @@ self.onmessage = async (e: MessageEvent<PyodideWorkerMessage>) => {
 
     switch (questionType) {
       case 'output':
-        result = evaluateOutput(code, testConfig);
+        result = await evaluateOutput(code, testConfig);
         break;
       case 'interactive':
-        result = evaluateInteractive(code, testConfig);
+        result = await evaluateInteractive(code, testConfig);
         break;
       case 'function':
-        result = evaluateFunction(code, testConfig);
+        result = await evaluateFunction(code, testConfig);
         break;
       default:
-        result = evaluateOutput(code, testConfig);
+        result = await evaluateOutput(code, testConfig);
     }
 
     const response: PyodideWorkerResponse = { type: 'result', id, result };

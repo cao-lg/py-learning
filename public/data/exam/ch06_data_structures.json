@@ -1,0 +1,88 @@
+{
+  "id": "ch06_data_structures",
+  "title": "第六章测验：数据结构",
+  "description": "测试列表、元组、字典和集合操作",
+  "duration": 25,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "ex6_q1",
+      "type": "output",
+      "title": "列表索引",
+      "instruction": "给定列表 fruits = ['apple', 'banana', 'orange']，打印第一个和最后一个元素。\n\n期望输出：\napple\norange",
+      "initialCode": "fruits = ['apple', 'banana', 'orange']\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "fruits[0] 和 fruits[-1]", "visible": false }
+      ]
+    },
+    {
+      "id": "ex6_q2",
+      "type": "output",
+      "title": "列表添加",
+      "instruction": "列表 nums = [1, 2, 3]，添加元素 4，打印列表。\n\n期望输出：[1, 2, 3, 4]",
+      "initialCode": "nums = [1, 2, 3]\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "nums.append(4)", "visible": false }
+      ]
+    },
+    {
+      "id": "ex6_q3",
+      "type": "output",
+      "title": "字典访问",
+      "instruction": "字典 person = {'name': 'Alice', 'age': 20}，打印 name 的值。\n\n期望输出：Alice",
+      "initialCode": "person = {'name': 'Alice', 'age': 20}\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "person['name']", "visible": false }
+      ]
+    },
+    {
+      "id": "ex6_q4",
+      "type": "output",
+      "title": "集合运算",
+      "instruction": "集合 a = {1, 2, 3} 和 b = {2, 3, 4}，求交集。\n\n期望输出：{2, 3}",
+      "initialCode": "a = {1, 2, 3}\nb = {2, 3, 4}\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a & b 或 a.intersection(b)", "visible": false }
+      ]
+    },
+    {
+      "id": "ex6_q5",
+      "type": "output",
+      "title": "列表推导式",
+      "instruction": "使用列表推导式创建 [1, 4, 9, 16]（1-4 的平方）。\n\n期望输出：[1, 4, 9, 16]",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "[x**2 for x in range(1, 5)]", "visible": false }
+      ]
+    },
+    {
+      "id": "ex6_q6",
+      "type": "output",
+      "title": "元组解包",
+      "instruction": "元组 rgb = ('red', 'green', 'blue')，解包为 r, g, b，打印 r 和 b。\n\n期望输出：\nred\nblue",
+      "initialCode": "rgb = ('red', 'green', 'blue')\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "r, g, b = rgb", "visible": false }
+      ]
+    }
+  ]
+}

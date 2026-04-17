@@ -1,16 +1,106 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { storage } from '../store/idb';
+
 export function HomePage() {
+  const [userName, setUserName] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempName, setTempName] = useState('');
+
+  useEffect(() => {
+    storage.getUserName().then(name => {
+      if (name) {
+        setUserName(name);
+        setTempName(name);
+      }
+    });
+  }, []);
+
+  const handleSave = async () => {
+    if (tempName.trim()) {
+      await storage.setUserName(tempName.trim());
+      await storage.setUserId(tempName.trim().toLowerCase().replace(/\s+/g, '_'));
+      setUserName(tempName.trim());
+      setIsEditing(false);
+    }
+  };
+
   return (
     <div className="text-center py-12">
       <h1 className="text-5xl font-bold mb-6 text-gray-900 dark:text-white">
         Python 基础学练测评考平台
       </h1>
-      <p className="text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+      <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
         面向高校/培训机构的 Python 基础教学闭环平台，覆盖"学-练-测-评"全流程
       </p>
 
+      <div className="mb-8">
+        {userName ? (
+          <div className="inline-flex items-center gap-3 bg-purple-100 dark:bg-purple-900/30 px-5 py-2.5 rounded-full">
+            <span className="text-purple-600 dark:text-purple-400 font-medium">
+              当前身份：{userName}
+            </span>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-sm text-purple-500 hover:text-purple-600 dark:hover:text-purple-300"
+            >
+              修改
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="inline-flex items-center gap-2 bg-purple-100 dark:bg-purple-900/30 px-5 py-2.5 rounded-full text-purple-600 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+          >
+            <span>👤</span>
+            <span>请先设置身份</span>
+          </button>
+        )}
+      </div>
+
+      {isEditing && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+              {userName ? '修改身份' : '设置身份'}
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              输入你的姓名或昵称，用于考试身份识别
+            </p>
+            <input
+              type="text"
+              value={tempName}
+              onChange={(e) => setTempName(e.target.value)}
+              placeholder="请输入姓名"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none mb-4"
+              autoFocus
+              onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+            />
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setTempName(userName);
+                  setIsEditing(false);
+                }}
+                className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={!tempName.trim()}
+                className="px-5 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                保存
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-        <a
-          href="/learn"
+        <Link
+          to="/learn"
           className="block p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
         >
           <div className="text-4xl mb-4">📚</div>
@@ -18,10 +108,10 @@ export function HomePage() {
           <p className="text-gray-600 dark:text-gray-400">
             静态 Markdown 课程章节，配套代码高亮与随堂练习
           </p>
-        </a>
+        </Link>
 
-        <a
-          href="/practice"
+        <Link
+          to="/practice"
           className="block p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
         >
           <div className="text-4xl mb-4">💻</div>
@@ -29,10 +119,10 @@ export function HomePage() {
           <p className="text-gray-600 dark:text-gray-400">
             即时评测，多题型支持，实时反馈，代码本地持久化
           </p>
-        </a>
+        </Link>
 
-        <a
-          href="/exam"
+        <Link
+          to="/exam"
           className="block p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
         >
           <div className="text-4xl mb-4">📝</div>
@@ -40,7 +130,7 @@ export function HomePage() {
           <p className="text-gray-600 dark:text-gray-400">
             完全隔离模式，确定性打乱，断网保护，审计日志
           </p>
-        </a>
+        </Link>
       </div>
 
       <div className="mt-16">

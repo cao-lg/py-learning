@@ -7,7 +7,7 @@ import { evaluatorRouter } from '../evaluator/router';
 import { storage } from '../store/idb';
 import { syncQueue } from '../store/sync-queue';
 import { generateDeterministicSeed, generateSubmissionHash, shuffleArray } from '../utils/crypto';
-import type { ExamSet, ExamQuestion, ExamSession, EvalResult } from '../types';
+import type { ExamSet, ExamQuestion, ExamSession, EvalResult, SyncPayload, Question } from '../types';
 
 export function ExamPage() {
   const { examId } = useParams<{ examId?: string }>();
@@ -20,7 +20,7 @@ export function ExamPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<ExamSession | null>(null);
-  const [startTime, setStartTime] = useState<number>(Date.now());
+  const [startTime, setStartTime] = useState<number>(() => Date.now());
   const [audit] = useState<ExamSession['audit']>({
     focus_loss: 0,
     tab_switch: 0,
@@ -29,16 +29,6 @@ export function ExamPage() {
   });
 
   const lastSyncRef = useRef<number>(0);
-
-  useEffect(() => {
-    loadExam();
-    setupAuditListeners();
-    syncQueue.startAutoSync(30000);
-
-    return () => {
-      syncQueue.stopAutoSync();
-    };
-  }, [examId]);
 
   const loadExam = async () => {
     setLoading(true);
@@ -105,6 +95,11 @@ export function ExamPage() {
     });
   };
 
+  const calculateScore = (): number => {
+    const passedCount = Object.values(results).filter((r) => r.passed).length;
+    return questions.length > 0 ? (passedCount / questions.length) * 100 : 0;
+  };
+
   const triggerSync = useCallback(async () => {
     if (!examSet || !session) return;
     const now = Date.now();
@@ -114,7 +109,7 @@ export function ExamPage() {
     const userId = await storage.getUserId();
     if (!userId) return;
 
-    const payload = {
+    const payload: SyncPayload & { exam: Record<string, { answers: Record<string, string>; score: number; status: string }> } = {
       user_id: userId,
       practice: {},
       exam: {
@@ -130,13 +125,20 @@ export function ExamPage() {
       hashes: {},
     };
 
-    await syncQueue.enqueue(payload as any);
+    await syncQueue.enqueue(payload);
   }, [examSet, session, answers, audit]);
 
-  const calculateScore = (): number => {
-    const passedCount = Object.values(results).filter((r) => r.passed).length;
-    return questions.length > 0 ? (passedCount / questions.length) * 100 : 0;
-  };
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    loadExam();
+    setupAuditListeners();
+    /* eslint-enable react-hooks/set-state-in-effect */
+    syncQueue.startAutoSync(30000);
+
+    return () => {
+      syncQueue.stopAutoSync();
+    };
+  }, [examId]);
 
   const handleAnswerChange = (questionId: string, code: string) => {
     setAnswers((prev) => {
@@ -186,7 +188,7 @@ export function ExamPage() {
       },
     };
 
-    await syncQueue.enqueue(payload as any);
+    await syncQueue.enqueue(payload as SyncPayload);
     await storage.saveExamSession(updatedSession);
     await storage.clearExamDraft(examSet.id);
 
@@ -199,9 +201,20 @@ export function ExamPage() {
   };
 
   const handleShowAnswer = (questionId: string) => {
+    const question = questions[currentIndex];
+    const questionForEval: Question = {
+      id: question.id,
+      type: question.type,
+      title: question.title,
+      instruction: question.instruction,
+      initialCode: question.initialCode,
+      testConfig: {
+        timeout_ms: question.testConfig.timeout_ms,
+      },
+    };
     evaluatorRouter.evaluate(
-      { ...questions[currentIndex], testConfig: questions[currentIndex].testConfig } as any,
-      answers[questionId] || questions[currentIndex].initialCode,
+      questionForEval,
+      answers[questionId] || question.initialCode,
       (result) => {
         setResults((prev) => ({ ...prev, [questionId]: result }));
       }

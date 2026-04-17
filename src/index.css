@@ -109,3 +109,21 @@ code {
     @apply bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200;
   }
 }
+
+.cm-editor {
+  height: 100%;
+  text-align: left;
+}
+
+.cm-scroller {
+  overflow: auto;
+}
+
+.cm-editor .cm-content {
+  text-align: left;
+}
+
+.editor-container {
+  height: calc(100vh - 350px);
+  min-height: 300px;
+}
