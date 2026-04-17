@@ -6,7 +6,7 @@ import { ExamTimer } from '../components/ExamTimer';
 import { evaluatorRouter } from '../evaluator/router';
 import { storage } from '../store/idb';
 import { syncQueue } from '../store/sync-queue';
-import { generateDeterministicSeed, generateSubmissionHash, shuffleArray } from '../utils/crypto';
+import { generateDeterministicSeed, shuffleArray } from '../utils/crypto';
 import type { ExamSet, ExamQuestion, ExamSession, EvalResult, SyncPayload, Question } from '../types';
 
 export function ExamPage() {
@@ -167,11 +167,6 @@ export function ExamPage() {
     if (!userId) return;
 
     const score = calculateScore();
-    const submissionHash = await generateSubmissionHash(
-      JSON.stringify(answers),
-      Date.now(),
-      session.seed
-    );
 
     const updatedSession: ExamSession = {
       ...session,
