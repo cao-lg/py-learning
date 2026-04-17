@@ -219,7 +219,6 @@ export function ExamPage() {
       instruction: question.instruction,
       initialCode: question.initialCode,
       testConfig: {
-        expected: testConfig.expected,
         timeout_ms: testConfig.timeout_ms,
       },
     };
@@ -231,7 +230,9 @@ export function ExamPage() {
           delete result.details.expected;
         }
         setResults((prev) => ({ ...prev, [questionId]: result }));
-      }
+      },
+      examSet?.id,
+      questionId
     );
   };
 

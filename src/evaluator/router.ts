@@ -56,7 +56,9 @@ export class EvaluatorRouter {
   evaluate(
     question: Question,
     code: string,
-    callback: (result: EvalResult) => void
+    callback: (result: EvalResult) => void,
+    examId?: string,
+    questionId?: string
   ): void {
     const id = `${question.id}-${Date.now()}`;
     this.pendingCallbacks.set(id, callback);
@@ -67,6 +69,8 @@ export class EvaluatorRouter {
       code,
       testConfig: question.testConfig,
       questionType: question.type,
+      examId,
+      questionId,
     });
   }
 

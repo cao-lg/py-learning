@@ -104,6 +104,8 @@ export interface PyodideWorkerMessage {
   testConfig?: TestConfig;
   questionType?: Question['type'];
   id?: string;
+  examId?: string;
+  questionId?: string;
 }
 
 export interface PyodideWorkerResponse {
