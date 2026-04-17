@@ -13,6 +13,7 @@
       "instruction": "编写程序，输出 'Hello, World!'",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Hello, World!",
         "timeout_ms": 5000
       },
       "hints": [
@@ -26,6 +27,7 @@
       "instruction": "使用 print() 函数输出 'Welcome to Python!'",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Welcome to Python!",
         "timeout_ms": 5000
       },
       "hints": [
@@ -39,6 +41,7 @@
       "instruction": "使用一条 print() 语句输出：\nLine 1\nLine 2\n（注意换行）",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Line 1\nLine 2",
         "timeout_ms": 5000
       },
       "hints": [
@@ -52,6 +55,7 @@
       "instruction": "计算并输出 2024 + 1 的结果",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "2025",
         "timeout_ms": 5000
       },
       "hints": [
@@ -65,6 +69,7 @@
       "instruction": "计算并输出一年（365天）的总秒数\n\n提示：365 * 24 * 60 * 60",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "31536000",
         "timeout_ms": 5000
       },
       "hints": [

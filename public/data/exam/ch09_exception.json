@@ -13,6 +13,7 @@
       "instruction": "尝试执行 1/0，捕获 ZeroDivisionError，打印 'Error: division by zero'。\n\n期望输出：Error: division by zero",
       "initialCode": "try:\n    result = 1 / 0\nexcept ZeroDivisionError:\n    print('Error: division by zero')\n",
       "testConfig": {
+        "expected": "Error: division by zero",
         "timeout_ms": 5000
       },
       "hints": [
@@ -26,6 +27,7 @@
       "instruction": "尝试将 'abc' 转为整数，捕获 ValueError，打印 'Invalid number'。\n\n期望输出：Invalid number",
       "initialCode": "try:\n    num = int('abc')\nexcept ValueError:\n    print('Invalid number')\n",
       "testConfig": {
+        "expected": "Invalid number",
         "timeout_ms": 5000
       },
       "hints": [
@@ -36,9 +38,10 @@
       "id": "ex9_q3",
       "type": "output",
       "title": "捕获异常对象",
-      "instruction": "捕获 ValueError 并打印错误信息（使用 as）。\n\n期望输出：invalid literal for int() with base 10: 'xyz'",
+      "instruction": "捕获 ValueError 并打印错误信息（使用 as）。",
       "initialCode": "try:\n    num = int('xyz')\nexcept ValueError as e:\n    print(e)\n",
       "testConfig": {
+        "expected": "invalid literal for int() with base 10: 'xyz'",
         "timeout_ms": 5000
       },
       "hints": [
@@ -52,6 +55,7 @@
       "instruction": "try-except-else 结构，如果没有异常则打印 'Success'。\n\n期望输出：Success",
       "initialCode": "try:\n    x = 10\nexcept:\n    print('Error')\nelse:\n    print('Success')\n",
       "testConfig": {
+        "expected": "Success",
         "timeout_ms": 5000
       },
       "hints": [
@@ -65,6 +69,7 @@
       "instruction": "try-except-finally 结构，无论是否有异常都打印 'Done'。\n\n期望输出：Done",
       "initialCode": "try:\n    x = 1\nexcept:\n    print('Error')\nfinally:\n    print('Done')\n",
       "testConfig": {
+        "expected": "Done",
         "timeout_ms": 5000
       },
       "hints": [
@@ -78,6 +83,7 @@
       "instruction": "手动抛出 ValueError，消息为 'Invalid value'。\n\n期望输出：Invalid value",
       "initialCode": "raise ValueError('Invalid value')\n",
       "testConfig": {
+        "expected": "Invalid value",
         "timeout_ms": 5000
       },
       "hints": [

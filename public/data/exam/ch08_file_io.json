@@ -13,6 +13,7 @@
       "instruction": "使用 StringIO 读取字符串 'Hello' 并打印。\n\n期望输出：Hello",
       "initialCode": "from io import StringIO\n\nf = StringIO('Hello')\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Hello",
         "timeout_ms": 5000
       },
       "hints": [
@@ -23,9 +24,10 @@
       "id": "ex8_q2",
       "type": "output",
       "title": "JSON序列化",
-      "instruction": "将字典 {'name': 'Alice', 'age': 20} 转为 JSON 字符串并打印。\n\n期望输出：{\"name\": \"Alice\", \"age\": 20}",
+      "instruction": "将字典 {'name': 'Alice', 'age': 20} 转为 JSON 字符串并打印。",
       "initialCode": "import json\n\ndata = {'name': 'Alice', 'age': 20}\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "{\"name\": \"Alice\", \"age\": 20}",
         "timeout_ms": 5000
       },
       "hints": [
@@ -39,6 +41,7 @@
       "instruction": "将 JSON 字符串 '{\"score\": 95}' 转为字典，获取 score 的值。\n\n期望输出：95",
       "initialCode": "import json\n\ns = '{\"score\": 95}'\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "95",
         "timeout_ms": 5000
       },
       "hints": [
@@ -52,6 +55,7 @@
       "instruction": "使用 StringIO 写入 'World'，然后获取并打印内容。\n\n期望输出：World",
       "initialCode": "from io import StringIO\n\nf = StringIO()\nf.write('World')\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "World",
         "timeout_ms": 5000
       },
       "hints": [
@@ -62,9 +66,10 @@
       "id": "ex8_q5",
       "type": "output",
       "title": "JSON格式化输出",
-      "instruction": "将字典 {'a': 1, 'b': 2} 转为带缩进（indent=2）的 JSON 字符串。\n\n期望输出：\n{\n  \"a\": 1,\n  \"b\": 2\n}",
+      "instruction": "将字典 {'a': 1, 'b': 2} 转为带缩进（indent=2）的 JSON 字符串。",
       "initialCode": "import json\n\ndata = {'a': 1, 'b': 2}\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "{\n  \"a\": 1,\n  \"b\": 2\n}",
         "timeout_ms": 5000
       },
       "hints": [
@@ -78,6 +83,7 @@
       "instruction": "StringIO 写入 'test' 后，seek 到开头再读取。\n\n期望输出：test",
       "initialCode": "from io import StringIO\n\nf = StringIO()\nf.write('test')\nf.seek(0)\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "test",
         "timeout_ms": 5000
       },
       "hints": [

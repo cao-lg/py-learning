@@ -13,6 +13,7 @@
       "instruction": "字符串 s = 'Hello World'，获取 'World' 部分并打印。\n\n期望输出：World",
       "initialCode": "s = 'Hello World'\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "World",
         "timeout_ms": 5000
       },
       "hints": [
@@ -26,6 +27,7 @@
       "instruction": "字符串 s = 'Hello'，全部转为大写并打印。\n\n期望输出：HELLO",
       "initialCode": "s = 'Hello'\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "HELLO",
         "timeout_ms": 5000
       },
       "hints": [
@@ -39,6 +41,7 @@
       "instruction": "字符串 s = 'Hello World'，将 'World' 替换为 'Python' 并打印。\n\n期望输出：Hello Python",
       "initialCode": "s = 'Hello World'\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Hello Python",
         "timeout_ms": 5000
       },
       "hints": [
@@ -52,6 +55,7 @@
       "instruction": "字符串 s = 'apple,banana,orange'，按逗号分割成列表。\n\n期望输出：['apple', 'banana', 'orange']",
       "initialCode": "s = 'apple,banana,orange'\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "['apple', 'banana', 'orange']",
         "timeout_ms": 5000
       },
       "hints": [
@@ -65,6 +69,7 @@
       "instruction": "变量 name='Bob', age=25，用 f-string 打印 'Bob is 25 years old'。\n\n期望输出：Bob is 25 years old",
       "initialCode": "name = 'Bob'\nage = 25\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "Bob is 25 years old",
         "timeout_ms": 5000
       },
       "hints": [
@@ -78,6 +83,7 @@
       "instruction": "字符串 s = 'Python'，反转并打印。\n\n期望输出：nohtyP",
       "initialCode": "s = 'Python'\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "nohtyP",
         "timeout_ms": 5000
       },
       "hints": [

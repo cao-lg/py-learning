@@ -13,6 +13,7 @@
       "instruction": "定义函数 greet()，无参数，打印 'Hello!'。",
       "initialCode": "# 在下方编写代码\n\ngreet()\n",
       "testConfig": {
+        "expected": "Hello!",
         "timeout_ms": 5000
       },
       "hints": [
@@ -26,6 +27,7 @@
       "instruction": "定义函数 greet(name)，接收参数，打印 'Hello, xxx!'。\n调用 greet('Alice') 测试。",
       "initialCode": "# 在下方编写代码\n\ngreet('Alice')\n",
       "testConfig": {
+        "expected": "Hello, Alice!",
         "timeout_ms": 5000
       },
       "hints": [
@@ -39,6 +41,7 @@
       "instruction": "定义函数 add(a, b)，返回 a + b。\n打印 add(3, 5) 的结果。\n\n期望输出：8",
       "initialCode": "# 在下方编写代码\n\nprint(add(3, 5))\n",
       "testConfig": {
+        "expected": "8",
         "timeout_ms": 5000
       },
       "hints": [
@@ -52,6 +55,7 @@
       "instruction": "定义函数 greet(name='World')，使用默认参数调用，打印 'Hello, World!'。",
       "initialCode": "# 在下方编写代码\n\ngreet()\n",
       "testConfig": {
+        "expected": "Hello, World!",
         "timeout_ms": 5000
       },
       "hints": [
@@ -65,6 +69,7 @@
       "instruction": "定义函数 sum_all(*nums)，接收任意数量参数，返回它们的和。\n调用 sum_all(1, 2, 3, 4, 5) 并打印结果。\n\n期望输出：15",
       "initialCode": "# 在下方编写代码\n\nprint(sum_all(1, 2, 3, 4, 5))\n",
       "testConfig": {
+        "expected": "15",
         "timeout_ms": 5000
       },
       "hints": [
@@ -78,6 +83,7 @@
       "instruction": "使用 lambda 创建求平方函数，计算 9 的平方并打印。\n\n期望输出：81",
       "initialCode": "# 在下方编写代码\n\nsquare = lambda x: x ** 2\nprint(square(9))\n",
       "testConfig": {
+        "expected": "81",
         "timeout_ms": 5000
       },
       "hints": [

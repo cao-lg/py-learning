@@ -13,6 +13,7 @@
       "instruction": "定义类 Person，有 name 属性，实例化后打印 name。\n\n期望输出：Alice",
       "initialCode": "class Person:\n    def __init__(self, name):\n        self.name = name\n\np = Person('Alice')\nprint(p.name)\n",
       "testConfig": {
+        "expected": "Alice",
         "timeout_ms": 5000
       },
       "hints": [
@@ -26,6 +27,7 @@
       "instruction": "定义类 Dog，有 bark() 方法打印 'Woof!'，调用该方法。\n\n期望输出：Woof!",
       "initialCode": "class Dog:\n    def bark(self):\n        print('Woof!')\n\nd = Dog()\nd.bark()\n",
       "testConfig": {
+        "expected": "Woof!",
         "timeout_ms": 5000
       },
       "hints": [
@@ -39,6 +41,7 @@
       "instruction": "定义类 Book，有 title 属性，实现 __str__ 返回书名，print 打印。\n\n期望输出：Python Basics",
       "initialCode": "class Book:\n    def __init__(self, title):\n        self.title = title\n    \n    def __str__(self):\n        return self.title\n\nb = Book('Python Basics')\nprint(b)\n",
       "testConfig": {
+        "expected": "Python Basics",
         "timeout_ms": 5000
       },
       "hints": [
@@ -52,6 +55,7 @@
       "instruction": "父类 Animal 有 name 属性，子类 Cat 继承它，创建 Cat 实例打印 name。\n\n期望输出：Tom",
       "initialCode": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\nclass Cat(Animal):\n    def __init__(self, name, color):\n        super().__init__(name)\n        self.color = color\n\nc = Cat('Tom', 'Orange')\nprint(c.name)\n",
       "testConfig": {
+        "expected": "Tom",
         "timeout_ms": 5000
       },
       "hints": [
@@ -65,6 +69,7 @@
       "instruction": "类 Counter 有类属性 count=0，每创建一个实例 count 加 1，创建两个实例后打印 count。\n\n期望输出：2",
       "initialCode": "class Counter:\n    count = 0\n    def __init__(self):\n        Counter.count += 1\n\nc1 = Counter()\nc2 = Counter()\nprint(Counter.count)\n",
       "testConfig": {
+        "expected": "2",
         "timeout_ms": 5000
       },
       "hints": [
@@ -78,6 +83,7 @@
       "instruction": "定义类 Vector，实现 __add__ 使两个向量相加，返回新的 Vector。\n\n期望输出：(4, 6)",
       "initialCode": "class Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    \n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n    \n    def __str__(self):\n        return f'({self.x}, {self.y})'\n\nv1 = Vector(1, 2)\nv2 = Vector(3, 4)\nprint(v1 + v2)\n",
       "testConfig": {
+        "expected": "(4, 6)",
         "timeout_ms": 5000
       },
       "hints": [

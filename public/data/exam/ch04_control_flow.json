@@ -13,6 +13,7 @@
       "instruction": "判断数字 7 是奇数还是偶数，如果是奇数打印 'odd'，偶数打印 'even'。\n\n期望输出：odd",
       "initialCode": "num = 7\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "odd",
         "timeout_ms": 5000
       },
       "hints": [
@@ -26,6 +27,7 @@
       "instruction": "使用 for 循环打印 1 到 5，每个数字一行。",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "1\n2\n3\n4\n5",
         "timeout_ms": 5000
       },
       "hints": [
@@ -39,6 +41,7 @@
       "instruction": "循环打印 1 到 10，当数字达到 5 时停止（使用 break）。",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "1\n2\n3\n4",
         "timeout_ms": 5000
       },
       "hints": [
@@ -52,6 +55,7 @@
       "instruction": "循环打印 1 到 5，跳过数字 3（使用 continue）。",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "1\n2\n4\n5",
         "timeout_ms": 5000
       },
       "hints": [
@@ -65,6 +69,7 @@
       "instruction": "使用 while 循环打印 5 到 1，倒计时。",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
+        "expected": "5\n4\n3\n2\n1",
         "timeout_ms": 5000
       },
       "hints": [
@@ -78,6 +83,7 @@
       "instruction": "循环正常执行完毕（不 break），打印 'completed'。\n\n期望输出：completed",
       "initialCode": "for i in range(3):\n    pass\n# 在下方编写代码\n",
       "testConfig": {
+        "expected": "completed",
         "timeout_ms": 5000
       },
       "hints": [
