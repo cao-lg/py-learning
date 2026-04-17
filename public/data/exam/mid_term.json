@@ -1,0 +1,73 @@
+{
+  "id": "mid_term",
+  "title": "Python 基础期中考试",
+  "description": "测试 Python 基础语法和简单算法",
+  "duration": 60,
+  "questions": [
+    {
+      "id": "em_q1",
+      "type": "output",
+      "title": "温度转换",
+      "instruction": "编写代码，将华氏温度 100 度转换为摄氏度并输出。\n\n公式：C = (F - 32) * 5 / 9\n\n输出格式：一个数字，保留两位小数",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用公式计算", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q2",
+      "type": "function",
+      "title": "阶乘计算",
+      "instruction": "定义函数 `factorial(n)` 计算 n 的阶乘。\n\n注意：0! = 1，1! = 1",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用递归或循环", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q3",
+      "type": "interactive",
+      "title": "简单计算器",
+      "instruction": "编写程序，从用户输入获取两个整数，计算并输出它们的和。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 int() 转换输入", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q4",
+      "type": "output",
+      "title": "列表操作",
+      "instruction": "创建一个列表包含数字 1-5，计算并输出所有元素的和。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "可以使用 sum() 函数", "visible": false }
+      ]
+    },
+    {
+      "id": "em_q5",
+      "type": "output",
+      "title": "字符串处理",
+      "instruction": "给定字符串 `Python` 反转它并输出。",
+      "initialCode": "text = \"Python\"\n# 在下方编写代码\n",
+      "testConfig": {
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "字符串切片 [::-1] 可以反转", "visible": false }
+      ]
+    }
+  ]
+}

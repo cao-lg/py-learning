@@ -1,0 +1,104 @@
+{
+  "id": "ch01_basics",
+  "title": "Python 基础 - 第一章",
+  "description": "学习 Python 基本语法、变量和 print 函数",
+  "questions": [
+    {
+      "id": "q1_hello_world",
+      "type": "output",
+      "title": "Hello World",
+      "instruction": "使用 `print()` 函数输出 `Hello, World!`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello, World!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 print() 函数", "visible": true },
+        { "text": "字符串需要用引号包裹", "visible": false }
+      ]
+    },
+    {
+      "id": "q2_variable",
+      "type": "output",
+      "title": "变量赋值",
+      "instruction": "创建一个变量 `name` 赋值为你的名字，然后使用 `print()` 输出 `Hello, {name}!`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello, Alice!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用变量存储名字", "visible": true },
+        { "text": "可以在 print 中使用 f-string 或字符串拼接", "visible": false }
+      ]
+    },
+    {
+      "id": "q3_interactive_input",
+      "type": "interactive",
+      "title": "用户输入",
+      "instruction": "使用 `input()` 函数获取用户输入的名字，并输出 `Hello, {名字}!`",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello, Alice!",
+        "mockInputs": ["Alice"],
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 input() 获取输入", "visible": true },
+        { "text": "input() 返回的是字符串，可以直接使用", "visible": false }
+      ]
+    },
+    {
+      "id": "q4_function",
+      "type": "function",
+      "title": "函数定义",
+      "instruction": "定义一个函数 `add(a, b)`，返回 a 和 b 的和。然后调用它计算 3 + 5 并输出结果。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "8",
+        "mockInputs": [
+          { "args": [3, 5], "expected": 8 }
+        ],
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 def 关键字定义函数", "visible": true },
+        { "text": "函数需要使用 return 返回值", "visible": false }
+      ]
+    },
+    {
+      "id": "q5_loop",
+      "type": "output",
+      "title": "循环输出",
+      "instruction": "使用 for 循环输出数字 1 到 5，每个数字占一行",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1\n2\n3\n4\n5",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 range(1, 6) 生成数字序列", "visible": true },
+        { "text": "print 函数默认会在末尾换行", "visible": false }
+      ]
+    },
+    {
+      "id": "q6_constraint",
+      "type": "constraint",
+      "title": "代码规范检查",
+      "instruction": "编写一个函数 `greet(name)` 返回 `Hello, {name}!`。要求：1) 使用 def 定义函数 2) 函数必须包含 docstring",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Hello, World!",
+        "timeout_ms": 5000,
+        "constraints": {
+          "require_docstring": true,
+          "require_def": true
+        }
+      },
+      "hints": [
+        { "text": "使用三引号 ''' 或 \"\"\" 创建 docstring", "visible": true }
+      ]
+    }
+  ]
+}
