@@ -4,6 +4,7 @@ import type { ExamSession } from '../types';
 const KEYS = {
   USER_ID: 'user_id',
   USER_NAME: 'user_name',
+  USER_PASSWORD: 'user_password',
   PRACTICE_CODE: 'practice_code_',
   EXAM_DRAFT: 'exam_draft_',
   EXAM_SESSION: 'exam_session_',
@@ -25,6 +26,14 @@ export const storage = {
 
   async setUserName(name: string): Promise<void> {
     await set(KEYS.USER_NAME, name);
+  },
+
+  async getUserPassword(): Promise<string | undefined> {
+    return get<string>(KEYS.USER_PASSWORD);
+  },
+
+  async setUserPassword(password: string): Promise<void> {
+    await set(KEYS.USER_PASSWORD, password);
   },
 
   async savePracticeCode(questionId: string, code: string): Promise<void> {
