@@ -25,12 +25,28 @@ export function ExamListPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/data/exam/_index.json')
-      .then(res => res.json())
-      .then((data: ExamIndex) => {
-        setExams(data.exams);
+    Promise.all([
+      fetch('/data/exam/_index.json'),
+      fetch('/api/exam-schedule').catch(() => null)
+    ])
+      .then(async ([examRes, scheduleRes]) => {
+        const data: ExamIndex = await examRes.json();
+        let schedule: Record<string, { startTime: string | null; endTime: string | null }> = {};
+        
+        if (scheduleRes?.ok) {
+          const scheduleData = await scheduleRes.json();
+          schedule = scheduleData.schedule || {};
+        }
+
+        const examsWithSchedule = data.exams.map(exam => ({
+          ...exam,
+          startTime: schedule[exam.id]?.startTime || exam.startTime,
+          endTime: schedule[exam.id]?.endTime || exam.endTime,
+        }));
+
+        setExams(examsWithSchedule);
         const status: Record<string, ExamStatus> = {};
-        data.exams.forEach(exam => {
+        examsWithSchedule.forEach(exam => {
           status[exam.id] = checkExamAvailability(exam).status;
         });
         setExamStatus(status);

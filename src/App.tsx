@@ -5,6 +5,8 @@ import { PracticePage } from './pages/Practice';
 import { ExamPage } from './pages/Exam';
 import { ExamListPage } from './pages/ExamList';
 import { AdminPage } from './pages/Admin';
+import { AdminLoginPage } from './pages/AdminLogin';
+import { AdminSettingsPage } from './pages/AdminSettings';
 import { HomePage } from './pages/Home';
 import { LearnPage } from './pages/Learn';
 
@@ -75,6 +77,8 @@ export function App() {
           <Route path="/exam" element={<ExamListPage />} />
           <Route path="/exam/:examId" element={<ExamPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route path="/admin/settings" element={<AdminSettingsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

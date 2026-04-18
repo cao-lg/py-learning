@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 interface StatsResponse {
   ok: boolean;
@@ -105,6 +106,9 @@ export function AdminPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">教师端</h1>
         <div className="flex items-center gap-4">
+          <Link to="/admin/settings" className="btn btn-secondary">
+            考试设置
+          </Link>
           <select
             value={selectedExam}
             onChange={(e) => setSelectedExam(e.target.value)}
