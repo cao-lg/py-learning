@@ -41,6 +41,20 @@ export interface ExamSet {
   duration: number;
   questions: ExamQuestion[];
   deterministicSeed?: string;
+  startTime?: string;
+  endTime?: string;
+}
+
+export interface ExamInfo {
+  id: string;
+  title: string;
+  description: string;
+  duration: number;
+  totalScore: number;
+  questionCount: number;
+  difficulty: string;
+  startTime?: string;
+  endTime?: string;
 }
 
 export interface EvalResult {

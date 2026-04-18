@@ -7,7 +7,8 @@ import { evaluatorRouter } from '../evaluator/router';
 import { storage } from '../store/idb';
 import { syncQueue } from '../store/sync-queue';
 import { generateDeterministicSeed, shuffleArray } from '../utils/crypto';
-import type { ExamSet, ExamQuestion, ExamSession, EvalResult, SyncPayload, Question, TestConfig } from '../types';
+import { checkExamAvailability, formatDateTime } from '../utils/exam-schedule';
+import type { ExamSet, ExamQuestion, ExamSession, EvalResult, SyncPayload, Question, TestConfig, ExamInfo } from '../types';
 
 export function ExamPage() {
   const { examId } = useParams<{ examId?: string }>();
@@ -36,7 +37,26 @@ export function ExamPage() {
     try {
       const userId = await storage.getUserId();
       if (!userId) {
-        throw new Error('Please bind your identity first');
+        throw new Error('请先设置身份');
+      }
+
+      const examIndexResponse = await fetch('/data/exam/_index.json');
+      if (examIndexResponse.ok) {
+        const examIndex = await examIndexResponse.json();
+        const examInfo = examIndex.exams.find((e: ExamInfo) => e.id === examId);
+        if (examInfo) {
+          const availability = checkExamAvailability(examInfo);
+          if (availability.status === 'not_started') {
+            setError(`考试尚未开始\n开始时间：${formatDateTime(availability.startsAt!)}`);
+            setLoading(false);
+            return;
+          }
+          if (availability.status === 'ended') {
+            setError('考试已结束');
+            setLoading(false);
+            return;
+          }
+        }
       }
 
       const response = await fetch(`/data/exam/${examId || 'mid_term'}.json`);

@@ -7,7 +7,9 @@
       "duration": 15,
       "totalScore": 100,
       "questionCount": 5,
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch02_variables",
@@ -16,7 +18,9 @@
       "duration": 20,
       "totalScore": 100,
       "questionCount": 5,
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch03_operators",
@@ -25,7 +29,9 @@
       "duration": 20,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch04_control_flow",
@@ -34,7 +40,9 @@
       "duration": 25,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch05_functions",
@@ -43,7 +51,9 @@
       "duration": 25,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch06_data_structures",
@@ -52,7 +62,9 @@
       "duration": 25,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch07_strings",
@@ -61,7 +73,9 @@
       "duration": 20,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "easy"
+      "difficulty": "easy",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch08_file_io",
@@ -70,7 +84,9 @@
       "duration": 20,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch09_exception",
@@ -79,7 +95,9 @@
       "duration": 20,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "ch10_oop",
@@ -88,7 +106,9 @@
       "duration": 30,
       "totalScore": 100,
       "questionCount": 6,
-      "difficulty": "hard"
+      "difficulty": "hard",
+      "startTime": "2026-04-01T00:00:00Z",
+      "endTime": "2026-12-31T23:59:59Z"
     },
     {
       "id": "mid_term",
@@ -97,7 +117,9 @@
       "duration": 60,
       "totalScore": 100,
       "questionCount": 5,
-      "difficulty": "medium"
+      "difficulty": "medium",
+      "startTime": "2026-04-15T09:00:00Z",
+      "endTime": "2026-04-15T18:00:00Z"
     },
     {
       "id": "final_exam",
@@ -106,7 +128,9 @@
       "duration": 90,
       "totalScore": 100,
       "questionCount": 8,
-      "difficulty": "hard"
+      "difficulty": "hard",
+      "startTime": "2026-06-01T09:00:00Z",
+      "endTime": "2026-06-01T18:00:00Z"
     }
   ]
 }
