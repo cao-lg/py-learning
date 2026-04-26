@@ -219,8 +219,9 @@ export function PracticePage() {
       // 同步练习记录到后台
       if (evalResult) {
         const chapterId = currentChapterId;
-        const score = evalResult.passedTests || 0;
-        const totalQuestions = evalResult.totalTests || 1;
+        // EvalResult 中的 score 已经是百分比值，我们需要转换为题目数量
+        const score = evalResult.passed ? 1 : 0;
+        const totalQuestions = 1;
         const answers = { [currentQuestion.id]: code };
         
         syncPracticeRecord(chapterId, score, totalQuestions, answers);
