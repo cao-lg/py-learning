@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { checkExamAvailability, formatDateTime, type ExamStatus } from '../utils/exam-schedule';
+import { storage } from '../store/idb';
 
 interface ExamInfo {
   id: string;
@@ -22,38 +23,124 @@ export function ExamListPage() {
   const [exams, setExams] = useState<ExamInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [examStatus, setExamStatus] = useState<Record<string, ExamStatus>>({});
+  const [userPassword, setUserPassword] = useState('');
+  const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+  const [inputPassword, setInputPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
+  const checkAuth = async () => {
+    const pwd = await storage.getUserPassword();
+    setUserPassword(pwd || '');
+    
+    if (pwd) {
+      setIsPasswordRequired(true);
+    } else {
+      setIsAuthenticated(true);
+    }
+  };
+
+  const handlePasswordVerify = () => {
+    if (inputPassword === userPassword) {
+      setIsPasswordRequired(false);
+      setIsAuthenticated(true);
+      setInputPassword('');
+      setPasswordError('');
+    } else {
+      setPasswordError('密码错误，请重试');
+    }
+  };
+
   useEffect(() => {
-    Promise.all([
-      fetch('/data/exam/_index.json'),
-      fetch('/api/exam-schedule').catch(() => null)
-    ])
-      .then(async ([examRes, scheduleRes]) => {
-        const data: ExamIndex = await examRes.json();
-        let schedule: Record<string, { startTime: string | null; endTime: string | null }> = {};
-        
-        if (scheduleRes?.ok) {
-          const scheduleData = await scheduleRes.json();
-          schedule = scheduleData.schedule || {};
-        }
-
-        const examsWithSchedule = data.exams.map(exam => ({
-          ...exam,
-          startTime: schedule[exam.id]?.startTime || exam.startTime,
-          endTime: schedule[exam.id]?.endTime || exam.endTime,
-        }));
-
-        setExams(examsWithSchedule);
-        const status: Record<string, ExamStatus> = {};
-        examsWithSchedule.forEach(exam => {
-          status[exam.id] = checkExamAvailability(exam).status;
-        });
-        setExamStatus(status);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      Promise.all([
+        fetch('/data/exam/_index.json'),
+        fetch('/api/exam-schedule').catch(() => null)
+      ])
+        .then(async ([examRes, scheduleRes]) => {
+          const data: ExamIndex = await examRes.json();
+          let schedule: Record<string, { startTime: string | null; endTime: string | null }> = {};
+          
+          if (scheduleRes?.ok) {
+            const scheduleData = await scheduleRes.json();
+            schedule = scheduleData.schedule || {};
+          }
+
+          const examsWithSchedule = data.exams.map(exam => ({
+            ...exam,
+            startTime: schedule[exam.id]?.startTime || exam.startTime,
+            endTime: schedule[exam.id]?.endTime || exam.endTime,
+          }));
+
+          setExams(examsWithSchedule);
+          const status: Record<string, ExamStatus> = {};
+          examsWithSchedule.forEach(exam => {
+            status[exam.id] = checkExamAvailability(exam).status;
+          });
+          setExamStatus(status);
+        })
+        .catch(console.error)
+        .finally(() => setLoading(false));
+    }
+  }, [isAuthenticated]);
+
+  if (isPasswordRequired) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            请输入密码
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            请输入您的密码以继续考试
+          </p>
+          <input
+            type="password"
+            value={inputPassword}
+            onChange={(e) => {
+              setInputPassword(e.target.value);
+              setPasswordError('');
+            }}
+            placeholder="请输入密码"
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none mb-2"
+            autoFocus
+            onKeyDown={(e) => e.key === 'Enter' && handlePasswordVerify()}
+          />
+          {passwordError && (
+            <p className="text-red-500 text-sm mb-4">{passwordError}</p>
+          )}
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => navigate('/')}
+              className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+            >
+              取消
+            </button>
+            <button
+              onClick={handlePasswordVerify}
+              disabled={!inputPassword}
+              className="px-5 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              确认
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   if (loading) {
     return (

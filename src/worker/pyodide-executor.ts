@@ -92,6 +92,18 @@ _output
     const { matched, diff } = compareOutputs(expected, capturedOutput);
 
     if (matched) {
+      // 练习模式下始终展示完整信息
+      if (!examId) {
+        return {
+          passed: true,
+          score: config.weight ?? 1,
+          message: 'All test cases passed!',
+          details: {
+            expected,
+            actual: capturedOutput,
+          }
+        };
+      }
       return {
         passed: true,
         score: config.weight ?? 1,
@@ -99,6 +111,19 @@ _output
       };
     }
 
+    // 练习模式展示完整信息，考试模式只展示错误信息但不展示期望输出
+    if (!examId) {
+      return {
+        passed: false,
+        score: 0,
+        message: `Output mismatch. ${diff.length} line(s) differ.`,
+        details: {
+          expected,
+          actual: capturedOutput,
+        }
+      };
+    }
+    
     return {
       passed: false,
       score: 0,
@@ -145,6 +170,18 @@ _output
     const { matched, diff } = compareOutputs(expected || '', stdout);
 
     if (matched) {
+      // 练习模式下始终展示完整信息
+      if (!examId) {
+        return {
+          passed: true,
+          score: config.weight ?? 1,
+          message: 'All test cases passed!',
+          details: {
+            expected: expected || '',
+            actual: stdout,
+          }
+        };
+      }
       return {
         passed: true,
         score: config.weight ?? 1,
@@ -152,6 +189,19 @@ _output
       };
     }
 
+    // 练习模式展示完整信息，考试模式只展示错误信息但不展示期望输出
+    if (!examId) {
+      return {
+        passed: false,
+        score: 0,
+        message: `Output mismatch. ${diff.length} line(s) differ.`,
+        details: {
+          expected: expected || '',
+          actual: stdout,
+        }
+      };
+    }
+    
     return {
       passed: false,
       score: 0,
@@ -170,7 +220,7 @@ _output
   }
 }
 
-async function evaluateFunction(code: string, config: TestConfig, _examId?: string, _questionId?: string): Promise<EvalResult> {
+async function evaluateFunction(code: string, config: TestConfig, examId?: string, _questionId?: string): Promise<EvalResult> {
   if (!pyodide) {
     return { passed: false, score: 0, message: 'Pyodide not initialized' };
   }
@@ -201,6 +251,17 @@ _test_function()
     const result = await pyodide.runPythonAsync(testCode);
     
     if (Array.isArray(result) && result.every((r: unknown) => r === true)) {
+      // 练习模式下展示完整信息
+      if (!examId) {
+        return {
+          passed: true,
+          score: config.weight ?? 1,
+          message: 'All test cases passed!',
+          details: {
+            actual: JSON.stringify(result),
+          }
+        };
+      }
       return {
         passed: true,
         score: config.weight ?? 1,
@@ -208,6 +269,18 @@ _test_function()
       };
     }
 
+    // 练习模式展示完整信息
+    if (!examId) {
+      return {
+        passed: false,
+        score: 0,
+        message: 'Some test cases failed',
+        details: {
+          actual: JSON.stringify(result),
+        }
+      };
+    }
+    
     return {
       passed: false,
       score: 0,

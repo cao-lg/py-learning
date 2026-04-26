@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Editor } from '../components/Editor';
 import { Terminal } from '../components/Terminal';
 import { evaluatorRouter } from '../evaluator/router';
@@ -14,6 +14,7 @@ interface ChapterInfo {
 
 export function PracticePage() {
   const { chapterId } = useParams<{ chapterId?: string }>();
+  const navigate = useNavigate();
   const [chapters, setChapters] = useState<ChapterInfo[]>([]);
   const [practiceSet, setPracticeSet] = useState<PracticeSet | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -23,8 +24,35 @@ export function PracticePage() {
   const [isRunning, setIsRunning] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userPassword, setUserPassword] = useState('');
+  const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+  const [inputPassword, setInputPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const currentChapterId = chapterId || 'ch01_basics';
+
+  const checkAuth = useCallback(async () => {
+    const pwd = await storage.getUserPassword();
+    setUserPassword(pwd || '');
+    
+    if (pwd) {
+      setIsPasswordRequired(true);
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handlePasswordVerify = () => {
+    if (inputPassword === userPassword) {
+      setIsPasswordRequired(false);
+      setIsAuthenticated(true);
+      setInputPassword('');
+      setPasswordError('');
+    } else {
+      setPasswordError('密码错误，请重试');
+    }
+  };
 
   const loadChapterIndex = useCallback(async () => {
     try {
@@ -68,17 +96,23 @@ export function PracticePage() {
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
-    loadChapterIndex();
+    checkAuth();
     /* eslint-enable react-hooks/set-state-in-effect */
-  }, [loadChapterIndex]);
+  }, [checkAuth]);
 
   useEffect(() => {
-    if (currentChapterId) {
+    if (isAuthenticated) {
+      loadChapterIndex();
+    }
+  }, [isAuthenticated, loadChapterIndex]);
+
+  useEffect(() => {
+    if (currentChapterId && isAuthenticated) {
       /* eslint-disable react-hooks/set-state-in-effect */
       loadPracticeSet(currentChapterId);
       /* eslint-enable react-hooks/set-state-in-effect */
     }
-  }, [currentChapterId, loadPracticeSet]);
+  }, [currentChapterId, isAuthenticated, loadPracticeSet]);
 
   useEffect(() => {
     if (currentQuestion) {
@@ -130,6 +164,59 @@ export function PracticePage() {
     window.location.replace(`/practice/${newChapterId}`);
   };
 
+  if (isPasswordRequired) {
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            请输入密码
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            请输入您的密码以继续练习
+          </p>
+          <input
+            type="password"
+            value={inputPassword}
+            onChange={(e) => {
+              setInputPassword(e.target.value);
+              setPasswordError('');
+            }}
+            placeholder="请输入密码"
+            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none mb-2"
+            autoFocus
+            onKeyDown={(e) => e.key === 'Enter' && handlePasswordVerify()}
+          />
+          {passwordError && (
+            <p className="text-red-500 text-sm mb-4">{passwordError}</p>
+          )}
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={() => navigate('/')}
+              className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+            >
+              取消
+            </button>
+            <button
+              onClick={handlePasswordVerify}
+              disabled={!inputPassword}
+              className="px-5 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              确认
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -143,14 +230,14 @@ export function PracticePage() {
       <div className="text-center py-12">
         <p className="text-red-500">{error}</p>
         <button onClick={() => loadPracticeSet(currentChapterId)} className="btn btn-primary mt-4">
-          Retry
+          重试
         </button>
       </div>
     );
   }
 
   if (!practiceSet || !currentQuestion) {
-    return <div className="text-center py-12 text-gray-500">No practice set loaded</div>;
+    return <div className="text-center py-12 text-gray-500">没有加载练习集</div>;
   }
 
   return (
@@ -202,6 +289,23 @@ export function PracticePage() {
           <p className="text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
             {currentQuestion.instruction}
           </p>
+          {/* 显示测试用例 */}
+          {currentQuestion.testConfig.expected && (
+            <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">期望输出：</h4>
+              <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-600">
+                {currentQuestion.testConfig.expected}
+              </pre>
+            </div>
+          )}
+          {currentQuestion.testConfig.mockInputs && currentQuestion.testConfig.mockInputs.length > 0 && (
+            <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">模拟输入：</h4>
+              <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-600">
+                {currentQuestion.testConfig.mockInputs.join('\n')}
+              </pre>
+            </div>
+          )}
         </div>
 
         <div className="flex-1 flex gap-4 min-h-0">
@@ -217,10 +321,10 @@ export function PracticePage() {
                 disabled={isRunning}
                 className="btn btn-primary"
               >
-                {isRunning ? 'Running...' : 'Run'}
+                {isRunning ? '运行中...' : '运行'}
               </button>
               <button onClick={handleReset} className="btn btn-secondary">
-                Reset
+                重置
               </button>
             </div>
           </div>
