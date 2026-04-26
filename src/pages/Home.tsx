@@ -11,6 +11,7 @@ export function HomePage() {
   const [tempPassword, setTempPassword] = useState('');
   const [inputPassword, setInputPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [targetPage, setTargetPage] = useState('/practice');
   const navigate = useNavigate();
 
   const checkUserExists = async (userId: string) => {
@@ -160,7 +161,7 @@ export function HomePage() {
         setIsPasswordRequired(false);
         setInputPassword('');
         setPasswordError('');
-        navigate('/practice');
+        navigate(targetPage);
       } else {
         setPasswordError('密码错误，请重试');
       }
@@ -324,6 +325,7 @@ export function HomePage() {
         <button
           onClick={() => {
             if (userId) {
+              setTargetPage('/practice');
               setIsPasswordRequired(true);
             } else {
               setIsEditing(true);
@@ -341,6 +343,7 @@ export function HomePage() {
         <button
           onClick={() => {
             if (userId) {
+              setTargetPage('/exams');
               setIsPasswordRequired(true);
             } else {
               setIsEditing(true);
