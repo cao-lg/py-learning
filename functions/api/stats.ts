@@ -83,7 +83,7 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     }));
 
     const examStatsRaw = await env.DB.prepare(`
-      SELECT exam_id, COUNT(*) as attempts, AVG(score * 100.0 / total_questions) as avg_score
+      SELECT exam_id, COUNT(*) as attempts, AVG(score) as avg_score
       FROM exam_records
       GROUP BY exam_id
       ORDER BY attempts DESC
@@ -168,8 +168,8 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     const examDetailedStatsRaw = await env.DB.prepare(`
       SELECT exam_id, 
              COUNT(*) as attempts,
-             AVG(score * 100.0 / total_questions) as avg_score,
-             SUM(CASE WHEN score * 100.0 / total_questions >= 60 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) as pass_rate
+             AVG(score) as avg_score,
+             SUM(CASE WHEN score >= 60 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) as pass_rate
       FROM exam_records
       GROUP BY exam_id
       ORDER BY attempts DESC
