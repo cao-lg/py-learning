@@ -174,6 +174,38 @@ export function PracticePage() {
     setResult(null);
   };
 
+  const syncPracticeRecord = async (chapterId: string, score: number, totalQuestions: number, answers: Record<string, string>) => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId) return;
+
+      const response = await fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          practice: {
+            [chapterId]: {
+              chapterId,
+              score,
+              totalQuestions,
+              completedAt: Date.now(),
+              answers
+            }
+          }
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Sync failed:', await response.text());
+      } else {
+        console.log('Practice record synced successfully');
+      }
+    } catch (error) {
+      console.error('Sync error:', error);
+    }
+  };
+
   const handleRun = () => {
     if (!currentQuestion) return;
     setIsRunning(true);
@@ -183,6 +215,16 @@ export function PracticePage() {
     evaluatorRouter.evaluate(currentQuestion, code, (evalResult) => {
       setResult(evalResult);
       setIsRunning(false);
+      
+      // 同步练习记录到后台
+      if (evalResult) {
+        const chapterId = currentChapterId;
+        const score = evalResult.passedTests || 0;
+        const totalQuestions = evalResult.totalTests || 1;
+        const answers = { [currentQuestion.id]: code };
+        
+        syncPracticeRecord(chapterId, score, totalQuestions, answers);
+      }
     });
   };
 
