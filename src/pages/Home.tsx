@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { storage } from '../store/idb';
 import { evaluatorRouter } from '../evaluator/router';
 
 export function HomePage() {
   const [userName, setUserName] = useState('');
-  const [userPassword, setUserPassword] = useState('');
+  const [userId, setUserId] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isPasswordRequired, setIsPasswordRequired] = useState(false);
   const [tempName, setTempName] = useState('');
@@ -14,27 +13,56 @@ export function HomePage() {
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
+  const checkUserExists = async (userId: string) => {
+    try {
+      const response = await fetch('/api/users-management', {
+        headers: { 'X-Admin-Password': '__admin__admin123' }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.ok) {
+          return data.users.some((user: { id: string }) => user.id === userId);
+        }
+      }
+      return false;
+    } catch (error) {
+      console.error('Check user exists error:', error);
+      return true; // 出错时默认认为用户存在，避免误删数据
+    }
+  };
+
   useEffect(() => {
-    storage.getUserName().then(name => {
-      if (name) {
-        setUserName(name);
-        setTempName(name);
-      }
-    });
-    storage.getUserPassword().then(pwd => {
-      if (pwd) {
-        setUserPassword(pwd);
-      }
-    });
+    // 从本地存储获取用户信息（仅用于显示，实际验证需要后台）
+    const storedUserId = localStorage.getItem('userId');
+    const storedUserName = localStorage.getItem('userName');
+    
+    if (storedUserId && storedUserName) {
+      // 检查用户是否在后台存在
+      checkUserExists(storedUserId).then(exists => {
+        if (!exists) {
+          // 用户不存在，清理本地数据
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userName');
+          setUserId('');
+          setUserName('');
+          setTempName('');
+        } else {
+          setUserId(storedUserId);
+          setUserName(storedUserName);
+          setTempName(storedUserName);
+        }
+      });
+    }
     evaluatorRouter.init();
   }, []);
 
-  const registerUser = async (name: string) => {
+  const registerUser = async (name: string, password: string) => {
     try {
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
+        body: JSON.stringify({ name, password })
       });
       
       if (!response.ok) {
@@ -49,8 +77,37 @@ export function HomePage() {
       }
     } catch (error) {
       console.error('Registration error:', error);
-      // 降级方案：使用本地生成的ID
-      return { id: crypto.randomUUID(), name };
+      throw error;
+    }
+  };
+
+  const verifyPassword = async (userId: string, password: string) => {
+    try {
+      const response = await fetch('/api/users/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, password })
+      });
+      
+      if (!response.ok) {
+        // 检查是否是用户不存在的错误
+        if (response.status === 404) {
+          // 用户不存在，清理本地数据
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userName');
+          setUserId('');
+          setUserName('');
+          setTempName('');
+          return false;
+        }
+        throw new Error('Failed to verify password');
+      }
+      
+      const data = await response.json();
+      return data.ok;
+    } catch (error) {
+      console.error('Password verification error:', error);
+      return false;
     }
   };
 
@@ -58,52 +115,39 @@ export function HomePage() {
     if (tempName.trim() && tempPassword.trim()) {
       try {
         // 调用后台API注册用户
-        const userData = await registerUser(tempName.trim());
-        await storage.setUserName(tempName.trim());
-        await storage.setUserId(userData.id);
-        await storage.setUserPassword(tempPassword);
-        setUserName(tempName.trim());
-        setUserPassword(tempPassword);
+        const userData = await registerUser(tempName.trim(), tempPassword);
+        // 仅在本地存储用户ID和用户名（用于显示）
+        localStorage.setItem('userId', userData.id);
+        localStorage.setItem('userName', userData.name);
+        setUserId(userData.id);
+        setUserName(userData.name);
         setIsEditing(false);
         setIsPasswordRequired(false);
         setTempPassword('');
       } catch (error) {
         console.error('Save error:', error);
-        // 降级方案
-        const fallbackId = crypto.randomUUID();
-        await storage.setUserName(tempName.trim());
-        await storage.setUserId(fallbackId);
-        await storage.setUserPassword(tempPassword);
-        setUserName(tempName.trim());
-        setUserPassword(tempPassword);
-        setIsEditing(false);
-        setIsPasswordRequired(false);
-        setTempPassword('');
+        setPasswordError('注册失败，请重试');
       }
     }
   };
 
   const handlePasswordVerify = async () => {
-    if (inputPassword === userPassword) {
-      setIsPasswordRequired(false);
-      setInputPassword('');
-      setPasswordError('');
-      navigate('/practice');
+    if (userId && inputPassword) {
+      const isVerified = await verifyPassword(userId, inputPassword);
+      if (isVerified) {
+        setIsPasswordRequired(false);
+        setInputPassword('');
+        setPasswordError('');
+        navigate('/practice');
+      } else {
+        setPasswordError('密码错误，请重试');
+      }
     } else {
-      setPasswordError('密码错误，请重试');
+      setPasswordError('请输入密码');
     }
   };
 
-  const handleExamPasswordVerify = async () => {
-    if (inputPassword === userPassword) {
-      setIsPasswordRequired(false);
-      setInputPassword('');
-      setPasswordError('');
-      navigate('/exam');
-    } else {
-      setPasswordError('密码错误，请重试');
-    }
-  };
+
 
   return (
     <div className="text-center py-12">
@@ -142,10 +186,10 @@ export function HomePage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {userPassword ? '修改身份' : '设置身份'}
+              {userId ? '修改身份' : '设置身份'}
             </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              {userPassword ? '修改您的身份信息' : '设置您的姓名和密码，用于保护您的学习记录'}
+              {userId ? '修改您的身份信息' : '设置您的姓名和密码，用于保护您的学习记录'}
             </p>
             <div className="space-y-4">
               <div>
@@ -161,13 +205,13 @@ export function HomePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 text-left">
-                  密码 {userPassword && <span className="text-gray-400 text-xs">(不修改请留空)</span>}
+                  密码 {userId && <span className="text-gray-400 text-xs">(不修改请留空)</span>}
                 </label>
                 <input
                   type="password"
                   value={tempPassword}
                   onChange={(e) => setTempPassword(e.target.value)}
-                  placeholder={userPassword ? '请输入新密码' : '设置密码'}
+                  placeholder={userId ? '请输入新密码' : '设置密码'}
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                 />
@@ -186,7 +230,7 @@ export function HomePage() {
               </button>
               <button
                 onClick={handleSave}
-                disabled={!tempName.trim() || (!userPassword && !tempPassword.trim())}
+                disabled={!tempName.trim() || (!userId && !tempPassword.trim())}
                 className="px-5 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 保存
@@ -215,7 +259,7 @@ export function HomePage() {
               placeholder="请输入密码"
               className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none mb-2"
               autoFocus
-              onKeyDown={(e) => e.key === 'Enter' && (userPassword ? handlePasswordVerify() : handleExamPasswordVerify())}
+              onKeyDown={(e) => e.key === 'Enter' && handlePasswordVerify()}
             />
             {passwordError && (
               <p className="text-red-500 text-sm mb-4">{passwordError}</p>
@@ -232,7 +276,7 @@ export function HomePage() {
                 取消
               </button>
               <button
-                onClick={handleExamPasswordVerify}
+                onClick={handlePasswordVerify}
                 disabled={!inputPassword}
                 className="px-5 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -257,10 +301,10 @@ export function HomePage() {
 
         <button
           onClick={() => {
-            if (userPassword) {
+            if (userId) {
               setIsPasswordRequired(true);
             } else {
-              navigate('/practice');
+              setIsEditing(true);
             }
           }}
           className="block p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700 text-left"
@@ -274,10 +318,10 @@ export function HomePage() {
 
         <button
           onClick={() => {
-            if (userPassword) {
+            if (userId) {
               setIsPasswordRequired(true);
             } else {
-              navigate('/exam');
+              setIsEditing(true);
             }
           }}
           className="block p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700 text-left"

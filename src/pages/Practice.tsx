@@ -24,7 +24,7 @@ export function PracticePage() {
   const [isRunning, setIsRunning] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userPassword, setUserPassword] = useState('');
+  const [userId, setUserId] = useState('');
   const [isPasswordRequired, setIsPasswordRequired] = useState(false);
   const [inputPassword, setInputPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -32,25 +32,58 @@ export function PracticePage() {
 
   const currentChapterId = chapterId || 'ch01_basics';
 
+  const verifyPassword = async (userId: string, password: string) => {
+    try {
+      const response = await fetch('/api/users/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, password })
+      });
+      
+      if (!response.ok) {
+        // 检查是否是用户不存在的错误
+        if (response.status === 404) {
+          // 用户不存在，清理本地数据
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userName');
+          navigate('/');
+          return false;
+        }
+        throw new Error('Failed to verify password');
+      }
+      
+      const data = await response.json();
+      return data.ok;
+    } catch (error) {
+      console.error('Password verification error:', error);
+      return false;
+    }
+  };
+
   const checkAuth = useCallback(async () => {
-    const pwd = await storage.getUserPassword();
-    setUserPassword(pwd || '');
+    const storedUserId = localStorage.getItem('userId');
+    setUserId(storedUserId || '');
     
-    if (pwd) {
+    if (storedUserId) {
       setIsPasswordRequired(true);
     } else {
-      setIsAuthenticated(true);
+      navigate('/');
     }
-  }, []);
+  }, [navigate]);
 
-  const handlePasswordVerify = () => {
-    if (inputPassword === userPassword) {
-      setIsPasswordRequired(false);
-      setIsAuthenticated(true);
-      setInputPassword('');
-      setPasswordError('');
+  const handlePasswordVerify = async () => {
+    if (userId && inputPassword) {
+      const isVerified = await verifyPassword(userId, inputPassword);
+      if (isVerified) {
+        setIsPasswordRequired(false);
+        setIsAuthenticated(true);
+        setInputPassword('');
+        setPasswordError('');
+      } else {
+        setPasswordError('密码错误，请重试');
+      }
     } else {
-      setPasswordError('密码错误，请重试');
+      setPasswordError('请输入密码');
     }
   };
 

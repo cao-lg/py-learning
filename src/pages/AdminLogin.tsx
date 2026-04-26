@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from '../store/idb';
 
 const ADMIN_PASSWORD = 'admin123';
 
@@ -11,7 +10,7 @@ export function AdminLoginPage() {
 
   const handleLogin = async () => {
     if (password === ADMIN_PASSWORD) {
-      await storage.setUserPassword('__admin__' + ADMIN_PASSWORD);
+      localStorage.setItem('adminToken', '__admin__' + ADMIN_PASSWORD);
       navigate('/admin');
     } else {
       setError('密码错误');

@@ -2,9 +2,6 @@ import { get, set, del } from 'idb-keyval';
 import type { ExamSession } from '../types';
 
 const KEYS = {
-  USER_ID: 'user_id',
-  USER_NAME: 'user_name',
-  USER_PASSWORD: 'user_password',
   PRACTICE_CODE: 'practice_code_',
   EXAM_DRAFT: 'exam_draft_',
   EXAM_SESSION: 'exam_session_',
@@ -12,30 +9,6 @@ const KEYS = {
 } as const;
 
 export const storage = {
-  async getUserId(): Promise<string | undefined> {
-    return get<string>(KEYS.USER_ID);
-  },
-
-  async setUserId(userId: string): Promise<void> {
-    await set(KEYS.USER_ID, userId);
-  },
-
-  async getUserName(): Promise<string | undefined> {
-    return get<string>(KEYS.USER_NAME);
-  },
-
-  async setUserName(name: string): Promise<void> {
-    await set(KEYS.USER_NAME, name);
-  },
-
-  async getUserPassword(): Promise<string | undefined> {
-    return get<string>(KEYS.USER_PASSWORD);
-  },
-
-  async setUserPassword(password: string): Promise<void> {
-    await set(KEYS.USER_PASSWORD, password);
-  },
-
   async savePracticeCode(questionId: string, code: string): Promise<void> {
     await set(KEYS.PRACTICE_CODE + questionId, code);
   },

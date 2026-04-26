@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { storage } from '../store/idb';
 
 interface User {
   id: string;
@@ -24,8 +23,8 @@ export function AdminUsersPage() {
   }, []);
 
   const checkAdmin = async () => {
-    const pwd = await storage.getUserPassword();
-    if (pwd !== ADMIN_PASSWORD) {
+    const adminToken = localStorage.getItem('adminToken');
+    if (adminToken !== ADMIN_PASSWORD) {
       navigate('/admin/login');
     }
   };
@@ -120,7 +119,7 @@ export function AdminUsersPage() {
   };
 
   const handleLogout = async () => {
-    await storage.setUserPassword('');
+    localStorage.removeItem('adminToken');
     navigate('/admin/login');
   };
 

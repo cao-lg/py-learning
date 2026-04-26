@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { evaluatorRouter } from './evaluator/router';
 import { PracticePage } from './pages/Practice';
@@ -10,108 +10,23 @@ import { AdminSettingsPage } from './pages/AdminSettings';
 import { AdminUsersPage } from './pages/AdminUsers';
 import { HomePage } from './pages/Home';
 import { LearnPage } from './pages/Learn';
-import { storage } from './store/idb';
 
 function ProtectedNav() {
-  const [userPassword, setUserPassword] = useState('');
-  const [isPasswordRequired, setIsPasswordRequired] = useState(false);
-  const [inputPassword, setInputPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [targetPath, setTargetPath] = useState('');
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    storage.getUserPassword().then(pwd => {
-      if (pwd) {
-        setUserPassword(pwd);
-      }
-    });
-  }, []);
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-    e.preventDefault();
-    if (userPassword && (path.startsWith('/practice') || path.startsWith('/exam'))) {
-      setTargetPath(path);
-      setIsPasswordRequired(true);
-    } else {
-      navigate(path);
-    }
-  };
-
-  const handlePasswordVerify = () => {
-    if (inputPassword === userPassword) {
-      setIsPasswordRequired(false);
-      setInputPassword('');
-      setPasswordError('');
-      navigate(targetPath);
-    } else {
-      setPasswordError('密码错误，请重试');
-    }
-  };
-
   return (
-    <>
-      <nav className="flex gap-6">
-        <a href="/learn" onClick={(e) => handleNavClick(e, '/learn')} className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
-          学
-        </a>
-        <a href="/practice" onClick={(e) => handleNavClick(e, '/practice')} className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
-          练
-        </a>
-        <a href="/exam" onClick={(e) => handleNavClick(e, '/exam')} className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
-          考
-        </a>
-        <a href="/admin" onClick={(e) => handleNavClick(e, '/admin')} className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
-          管理
-        </a>
-      </nav>
-      {isPasswordRequired && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              请输入密码
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              请输入您的密码以继续
-            </p>
-            <input
-              type="password"
-              value={inputPassword}
-              onChange={(e) => {
-                setInputPassword(e.target.value);
-                setPasswordError('');
-              }}
-              placeholder="请输入密码"
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none mb-2"
-              autoFocus
-              onKeyDown={(e) => e.key === 'Enter' && handlePasswordVerify()}
-            />
-            {passwordError && (
-              <p className="text-red-500 text-sm mb-4">{passwordError}</p>
-            )}
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => {
-                  setIsPasswordRequired(false);
-                  setInputPassword('');
-                  setPasswordError('');
-                }}
-                className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-              >
-                取消
-              </button>
-              <button
-                onClick={handlePasswordVerify}
-                disabled={!inputPassword}
-                className="px-5 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                确认
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <nav className="flex gap-6">
+      <a href="/learn" className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
+        学
+      </a>
+      <a href="/practice" className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
+        练
+      </a>
+      <a href="/exam" className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
+        考
+      </a>
+      <a href="/admin" className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
+        管理
+      </a>
+    </nav>
   );
 }
 

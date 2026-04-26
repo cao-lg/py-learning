@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { checkExamAvailability, formatDateTime, type ExamStatus } from '../utils/exam-schedule';
-import { storage } from '../store/idb';
 
 interface ExamInfo {
   id: string;
@@ -23,32 +22,65 @@ export function ExamListPage() {
   const [exams, setExams] = useState<ExamInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [examStatus, setExamStatus] = useState<Record<string, ExamStatus>>({});
-  const [userPassword, setUserPassword] = useState('');
+  const [userId, setUserId] = useState('');
   const [isPasswordRequired, setIsPasswordRequired] = useState(false);
   const [inputPassword, setInputPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  const checkAuth = async () => {
-    const pwd = await storage.getUserPassword();
-    setUserPassword(pwd || '');
-    
-    if (pwd) {
-      setIsPasswordRequired(true);
-    } else {
-      setIsAuthenticated(true);
+  const verifyPassword = async (userId: string, password: string) => {
+    try {
+      const response = await fetch('/api/users/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, password })
+      });
+      
+      if (!response.ok) {
+        // 检查是否是用户不存在的错误
+        if (response.status === 404) {
+          // 用户不存在，清理本地数据
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userName');
+          navigate('/');
+          return false;
+        }
+        throw new Error('Failed to verify password');
+      }
+      
+      const data = await response.json();
+      return data.ok;
+    } catch (error) {
+      console.error('Password verification error:', error);
+      return false;
     }
   };
 
-  const handlePasswordVerify = () => {
-    if (inputPassword === userPassword) {
-      setIsPasswordRequired(false);
-      setIsAuthenticated(true);
-      setInputPassword('');
-      setPasswordError('');
+  const checkAuth = async () => {
+    const storedUserId = localStorage.getItem('userId');
+    setUserId(storedUserId || '');
+    
+    if (storedUserId) {
+      setIsPasswordRequired(true);
     } else {
-      setPasswordError('密码错误，请重试');
+      navigate('/');
+    }
+  };
+
+  const handlePasswordVerify = async () => {
+    if (userId && inputPassword) {
+      const isVerified = await verifyPassword(userId, inputPassword);
+      if (isVerified) {
+        setIsPasswordRequired(false);
+        setIsAuthenticated(true);
+        setInputPassword('');
+        setPasswordError('');
+      } else {
+        setPasswordError('密码错误，请重试');
+      }
+    } else {
+      setPasswordError('请输入密码');
     }
   };
 

@@ -35,7 +35,7 @@ export function ExamPage() {
     setLoading(true);
     setError(null);
     try {
-      const userId = await storage.getUserId();
+      const userId = localStorage.getItem('userId');
       if (!userId) {
         throw new Error('请先设置身份');
       }
@@ -130,7 +130,7 @@ export function ExamPage() {
     if (now - lastSyncRef.current < 10000) return;
     lastSyncRef.current = now;
 
-    const userId = await storage.getUserId();
+    const userId = localStorage.getItem('userId');
     if (!userId) return;
 
     const payload: SyncPayload = {
@@ -183,7 +183,7 @@ export function ExamPage() {
     const confirmed = window.confirm('Are you sure you want to submit? This action cannot be undone.');
     if (!confirmed) return;
 
-    const userId = await storage.getUserId();
+    const userId = localStorage.getItem('userId');
     if (!userId) return;
 
     const score = calculateScore();
