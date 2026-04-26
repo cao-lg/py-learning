@@ -87,9 +87,9 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
       ok: true,
       message: type === 'all' ? "全部数据清理完成" : "无效数据清理完成",
       deletedRecords: {
-        practiceRecords: deletedPractice.changes,
-        examRecords: deletedExam.changes,
-        auditLogs: deletedAudit.changes,
+        practiceRecords: deletedPractice.changes || 0,
+        examRecords: deletedExam.changes || 0,
+        auditLogs: deletedAudit.changes || 0,
       },
     };
 
