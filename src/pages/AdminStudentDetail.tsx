@@ -283,6 +283,7 @@ export function AdminStudentDetailPage() {
             </div>
           </div>
         )}
+      </div>
       </AdminLayout>
     );
 }
