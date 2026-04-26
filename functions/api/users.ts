@@ -122,7 +122,7 @@ async function handlePasswordVerification(request: Request, env: Env): Promise<R
     }
 
     // 验证密码
-    const isPasswordValid = result.password === password;
+    const isPasswordValid = !result.password || result.password === password;
 
     return new Response(JSON.stringify({ ok: isPasswordValid }), { 
       status: 200,
