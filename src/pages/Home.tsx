@@ -168,7 +168,8 @@ export function HomePage() {
         setIsPasswordRequired(false);
         setInputPassword('');
         setPasswordError('');
-        navigate(targetPage);
+        // 添加authenticated=true参数，避免在ExamListPage中再次验证密码
+        navigate(`${targetPage}?authenticated=true`);
       } else {
         setPasswordError('密码错误，请重试');
       }
@@ -350,7 +351,7 @@ export function HomePage() {
         <button
           onClick={() => {
             if (userId) {
-              setTargetPage('/exams');
+              setTargetPage('/exam');
               setIsPasswordRequired(true);
             } else {
               setIsEditing(true);

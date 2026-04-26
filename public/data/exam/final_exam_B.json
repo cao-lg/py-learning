@@ -11,7 +11,7 @@
       "id": "feB_q1",
       "type": "function",
       "title": "列表反转",
-      "instruction": "定义函数 `reverse_list(lst)` 反转列表，但不修改原列表。\n\n例如：[1, 2, 3] → [3, 2, 1]",
+      "instruction": "定义函数 `reverse_list(lst)` 反转列表，但不修改原列表。\n\n例如：\n[1, 2, 3] → [3, 2, 1]\n['a', 'b', 'c'] → ['c', 'b', 'a']\n[] → []",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "[3, 2, 1]",
@@ -25,7 +25,7 @@
       "id": "feB_q2",
       "type": "function",
       "title": "字典键值反转",
-      "instruction": "定义函数 `invert_dict(d)` 将字典的键和值互换。\n\n例如：{'a': 1, 'b': 2} → {1: 'a', 2: 'b'}",
+      "instruction": "定义函数 `invert_dict(d)` 将字典的键和值互换。\n\n例如：\n{'a': 1, 'b': 2} → {1: 'a', 2: 'b'}\n{1: 'x', 2: 'y'} → {'x': 1, 'y': 2}",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "{1: 'a', 2: 'b'}",
@@ -39,7 +39,7 @@
       "id": "feB_q3",
       "type": "function",
       "title": "统计字符出现",
-      "instruction": "定义函数 `count_chars(s)` 统计字符串中每个字符出现的次数。\n\n例如：'hello' → {'h': 1, 'e': 1, 'l': 2, 'o': 1}",
+      "instruction": "定义函数 `count_chars(s)` 统计字符串中每个字符出现的次数。\n\n例如：\n'hello' → {'h': 1, 'e': 1, 'l': 2, 'o': 1}\n'python' → {'p': 1, 'y': 1, 't': 1, 'h': 1, 'o': 1, 'n': 1}\n'' → {}",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "{'h': 1, 'e': 1, 'l': 2, 'o': 1}",
@@ -52,71 +52,71 @@
     {
       "id": "feB_q4",
       "type": "function",
-      "title": "选择排序",
-      "instruction": "定义函数 `selection_sort(lst)` 用选择排序算法对列表进行升序排序，不返回新列表。",
+      "title": "列表去重",
+      "instruction": "定义函数 `remove_duplicates(lst)` 去除列表中的重复元素，保持原有顺序。\n\n例如：\n[1, 2, 2, 3, 1] → [1, 2, 3]\n['x', 'y', 'x', 'z'] → ['x', 'y', 'z']",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "[1, 2, 3, 4, 5]",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "每次从未排序部分选择最小元素放到已排序部分末尾", "visible": false }
+        { "text": "使用 set 或字典保持顺序", "visible": false }
       ]
     },
     {
       "id": "feB_q5",
       "type": "function",
-      "title": "判断素数",
-      "instruction": "定义函数 `is_prime(n)` 判断整数 n 是否为素数。\n\n素数只能被 1 和自身整除。\n\n例如：13 → True, 4 → False",
+      "title": "字符串大写",
+      "instruction": "定义函数 `to_uppercase(s)` 将字符串转换为大写。\n\n例如：\n'hello' → 'HELLO'\n'Python' → 'PYTHON'\n'' → ''",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "True",
+        "expected": "'HELLO'",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "检查从 2 到 sqrt(n) 的数是否能整除 n", "visible": false }
+        { "text": "使用 upper() 方法", "visible": false }
       ]
     },
     {
       "id": "feB_q6",
       "type": "output",
-      "title": "九九乘法表",
-      "instruction": "输出九九乘法表的前 3 行，每行用换行分隔。\n\n格式：1×1=1 1×2=2 1×3=3\n         2×1=2 2×2=4 2×3=6\n         3×1=3 3×2=6 3×3=9",
+      "title": "偶数打印",
+      "instruction": "输出 1 到 20 之间的所有偶数，用空格分隔。\n\n例如：2 4 6 8 10 12 14 16 18 20",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "1×1=1 1×2=2 1×3=3\n2×1=2 2×2=4 2×3=6\n3×1=3 3×2=6 3×3=9",
+        "expected": "2 4 6 8 10 12 14 16 18 20",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用双重循环，外层 i 从 1 到 3，内层 j 从 1 到 3", "visible": false }
+        { "text": "使用循环和条件判断", "visible": false }
       ]
     },
     {
       "id": "feB_q7",
       "type": "function",
-      "title": "计算阶乘",
-      "instruction": "定义函数 `factorial(n)` 计算 n 的阶乘。\n\n阶乘：n! = n × (n-1) × ... × 2 × 1\n\n例如：factorial(5) = 120",
+      "title": "计算平均值",
+      "instruction": "定义函数 `calculate_average(lst)` 计算列表中所有元素的平均值。\n\n例如：\n[1, 2, 3, 4, 5] → 3.0\n[10, 20, 30] → 20.0\n[] → 0.0",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "120",
+        "expected": "3.0",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "可以用循环或递归实现", "visible": false }
+        { "text": "使用 sum() 函数和 len() 函数", "visible": false }
       ]
     },
     {
       "id": "feB_q8",
       "type": "function",
-      "title": "最长公共前缀",
-      "instruction": "定义函数 `longest_common_prefix(strs)` 找出字符串列表中的最长公共前缀。\n\n例如：['flower', 'flow', 'flight'] → 'fl'",
+      "title": "列表元素类型",
+      "instruction": "定义函数 `get_types(lst)` 返回列表中每个元素的类型名称。\n\n例如：\n[1, 'hello', 3.14, True] → ['int', 'str', 'float', 'bool']\n[] → []",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "'fl'",
+        "expected": "['int', 'str', 'float', 'bool']",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "比较每个字符串的相同位置字符，找到第一个不同的位置", "visible": false }
+        { "text": "使用 type() 函数和列表推导式", "visible": false }
       ]
     }
   ]
