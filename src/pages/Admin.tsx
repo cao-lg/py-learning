@@ -9,6 +9,35 @@ interface StatsResponse {
   recentActivity?: { date: string; count: number }[];
   topChapters?: { chapterId: string; attempts: number; avgScore: number }[];
   examStats?: { examId: string; attempts: number; avgScore: number }[];
+  // 基于学生的统计
+  studentStats?: {
+    activeStudents?: number;
+    avgPracticePerStudent?: number;
+    avgExamPerStudent?: number;
+    topStudents?: { userId: string; userName: string; practiceCount: number; examCount: number; totalScore: number }[];
+  };
+  // 基于课程的统计
+  courseStats?: {
+    totalChapters?: number;
+    avgAttemptsPerChapter?: number;
+    avgScorePerChapter?: number;
+    chapterStats?: { chapterId: string; attempts: number; avgScore: number; completionRate: number }[];
+  };
+  // 基于练习的统计
+  practiceStats?: {
+    totalQuestions?: number;
+    avgAttemptsPerQuestion?: number;
+    avgScorePerQuestion?: number;
+    difficultyDistribution?: { difficulty: string; count: number; avgScore: number }[];
+  };
+  // 基于考试的统计
+  examDetailedStats?: {
+    totalExams?: number;
+    avgAttemptsPerExam?: number;
+    avgScorePerExam?: number;
+    passRate?: number;
+    examStats?: { examId: string; attempts: number; avgScore: number; passRate: number }[];
+  };
   error?: string;
 }
 
@@ -150,6 +179,53 @@ export function AdminPage() {
         </div>
       </div>
 
+      {/* 学生统计 */}
+      {stats?.studentStats && (
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-1">活跃学生</h3>
+                <p className="text-3xl font-bold text-blue-600">
+                  {stats.studentStats.activeStudents || 0}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                <span className="text-2xl">👨‍🎓</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-1">人均练习</h3>
+                <p className="text-3xl font-bold text-green-600">
+                  {stats.studentStats.avgPracticePerStudent?.toFixed(1) || 0}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                <span className="text-2xl">📝</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-1">人均考试</h3>
+                <p className="text-3xl font-bold text-purple-600">
+                  {stats.studentStats.avgExamPerStudent?.toFixed(1) || 0}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center">
+                <span className="text-2xl">📋</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 最近活动图表 */}
       {stats?.recentActivity && stats.recentActivity.length > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
@@ -167,6 +243,215 @@ export function AdminPage() {
                 <span className="text-xs font-medium text-gray-700">{day.count}</span>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* 课程统计 */}
+      {stats?.courseStats && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">课程统计</h3>
+          <div className="grid md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">总章节数</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.courseStats.totalChapters || 0}
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">平均尝试次数</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.courseStats.avgAttemptsPerChapter?.toFixed(1) || 0}
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">平均得分</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.courseStats.avgScorePerChapter?.toFixed(1)}%
+              </p>
+            </div>
+          </div>
+          {stats.courseStats.chapterStats && stats.courseStats.chapterStats.length > 0 && (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">章节ID</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">尝试次数</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">平均得分</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">完成率</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {stats.courseStats.chapterStats.slice(0, 5).map((chapter) => (
+                    <tr key={chapter.chapterId} className="hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{chapter.chapterId}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{chapter.attempts}</td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium ${chapter.avgScore >= 70 ? 'bg-green-100 text-green-800' : chapter.avgScore >= 50 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                          {chapter.avgScore}%
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium ${chapter.completionRate >= 70 ? 'bg-green-100 text-green-800' : chapter.completionRate >= 50 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                          {chapter.completionRate}%
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 练习统计 */}
+      {stats?.practiceStats && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">练习统计</h3>
+          <div className="grid md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">总题目数</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.practiceStats.totalQuestions || 0}
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">平均尝试次数</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.practiceStats.avgAttemptsPerQuestion?.toFixed(1) || 0}
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">平均得分</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.practiceStats.avgScorePerQuestion?.toFixed(1)}%
+              </p>
+            </div>
+          </div>
+          {stats.practiceStats.difficultyDistribution && stats.practiceStats.difficultyDistribution.length > 0 && (
+            <div className="h-64">
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">难度分布</h4>
+              <div className="flex items-end gap-4 h-48">
+                {stats.practiceStats.difficultyDistribution.map((item) => (
+                  <div key={item.difficulty} className="flex-1 flex flex-col items-center gap-2">
+                    <div
+                      className={`w-full rounded-t transition-all hover:opacity-90`}
+                      style={{ 
+                        height: `${Math.max((item.count / (stats.totalPracticeRecords || 1)) * 100, 8)}%`,
+                        backgroundColor: item.difficulty === '简单' ? '#10b981' : item.difficulty === '中等' ? '#f59e0b' : '#ef4444'
+                      }}
+                    />
+                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{item.difficulty}</span>
+                    <span className="text-xs text-gray-500">{item.count}</span>
+                    <span className="text-xs text-gray-500">{item.avgScore}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 考试统计 */}
+      {stats?.examDetailedStats && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">考试统计</h3>
+          <div className="grid md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">总考试数</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.examDetailedStats.totalExams || 0}
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">平均尝试次数</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.examDetailedStats.avgAttemptsPerExam?.toFixed(1) || 0}
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">平均得分</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.examDetailedStats.avgScorePerExam?.toFixed(1)}%
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+              <h4 className="text-sm text-gray-500 dark:text-gray-400 mb-1">整体通过率</h4>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {stats.examDetailedStats.passRate}%
+              </p>
+            </div>
+          </div>
+          {stats.examDetailedStats.examStats && stats.examDetailedStats.examStats.length > 0 && (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-900">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">考试ID</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">考试名称</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">尝试次数</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">平均得分</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">通过率</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {stats.examDetailedStats.examStats.map((exam) => (
+                    <tr key={exam.examId} className="hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{exam.examId}</td>
+                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                        {examTitles[exam.examId] || exam.examId}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{exam.attempts}</td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium ${exam.avgScore >= 70 ? 'bg-green-100 text-green-800' : exam.avgScore >= 50 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                          {exam.avgScore}%
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium ${exam.passRate >= 70 ? 'bg-green-100 text-green-800' : exam.passRate >= 50 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                          {exam.passRate}%
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 优秀学生 */}
+      {stats?.studentStats?.topStudents && stats.studentStats.topStudents.length > 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">优秀学生</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-gray-900">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">排名</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">学生姓名</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">练习次数</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">考试次数</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">总得分</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {stats.studentStats.topStudents.map((student, index) => (
+                  <tr key={student.userId} className="hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                    <td className="px-4 py-3 text-sm font-bold text-gray-900 dark:text-white">
+                      {index + 1}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{student.userName}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{student.practiceCount}</td>
+                    <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{student.examCount}</td>
+                    <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{student.totalScore}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
