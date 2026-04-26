@@ -57,26 +57,7 @@ export function HomePage() {
     evaluatorRouter.init();
   }, []);
 
-  // 定期检查用户是否存在，确保本地数据与后台同步
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const storedUserId = localStorage.getItem('userId');
-      if (storedUserId) {
-        checkUserExists(storedUserId).then(exists => {
-          if (!exists) {
-            // 用户不存在，清理本地数据
-            localStorage.removeItem('userId');
-            localStorage.removeItem('userName');
-            setUserId('');
-            setUserName('');
-            setTempName('');
-          }
-        });
-      }
-    }, 30000); // 每30秒检查一次
 
-    return () => clearInterval(interval);
-  }, []);
 
   const registerUser = async (name: string, password: string) => {
     try {
