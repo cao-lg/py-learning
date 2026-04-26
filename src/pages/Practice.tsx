@@ -34,6 +34,14 @@ export function PracticePage() {
 
   const verifyPassword = async (userId: string, password: string) => {
     try {
+      // 开发环境使用模拟数据
+      if (import.meta.env.DEV) {
+        console.log('Development mode: using mock data for password verification');
+        // 模拟验证成功
+        return true;
+      }
+
+      // 生产环境使用真实 API
       const response = await fetch('/api/users/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

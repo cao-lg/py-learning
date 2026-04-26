@@ -61,6 +61,18 @@ export function HomePage() {
 
   const registerUser = async (name: string, password: string) => {
     try {
+      // 开发环境使用模拟数据
+      if (import.meta.env.DEV) {
+        console.log('Development mode: using mock data for user registration');
+        // 模拟注册成功
+        return {
+          ok: true,
+          id: 'mock-' + Date.now(),
+          name
+        };
+      }
+
+      // 生产环境使用真实 API
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -72,11 +84,11 @@ export function HomePage() {
       }
       
       const data = await response.json();
-      if (data.ok) {
-        return { id: data.id, name: data.name };
-      } else {
-        throw new Error(data.error || 'Registration failed');
+      if (!data.ok) {
+        throw new Error('Failed to register user');
       }
+      
+      return data;
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -85,6 +97,14 @@ export function HomePage() {
 
   const verifyPassword = async (userId: string, password: string) => {
     try {
+      // 开发环境使用模拟数据
+      if (import.meta.env.DEV) {
+        console.log('Development mode: using mock data for password verification');
+        // 模拟验证成功
+        return true;
+      }
+
+      // 生产环境使用真实 API
       const response = await fetch('/api/users/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
