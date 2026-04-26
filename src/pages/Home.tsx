@@ -29,16 +29,57 @@ export function HomePage() {
     evaluatorRouter.init();
   }, []);
 
+  const registerUser = async (name: string) => {
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to register user');
+      }
+      
+      const data = await response.json();
+      if (data.ok) {
+        return { id: data.id, name: data.name };
+      } else {
+        throw new Error(data.error || 'Registration failed');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      // 降级方案：使用本地生成的ID
+      return { id: crypto.randomUUID(), name };
+    }
+  };
+
   const handleSave = async () => {
     if (tempName.trim() && tempPassword.trim()) {
-      await storage.setUserName(tempName.trim());
-      await storage.setUserId(tempName.trim().toLowerCase().replace(/\s+/g, '_'));
-      await storage.setUserPassword(tempPassword);
-      setUserName(tempName.trim());
-      setUserPassword(tempPassword);
-      setIsEditing(false);
-      setIsPasswordRequired(false);
-      setTempPassword('');
+      try {
+        // 调用后台API注册用户
+        const userData = await registerUser(tempName.trim());
+        await storage.setUserName(tempName.trim());
+        await storage.setUserId(userData.id);
+        await storage.setUserPassword(tempPassword);
+        setUserName(tempName.trim());
+        setUserPassword(tempPassword);
+        setIsEditing(false);
+        setIsPasswordRequired(false);
+        setTempPassword('');
+      } catch (error) {
+        console.error('Save error:', error);
+        // 降级方案
+        const fallbackId = crypto.randomUUID();
+        await storage.setUserName(tempName.trim());
+        await storage.setUserId(fallbackId);
+        await storage.setUserPassword(tempPassword);
+        setUserName(tempName.trim());
+        setUserPassword(tempPassword);
+        setIsEditing(false);
+        setIsPasswordRequired(false);
+        setTempPassword('');
+      }
     }
   };
 
