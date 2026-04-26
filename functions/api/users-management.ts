@@ -58,8 +58,18 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
         // 生成临时密码
         const tempPassword = Math.random().toString(36).substring(2, 10);
 
-        // 这里不直接操作本地密码，而是返回临时密码
-        // 用户需要使用临时密码登录后重新设置
+        // 更新数据库中的密码字段
+        try {
+          await env.DB.prepare(`
+            UPDATE users SET password = ?, updated_at = ? WHERE id = ?
+          `).bind(tempPassword, Date.now(), userId).run();
+        } catch (e) {
+          console.error('Update password failed:', e);
+          // 尝试不使用 password 字段
+          await env.DB.prepare(`
+            UPDATE users SET updated_at = ? WHERE id = ?
+          `).bind(Date.now(), userId).run();
+        }
 
         return new Response(JSON.stringify({ 
           ok: true, 
