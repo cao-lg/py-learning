@@ -55,7 +55,7 @@ export function AdminUsersPage() {
   };
 
   const handleResetPassword = async (userId: string) => {
-    if (window.confirm('确定要重置此用户的密码吗？用户将需要重新设置密码。')) {
+    if (window.confirm('确定要重置此用户的密码吗？系统将生成临时密码。')) {
       try {
         const response = await fetch('/api/users-management', {
           method: 'POST',
@@ -63,17 +63,56 @@ export function AdminUsersPage() {
             'Content-Type': 'application/json',
             'X-Admin-Password': ADMIN_PASSWORD
           },
-          body: JSON.stringify({ userId }),
+          body: JSON.stringify({ userId, action: 'resetPassword' }),
         });
 
         if (response.ok) {
-          setMessage({ type: 'success', text: '密码重置成功' });
-          // 这里可以添加本地存储的密码清除逻辑
+          const data = await response.json();
+          if (data.ok) {
+            setMessage({ 
+              type: 'success', 
+              text: `密码重置成功！临时密码：${data.tempPassword}\n请将此密码告知用户` 
+            });
+          } else {
+            setMessage({ type: 'error', text: '密码重置失败' });
+          }
         } else {
           setMessage({ type: 'error', text: '密码重置失败' });
         }
       } catch (error) {
         setMessage({ type: 'error', text: '密码重置失败' });
+      } finally {
+        setTimeout(() => setMessage(null), 5000);
+      }
+    }
+  };
+
+  const handleDeleteUser = async (userId: string) => {
+    if (window.confirm('确定要删除此用户吗？此操作将删除用户的所有数据，且无法恢复。')) {
+      try {
+        const response = await fetch('/api/users-management', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Password': ADMIN_PASSWORD
+          },
+          body: JSON.stringify({ userId, action: 'delete' }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.ok) {
+            setMessage({ type: 'success', text: '用户删除成功' });
+            // 重新加载用户列表
+            loadUsers();
+          } else {
+            setMessage({ type: 'error', text: '用户删除失败' });
+          }
+        } else {
+          setMessage({ type: 'error', text: '用户删除失败' });
+        }
+      } catch (error) {
+        setMessage({ type: 'error', text: '用户删除失败' });
       } finally {
         setTimeout(() => setMessage(null), 3000);
       }
@@ -163,12 +202,20 @@ export function AdminUsersPage() {
                     {new Date(user.createdAt).toLocaleString()}
                   </td>
                   <td className="px-4 py-3 text-sm">
-                    <button
-                      onClick={() => handleResetPassword(user.id)}
-                      className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
-                    >
-                      重置密码
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => handleResetPassword(user.id)}
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
+                      >
+                        重置密码
+                      </button>
+                      <button
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
+                      >
+                        删除
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

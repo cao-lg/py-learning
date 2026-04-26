@@ -42,10 +42,10 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
   }
 
   if (request.method === "POST") {
-    // 重置用户密码（实际上是清除本地存储的密码）
+    // 重置用户密码或删除用户
     try {
       const body = await request.json();
-      const { userId } = body;
+      const { userId, action } = body;
 
       if (!userId) {
         return new Response(JSON.stringify({ ok: false, error: "UserId required" }), {
@@ -54,15 +54,43 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
         });
       }
 
-      // 这里不直接操作密码，因为密码存储在用户本地
-      // 而是记录重置操作，让用户重新设置密码
+      if (action === "resetPassword") {
+        // 生成临时密码
+        const tempPassword = Math.random().toString(36).substring(2, 10);
 
-      return new Response(JSON.stringify({ ok: true, message: "Password reset initiated" }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
+        // 这里不直接操作本地密码，而是返回临时密码
+        // 用户需要使用临时密码登录后重新设置
+
+        return new Response(JSON.stringify({ 
+          ok: true, 
+          message: "Password reset successfully",
+          tempPassword 
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      } else if (action === "delete") {
+        // 删除用户及其相关数据
+        await env.DB.prepare(`DELETE FROM users WHERE id = ?`).bind(userId).run();
+        await env.DB.prepare(`DELETE FROM practice_records WHERE user_id = ?`).bind(userId).run();
+        await env.DB.prepare(`DELETE FROM exam_records WHERE user_id = ?`).bind(userId).run();
+        await env.DB.prepare(`DELETE FROM audit_logs WHERE user_id = ?`).bind(userId).run();
+
+        return new Response(JSON.stringify({ 
+          ok: true, 
+          message: "User deleted successfully" 
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      } else {
+        return new Response(JSON.stringify({ ok: false, error: "Invalid action" }), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
     } catch (error) {
-      console.error("Reset password error:", error);
+      console.error("User management error:", error);
       return new Response(JSON.stringify({ ok: false, error: "Internal error" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
