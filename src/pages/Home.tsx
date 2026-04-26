@@ -123,13 +123,15 @@ export function HomePage() {
           setTempName('');
           return false;
         }
-        throw new Error('Failed to verify password');
+        // 其他错误，如密码错误，不清理用户数据
+        return false;
       }
       
       const data = await response.json();
       return data.ok;
     } catch (error) {
       console.error('Password verification error:', error);
+      // 网络错误，不清理用户数据
       return false;
     }
   };
@@ -147,6 +149,11 @@ export function HomePage() {
         setIsEditing(false);
         setIsPasswordRequired(false);
         setTempPassword('');
+        
+        // 如果之前是因为点击考试或练习按钮而触发的身份设置，导航到目标页面
+        if (targetPage) {
+          navigate(targetPage);
+        }
       } catch (error) {
         console.error('Save error:', error);
         setPasswordError('注册失败，请重试');
