@@ -118,6 +118,62 @@
       "hints": [
         { "text": "使用 len() 函数", "visible": false }
       ]
+    },
+    {
+      "id": "feC_q9",
+      "type": "function",
+      "title": "列表元素求和",
+      "instruction": "定义函数 `sum_elements(lst)` 计算列表中所有元素的总和。\n\n例如：\n[1, 2, 3, 4, 5] → 15\n[10, -5, 3] → 8\n[] → 0",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "15",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 sum() 函数或循环累加", "visible": false }
+      ]
+    },
+    {
+      "id": "feC_q10",
+      "type": "function",
+      "title": "字符串替换",
+      "instruction": "定义函数 `replace_string(s, old, new)` 替换字符串中的指定子串。\n\n例如：\n'hello world', 'world', 'python' → 'hello python'\n'123-456-789', '-', '' → '123456789'",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "'hello python'",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 replace() 方法", "visible": false }
+      ]
+    },
+    {
+      "id": "feC_q11",
+      "type": "function",
+      "title": "判断奇数",
+      "instruction": "定义函数 `is_odd(n)` 判断整数是否为奇数。\n\n例如：\n3 → True\n6 → False\n-1 → True",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用取模运算符 %", "visible": false }
+      ]
+    },
+    {
+      "id": "feC_q12",
+      "type": "output",
+      "title": "斐波那契数列",
+      "instruction": "输出前 8 个斐波那契数列数字，用空格分隔。\n\n斐波那契：1, 1, 2, 3, 5, 8, 13, 21",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1 1 2 3 5 8 13 21",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用循环或递归生成斐波那契数列", "visible": false }
+      ]
     }
   ]
 }

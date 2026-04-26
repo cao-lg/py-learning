@@ -118,6 +118,62 @@
       "hints": [
         { "text": "使用 type() 函数和列表推导式", "visible": false }
       ]
+    },
+    {
+      "id": "feB_q9",
+      "type": "function",
+      "title": "列表元素过滤",
+      "instruction": "定义函数 `filter_positive(lst)` 过滤出列表中的正数。\n\n例如：\n[1, -2, 3, -4, 5] → [1, 3, 5]\n[-1, -2, -3] → []\n[] → []",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 3, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用列表推导式或 filter() 函数", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q10",
+      "type": "function",
+      "title": "字符串连接",
+      "instruction": "定义函数 `join_strings(strs, separator)` 用指定分隔符连接字符串列表。\n\n例如：\n['hello', 'world', 'python'], ' ' → 'hello world python'\n['a', 'b', 'c'], '-' → 'a-b-c'",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "'hello world python'",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 join() 方法", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q11",
+      "type": "function",
+      "title": "判断偶数",
+      "instruction": "定义函数 `is_even(n)` 判断整数是否为偶数。\n\n例如：\n4 → True\n7 → False\n0 → True",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用取模运算符 %", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q12",
+      "type": "output",
+      "title": "倒计时",
+      "instruction": "输出从 10 到 1 的倒计时，用空格分隔。\n\n例如：10 9 8 7 6 5 4 3 2 1",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "10 9 8 7 6 5 4 3 2 1",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 range() 函数和步长", "visible": false }
+      ]
     }
   ]
 }

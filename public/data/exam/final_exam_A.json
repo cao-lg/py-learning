@@ -118,6 +118,62 @@
       "hints": [
         { "text": "使用切片 s[::-1]", "visible": false }
       ]
+    },
+    {
+      "id": "feA_q9",
+      "type": "function",
+      "title": "列表元素平方",
+      "instruction": "定义函数 `square_elements(lst)` 返回列表中每个元素的平方。\n\n例如：\n[1, 2, 3, 4] → [1, 4, 9, 16]\n[-2, 0, 5] → [4, 0, 25]\n[] → []",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 4, 9, 16]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用列表推导式或循环", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q10",
+      "type": "function",
+      "title": "字符串分割",
+      "instruction": "定义函数 `split_string(s, delimiter)` 按照指定分隔符分割字符串。\n\n例如：\n'hello,world,python', ',' → ['hello', 'world', 'python']\n'1-2-3-4', '-' → ['1', '2', '3', '4']",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "['hello', 'world', 'python']",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 split() 方法", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q11",
+      "type": "function",
+      "title": "判断数字",
+      "instruction": "定义函数 `is_number(s)` 判断字符串是否可以转换为数字。\n\n例如：\n'123' → True\n'3.14' → True\n'hello' → False",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 try-except 语句", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q12",
+      "type": "output",
+      "title": "乘法表",
+      "instruction": "输出 1 到 5 的乘法表，每行用换行分隔。\n\n例如：\n1×1=1\n1×2=2 2×2=4\n1×3=3 2×3=6 3×3=9\n1×4=4 2×4=8 3×4=12 4×4=16\n1×5=5 2×5=10 3×5=15 4×5=20 5×5=25",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1×1=1\n1×2=2 2×2=4\n1×3=3 2×3=6 3×3=9\n1×4=4 2×4=8 3×4=12 4×4=16\n1×5=5 2×5=10 3×5=15 4×5=20 5×5=25",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用双重循环", "visible": false }
+      ]
     }
   ]
 }

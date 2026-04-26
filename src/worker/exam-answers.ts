@@ -103,6 +103,10 @@ export const examAnswers: Record<string, Record<string, string>> = {
     feA_q6: '1 2 3 4 5 6 7 8 9 10',
     feA_q7: '15',
     feA_q8: "'olleh'",
+    feA_q9: '[1, 4, 9, 16]',
+    feA_q10: "['hello', 'world', 'python']",
+    feA_q11: 'True',
+    feA_q12: '1×1=1\n1×2=2 2×2=4\n1×3=3 2×3=6 3×3=9\n1×4=4 2×4=8 3×4=12 4×4=16\n1×5=5 2×5=10 3×5=15 4×5=20 5×5=25',
   },
   final_exam_B: {
     feB_q1: '[3, 2, 1]',
@@ -113,6 +117,10 @@ export const examAnswers: Record<string, Record<string, string>> = {
     feB_q6: '2 4 6 8 10 12 14 16 18 20',
     feB_q7: '3.0',
     feB_q8: "['int', 'str', 'float', 'bool']",
+    feB_q9: '[1, 3, 5]',
+    feB_q10: "'hello world python'",
+    feB_q11: 'True',
+    feB_q12: '10 9 8 7 6 5 4 3 2 1',
   },
   final_exam_C: {
     feC_q1: '[2, 3]',
@@ -123,6 +131,10 @@ export const examAnswers: Record<string, Record<string, string>> = {
     feC_q6: '1 3 5 7 9 11 13 15 17 19',
     feC_q7: '9',
     feC_q8: '5',
+    feC_q9: '15',
+    feC_q10: "'hello python'",
+    feC_q11: 'True',
+    feC_q12: '1 1 2 3 5 8 13 21',
   },
 };
 
