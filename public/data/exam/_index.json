@@ -124,11 +124,12 @@
     {
       "id": "final_exam",
       "title": "期末考试",
-      "description": "Python 基础知识全面考核",
+      "description": "Python 基础知识全面考核，随机分配A、B、C卷",
       "duration": 90,
       "totalScore": 100,
       "questionCount": 8,
       "difficulty": "hard",
+      "hasMultipleVersions": true,
       "startTime": "2026-06-01T09:00:00Z",
       "endTime": "2026-06-01T18:00:00Z"
     }

@@ -1,0 +1,123 @@
+{
+  "id": "final_exam_B",
+  "version": "B",
+  "title": "期末考试 B卷",
+  "description": "全面测试 Python 基础知识，包括数据结构、文件操作、异常处理和面向对象编程",
+  "duration": 90,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "feB_q1",
+      "type": "function",
+      "title": "列表反转",
+      "instruction": "定义函数 `reverse_list(lst)` 反转列表，但不修改原列表。\n\n例如：[1, 2, 3] → [3, 2, 1]",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[3, 2, 1]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用切片 lst[::-1] 或反向遍历", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q2",
+      "type": "function",
+      "title": "字典键值反转",
+      "instruction": "定义函数 `invert_dict(d)` 将字典的键和值互换。\n\n例如：{'a': 1, 'b': 2} → {1: 'a', 2: 'b'}",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1: 'a', 2: 'b'}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用字典推导式 {v: k for k, v in d.items()}", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q3",
+      "type": "function",
+      "title": "统计字符出现",
+      "instruction": "定义函数 `count_chars(s)` 统计字符串中每个字符出现的次数。\n\n例如：'hello' → {'h': 1, 'e': 1, 'l': 2, 'o': 1}",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{'h': 1, 'e': 1, 'l': 2, 'o': 1}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用字典来计数", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q4",
+      "type": "function",
+      "title": "选择排序",
+      "instruction": "定义函数 `selection_sort(lst)` 用选择排序算法对列表进行升序排序，不返回新列表。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 2, 3, 4, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "每次从未排序部分选择最小元素放到已排序部分末尾", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q5",
+      "type": "function",
+      "title": "判断素数",
+      "instruction": "定义函数 `is_prime(n)` 判断整数 n 是否为素数。\n\n素数只能被 1 和自身整除。\n\n例如：13 → True, 4 → False",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "检查从 2 到 sqrt(n) 的数是否能整除 n", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q6",
+      "type": "output",
+      "title": "九九乘法表",
+      "instruction": "输出九九乘法表的前 3 行，每行用换行分隔。\n\n格式：1×1=1 1×2=2 1×3=3\n         2×1=2 2×2=4 2×3=6\n         3×1=3 3×2=6 3×3=9",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1×1=1 1×2=2 1×3=3\n2×1=2 2×2=4 2×3=6\n3×1=3 3×2=6 3×3=9",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用双重循环，外层 i 从 1 到 3，内层 j 从 1 到 3", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q7",
+      "type": "function",
+      "title": "计算阶乘",
+      "instruction": "定义函数 `factorial(n)` 计算 n 的阶乘。\n\n阶乘：n! = n × (n-1) × ... × 2 × 1\n\n例如：factorial(5) = 120",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "120",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "可以用循环或递归实现", "visible": false }
+      ]
+    },
+    {
+      "id": "feB_q8",
+      "type": "function",
+      "title": "最长公共前缀",
+      "instruction": "定义函数 `longest_common_prefix(strs)` 找出字符串列表中的最长公共前缀。\n\n例如：['flower', 'flow', 'flight'] → 'fl'",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "'fl'",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "比较每个字符串的相同位置字符，找到第一个不同的位置", "visible": false }
+      ]
+    }
+  ]
+}

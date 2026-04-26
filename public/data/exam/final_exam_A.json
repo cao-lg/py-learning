@@ -1,0 +1,123 @@
+{
+  "id": "final_exam_A",
+  "version": "A",
+  "title": "期末考试 A卷",
+  "description": "全面测试 Python 基础知识，包括数据结构、文件操作、异常处理和面向对象编程",
+  "duration": 90,
+  "totalScore": 100,
+  "passingScore": 60,
+  "questions": [
+    {
+      "id": "feA_q1",
+      "type": "function",
+      "title": "列表去重",
+      "instruction": "定义函数 `remove_duplicates(lst)` 去除列表中的重复元素，保持原有顺序。\n\n例如：[1, 3, 2, 2, 1] → [1, 3, 2]",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 3, 2]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 set 或字典保持顺序", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q2",
+      "type": "function",
+      "title": "字典合并",
+      "instruction": "定义函数 `merge_dicts(d1, d2)` 合并两个字典，如果键相同，d2 的值覆盖 d1 的值。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{'a': 1, 'b': 2, 'c': 3}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "可以使用 {**d1, **d2}", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q3",
+      "type": "function",
+      "title": "字符串计数",
+      "instruction": "定义函数 `count_words(s)` 统计字符串中每个单词出现的次数（用空格分隔）。\n\n例如：'hello world hello' → {'hello': 2, 'world': 1}",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{'hello': 2, 'world': 1}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 split() 和字典", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q4",
+      "type": "function",
+      "title": "冒泡排序",
+      "instruction": "定义函数 `bubble_sort(lst)` 用冒泡排序算法对列表进行升序排序，不返回新列表。",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 2, 3, 4, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "相邻元素两两比较，根据大小交换位置", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q5",
+      "type": "function",
+      "title": "判断回文",
+      "instruction": "定义函数 `is_palindrome(s)` 判断字符串是否为回文（正读反读都相同）。\n\n忽略大小写和非字母数字字符。\n\n例如：'A man, a plan, a canal: Panama' → True",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "先清理字符串，只保留字母数字，转小写后反转比较", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q6",
+      "type": "output",
+      "title": "斐波那契数列",
+      "instruction": "输出前 10 个斐波那契数列数字，用空格分隔。\n\n斐波那契：1, 1, 2, 3, 5, 8, 13, 21, 34, 55",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1 1 2 3 5 8 13 21 34 55",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "f(n) = f(n-1) + f(n-2)，前两项是 1, 1", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q7",
+      "type": "function",
+      "title": "找出缺失数字",
+      "instruction": "定义函数 `find_missing(start, end, lst)` 找出在 start 到 end 范围内缺失的数字。\n\n例如：start=1, end=5, lst=[1, 2, 4] → [3, 5]",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[3, 5]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用集合的差集运算", "visible": false }
+      ]
+    },
+    {
+      "id": "feA_q8",
+      "type": "function",
+      "title": "两数之和",
+      "instruction": "定义函数 `two_sum(nums, target)` 找出列表中两数之和等于 target 的两个数的索引。\n\n假设有且仅有一个答案。\n\n例如：[2, 7, 11, 15], target=9 → [0, 1]（因为 2+7=9）",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[0, 1]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用字典存储已遍历的数字和索引", "visible": false }
+      ]
+    }
+  ]
+}

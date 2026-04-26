@@ -131,6 +131,47 @@ export function AdminPage() {
     }
   };
 
+  const exportData = async () => {
+    const password = prompt('请输入管理员密码以导出学生数据');
+    if (!password) return;
+
+    try {
+      const response = await fetch('/api/export', {
+        headers: { 'X-Admin-Password': `__admin__${password}` }
+      });
+      const data = await response.json();
+      if (data.ok) {
+        // 生成 CSV 内容
+        let csvContent = '数据类型,学生姓名,学生ID,考试/章节,分数,总题数,完成时间\n';
+
+        // 添加考试记录
+        data.data?.students.forEach((student: any) => {
+          student.examRecords.forEach((record: any) => {
+            csvContent += `考试,${student.name},${student.id},${record.exam_title},${record.score},${record.total_questions},${new Date(record.completed_at).toLocaleString()}\n`;
+          });
+
+          // 添加练习记录
+          student.practiceRecords.forEach((record: any) => {
+            csvContent += `练习,${student.name},${student.id},${record.chapter_id},${record.score},${record.total_questions},${new Date(record.completed_at).toLocaleString()}\n`;
+          });
+        });
+
+        // 下载 CSV 文件
+        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `学生答题记录_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        alert('数据导出失败：' + data.error);
+      }
+    } catch (error) {
+      alert('数据导出失败：网络错误');
+    }
+  };
+
   if (loading) {
     return (
       <AdminLayout title="统计概览">
@@ -158,6 +199,13 @@ export function AdminPage() {
     <AdminLayout title="统计概览">
       {/* 操作按钮 */}
       <div className="flex justify-end mb-6 gap-4">
+        <button 
+          onClick={exportData}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center gap-2"
+        >
+          <span>📤</span>
+          <span>导出学生数据</span>
+        </button>
         <button 
           onClick={() => cleanupData('invalid')}
           className="px-4 py-2 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors flex items-center gap-2"

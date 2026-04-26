@@ -94,6 +94,36 @@ export const examAnswers: Record<string, Record<string, string>> = {
     fe_q7: '[3, 5]',
     fe_q8: '[0, 1]',
   },
+  final_exam_A: {
+    feA_q1: '[1, 3, 2]',
+    feA_q2: "{'a': 1, 'b': 2, 'c': 3}",
+    feA_q3: "{'hello': 2, 'world': 1}",
+    feA_q4: '[1, 2, 3, 4, 5]',
+    feA_q5: 'True',
+    feA_q6: '1 1 2 3 5 8 13 21 34 55',
+    feA_q7: '[3, 5]',
+    feA_q8: '[0, 1]',
+  },
+  final_exam_B: {
+    feB_q1: '[3, 2, 1]',
+    feB_q2: "{1: 'a', 2: 'b'}",
+    feB_q3: "{'h': 1, 'e': 1, 'l': 2, 'o': 1}",
+    feB_q4: '[1, 2, 3, 4, 5]',
+    feB_q5: 'True',
+    feB_q6: '1×1=1 1×2=2 1×3=3\n2×1=2 2×2=4 2×3=6\n3×1=3 3×2=6 3×3=9',
+    feB_q7: '120',
+    feB_q8: "'fl'",
+  },
+  final_exam_C: {
+    feC_q1: '[2, 3]',
+    feC_q2: "['b', 'c', 'a']",
+    feC_q3: "'Hello World'",
+    feC_q4: '[1, 2, 3, 4, 5]',
+    feC_q5: 'True',
+    feC_q6: '*\n**\n***\n****\n*****',
+    feC_q7: '55',
+    feC_q8: 'True',
+  },
 };
 
 export function getExamAnswer(examId: string, questionId: string): string | undefined {

@@ -41,10 +41,14 @@ export function ExamPage() {
       }
 
       const examIndexResponse = await fetch('/data/exam/_index.json');
+      let examInfo: any = null;
+      let hasMultipleVersions = false;
+      
       if (examIndexResponse.ok) {
         const examIndex = await examIndexResponse.json();
-        const examInfo = examIndex.exams.find((e: ExamInfo) => e.id === examId);
+        examInfo = examIndex.exams.find((e: ExamInfo) => e.id === examId);
         if (examInfo) {
+          hasMultipleVersions = examInfo.hasMultipleVersions;
           const availability = checkExamAvailability(examInfo);
           if (availability.status === 'not_started') {
             setError(`考试尚未开始\n开始时间：${formatDateTime(availability.startsAt!)}`);
@@ -59,29 +63,49 @@ export function ExamPage() {
         }
       }
 
-      const response = await fetch(`/data/exam/${examId || 'mid_term'}.json`);
+      // 检查是否有现有会话
+      const existingSessionCheck = await storage.getExamSession(examId || 'mid_term', userId);
+      let versionId: string = examId || 'mid_term';
+      
+      // 如果有多版本考试
+      if (hasMultipleVersions && examId === 'final_exam') {
+        if (existingSessionCheck && existingSessionCheck.exam_id !== examId) {
+          // 已有会话，使用之前的版本
+          versionId = existingSessionCheck.exam_id;
+        } else {
+          // 随机选择A、B、C卷
+          const versions = ['final_exam_A', 'final_exam_B', 'final_exam_C'];
+          const seed = await generateDeterministicSeed(userId, examId || 'final_exam');
+          // 确保seed是数字
+          const seedNumber = parseInt(seed, 16) || 0;
+          const versionIndex = Math.abs(seedNumber % 3);
+          versionId = versions[versionIndex];
+        }
+      }
+
+      const response = await fetch(`/data/exam/${versionId}.json`);
       if (!response.ok) throw new Error('Failed to load exam');
       const data: ExamSet = await response.json();
 
-      const seed = await generateDeterministicSeed(userId, data.id);
+      const seed = await generateDeterministicSeed(userId, versionId);
       const shuffledQuestions = shuffleArray(data.questions, seed);
 
       setExamSet(data);
       setQuestions(shuffledQuestions);
       setStartTime(Date.now());
 
-      const existingSession = await storage.getExamSession(data.id, userId);
+      const existingSession = await storage.getExamSession(versionId, userId);
       if (existingSession && existingSession.status !== 'ongoing') {
         setIsSubmitted(true);
         setSession(existingSession);
         if (existingSession.score !== undefined) {
           setResults({});
         }
-        const draft = await storage.getExamDraft(data.id);
+        const draft = await storage.getExamDraft(versionId);
         if (draft) setAnswers(draft);
       } else {
         const newSession: ExamSession = {
-          exam_id: data.id,
+          exam_id: versionId,
           user_id: userId,
           seed,
           status: 'ongoing',
@@ -91,7 +115,7 @@ export function ExamPage() {
         setSession(newSession);
       }
 
-      const savedDraft = await storage.getExamDraft(data.id);
+      const savedDraft = await storage.getExamDraft(versionId);
       if (savedDraft) {
         setAnswers(savedDraft);
       }
