@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { AdminLayout } from '../components/AdminLayout';
 
 interface User {
@@ -264,8 +265,10 @@ export function AdminUsersPage() {
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 font-mono">
                     {user.id.slice(0, 8)}...
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
-                    {user.name}
+                  <td className="px-6 py-4 text-sm font-medium">
+                    <Link to={`/admin/users/${user.id}`} className="text-blue-600 dark:text-blue-400 hover:underline">
+                      {user.name}
+                    </Link>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                     {new Date(user.createdAt).toLocaleString('zh-CN')}

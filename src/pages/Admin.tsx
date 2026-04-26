@@ -109,22 +109,25 @@ export function AdminPage() {
     URL.revokeObjectURL(url);
   };
 
-  const cleanupData = async () => {
-    if (window.confirm('确定要清理无效数据吗？这将删除所有没有对应用户的记录和分数异常的记录。')) {
-      try {
-        const response = await fetch('/api/cleanup', {
-          method: 'POST',
-        });
-        const data = await response.json();
-        if (data.ok) {
-          alert(`数据清理完成！\n删除了 ${data.deletedRecords?.practiceRecords || 0} 条练习记录\n删除了 ${data.deletedRecords?.examRecords || 0} 条考试记录\n删除了 ${data.deletedRecords?.auditLogs || 0} 条审计日志`);
-          fetchStats(); // 重新获取统计数据
-        } else {
-          alert('数据清理失败：' + data.error);
-        }
-      } catch (error) {
-        alert('数据清理失败：网络错误');
+  const cleanupData = async (type: 'invalid' | 'all') => {
+    const password = prompt(type === 'all' ? '请输入管理员密码以清理全部记录' : '请输入管理员密码以清理无效记录');
+    if (!password) return;
+
+    try {
+      const response = await fetch('/api/cleanup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, password })
+      });
+      const data = await response.json();
+      if (data.ok) {
+        alert(`${data.message}\n删除了 ${data.deletedRecords?.practiceRecords || 0} 条练习记录\n删除了 ${data.deletedRecords?.examRecords || 0} 条考试记录\n删除了 ${data.deletedRecords?.auditLogs || 0} 条审计日志`);
+        fetchStats(); // 重新获取统计数据
+      } else {
+        alert('数据清理失败：' + data.error);
       }
+    } catch (error) {
+      alert('数据清理失败：网络错误');
     }
   };
 
@@ -154,13 +157,20 @@ export function AdminPage() {
   return (
     <AdminLayout title="统计概览">
       {/* 操作按钮 */}
-      <div className="flex justify-end mb-6">
+      <div className="flex justify-end mb-6 gap-4">
         <button 
-          onClick={cleanupData}
-          className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
+          onClick={() => cleanupData('invalid')}
+          className="px-4 py-2 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition-colors flex items-center gap-2"
         >
           <span>🧹</span>
           <span>清理无效数据</span>
+        </button>
+        <button 
+          onClick={() => cleanupData('all')}
+          className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
+        >
+          <span>🗑️</span>
+          <span>清理全部记录</span>
         </button>
       </div>
 
