@@ -106,6 +106,9 @@ export function AdminPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">教师端</h1>
         <div className="flex items-center gap-4">
+          <Link to="/admin/users" className="btn btn-secondary">
+            用户管理
+          </Link>
           <Link to="/admin/settings" className="btn btn-secondary">
             考试设置
           </Link>

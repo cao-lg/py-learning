@@ -7,6 +7,7 @@ import { ExamListPage } from './pages/ExamList';
 import { AdminPage } from './pages/Admin';
 import { AdminLoginPage } from './pages/AdminLogin';
 import { AdminSettingsPage } from './pages/AdminSettings';
+import { AdminUsersPage } from './pages/AdminUsers';
 import { HomePage } from './pages/Home';
 import { LearnPage } from './pages/Learn';
 import { storage } from './store/idb';
@@ -170,6 +171,7 @@ export function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route path="/admin/settings" element={<AdminSettingsPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
