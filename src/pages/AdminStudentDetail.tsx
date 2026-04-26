@@ -55,7 +55,6 @@ const examTitles: Record<string, string> = {
 
 export function AdminStudentDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [student, setStudent] = useState<StudentDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
