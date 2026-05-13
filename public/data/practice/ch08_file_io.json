@@ -148,9 +148,9 @@
       "type": "output",
       "title": "批量写入",
       "instruction": "使用 StringIO 模拟 writelines()，写入 ['line1\\n', 'line2\\n']。",
-      "initialCode": "from io import StringIO\n\nf = StringIO()\nf.writelines(['line1\\n', 'line2\\n'])\nf.seek(0)\nprint(f.read())\n",
+      "initialCode": "from io import StringIO\n\nf = StringIO()\nf.writelines(['line1\\n', 'line2\\n'])\nf.seek(0)\nprint(f.read(), end='')\n",
       "testConfig": {
-        "expected": "line1\\nline2\\n",
+        "expected": "line1\nline2\n",
         "timeout_ms": 5000
       },
       "hints": [

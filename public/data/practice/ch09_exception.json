@@ -106,7 +106,7 @@
       "type": "output",
       "title": "手动抛出异常",
       "instruction": "手动抛出 ValueError，消息为 'Invalid value'。",
-      "initialCode": "raise ValueError('Invalid value')\n",
+      "initialCode": "try:\n    raise ValueError('Invalid value')\nexcept ValueError as e:\n    print(e)\n",
       "testConfig": {
         "expected": "Invalid value",
         "timeout_ms": 5000

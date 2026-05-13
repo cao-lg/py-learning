@@ -39,7 +39,7 @@
       "instruction": "计算 `(15 + 35) * 2 - 100 / 4`，打印结果。",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "80.0",
+        "expected": "75.0",
         "timeout_ms": 5000
       },
       "hints": [
@@ -82,7 +82,7 @@
       "instruction": "计算 `2的20次方除以17的余数`，打印结果。\n\n提示：这是密码学中常用的模幂运算",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "9",
+        "expected": "16",
         "timeout_ms": 5000
       },
       "hints": [

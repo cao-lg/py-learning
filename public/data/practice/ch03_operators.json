@@ -264,7 +264,7 @@
       "instruction": "判断并打印：\na = 5\nb = 10\nc = 15\na < b == c > a",
       "initialCode": "a = 5\nb = 10\nc = 15\n# 在下方编写代码\n",
       "testConfig": {
-        "expected": "True",
+        "expected": "False",
         "timeout_ms": 5000
       },
       "hints": [
