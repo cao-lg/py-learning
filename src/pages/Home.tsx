@@ -6,12 +6,9 @@ export function HomePage() {
   const [userName, setUserName] = useState('');
   const [userId, setUserId] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [isPasswordRequired, setIsPasswordRequired] = useState(false);
   const [tempName, setTempName] = useState('');
   const [tempPassword, setTempPassword] = useState('');
-  const [inputPassword, setInputPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [targetPage, setTargetPage] = useState('/practice');
   const navigate = useNavigate();
 
   const checkUserExists = async (userId: string) => {
@@ -55,6 +52,7 @@ export function HomePage() {
         }
       });
     }
+    
     evaluatorRouter.init();
   }, []);
 
@@ -147,13 +145,7 @@ export function HomePage() {
         setUserId(userData.id);
         setUserName(userData.name);
         setIsEditing(false);
-        setIsPasswordRequired(false);
         setTempPassword('');
-        
-        // 如果之前是因为点击考试或练习按钮而触发的身份设置，导航到目标页面
-        if (targetPage) {
-          navigate(targetPage);
-        }
       } catch (error) {
         console.error('Save error:', error);
         setPasswordError('注册失败，请重试');
@@ -333,10 +325,10 @@ export function HomePage() {
         <button
           onClick={() => {
             if (userId) {
-              setTargetPage('/practice');
-              setIsPasswordRequired(true);
+              navigate('/practice');
             } else {
               setIsEditing(true);
+              setTargetPage('/practice');
             }
           }}
           className="block p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700 text-left"
@@ -351,10 +343,10 @@ export function HomePage() {
         <button
           onClick={() => {
             if (userId) {
-              setTargetPage('/exam');
-              setIsPasswordRequired(true);
+              navigate('/exam');
             } else {
               setIsEditing(true);
+              setTargetPage('/exam');
             }
           }}
           className="block p-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700 text-left"

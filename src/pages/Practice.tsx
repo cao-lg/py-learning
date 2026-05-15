@@ -73,7 +73,9 @@ export function PracticePage() {
     setUserId(storedUserId || '');
     
     if (storedUserId) {
-      setIsPasswordRequired(true);
+      // 只要登录了（localStorage 中有 userId），就不再要求密码验证
+      setIsAuthenticated(true);
+      setIsPasswordRequired(false);
     } else {
       navigate('/');
     }
