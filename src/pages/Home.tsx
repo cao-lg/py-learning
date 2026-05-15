@@ -8,7 +8,6 @@ export function HomePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [tempName, setTempName] = useState('');
   const [tempPassword, setTempPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
 
   const checkUserExists = async (userId: string) => {
