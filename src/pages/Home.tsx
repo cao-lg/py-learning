@@ -106,7 +106,6 @@ export function HomePage() {
         setTempPassword('');
       } catch (error) {
         console.error('Save error:', error);
-        setPasswordError('注册失败，请重试');
       }
     }
   };
