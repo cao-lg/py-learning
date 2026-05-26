@@ -18,11 +18,19 @@ interface ExamSchedule {
   endTime: string | null;
 }
 
+interface ExamInputValues {
+  [examId: string]: {
+    startTime: string;
+    endTime: string;
+  };
+}
+
 const ADMIN_PASSWORD = '__admin__admin123';
 
 export function AdminSettingsPage() {
   const [exams, setExams] = useState<ExamInfo[]>([]);
   const [schedule, setSchedule] = useState<Record<string, ExamSchedule>>({});
+  const [inputValues, setInputValues] = useState<ExamInputValues>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -46,6 +54,17 @@ export function AdminSettingsPage() {
       if (scheduleRes.ok) {
         const scheduleData = await scheduleRes.json();
         setSchedule(scheduleData.schedule || {});
+        
+        // 初始化输入值
+        const initialValues: ExamInputValues = {};
+        examData.exams.forEach(exam => {
+          const examSchedule = (scheduleData.schedule || {})[exam.id];
+          initialValues[exam.id] = {
+            startTime: formatDateTime(examSchedule?.startTime) || formatDateTime(exam.startTime) || '',
+            endTime: formatDateTime(examSchedule?.endTime) || formatDateTime(exam.endTime) || '',
+          };
+        });
+        setInputValues(initialValues);
       }
     } catch (error) {
       console.error('Failed to load data:', error);
@@ -54,9 +73,45 @@ export function AdminSettingsPage() {
     }
   };
 
-  const handleSave = async (examId: string, startTime: string | null, endTime: string | null) => {
+  const formatDateTime = (dateString: string | null | undefined): string => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    } catch {
+      return '';
+    }
+  };
+
+  const handleInputChange = (examId: string, field: 'startTime' | 'endTime', value: string) => {
+    setInputValues(prev => ({
+      ...prev,
+      [examId]: {
+        ...prev[examId],
+        [field]: value
+      }
+    }));
+  };
+
+  const handleSave = async (examId: string) => {
     setSaving(examId);
     setMessage(null);
+
+    const inputs = inputValues[examId];
+    if (!inputs) {
+      setMessage({ type: 'error', text: '获取输入值失败' });
+      setSaving(null);
+      return;
+    }
+
+    // 将 datetime-local 格式转换为 ISO 字符串
+    const startTime = inputs.startTime ? new Date(inputs.startTime).toISOString() : null;
+    const endTime = inputs.endTime ? new Date(inputs.endTime).toISOString() : null;
 
     try {
       const response = await fetch('/api/exam-schedule', {
@@ -75,10 +130,11 @@ export function AdminSettingsPage() {
         }));
         setMessage({ type: 'success', text: `${exams.find(e => e.id === examId)?.title || '考试'}设置已保存` });
       } else {
-        setMessage({ type: 'error', text: '保存失败' });
+        const errorData = await response.json().catch(() => null);
+        setMessage({ type: 'error', text: errorData?.error || '保存失败' });
       }
     } catch (error) {
-      setMessage({ type: 'error', text: '保存失败' });
+      setMessage({ type: 'error', text: '保存失败: ' + (error as Error).message });
     } finally {
       setSaving(null);
       setTimeout(() => setMessage(null), 3000);
@@ -87,7 +143,33 @@ export function AdminSettingsPage() {
 
   const handleClear = async (examId: string) => {
     if (window.confirm('确定要清除此考试的时间限制吗？')) {
-      await handleSave(examId, null, null);
+      // 清空输入值
+      setInputValues(prev => ({
+        ...prev,
+        [examId]: {
+          startTime: '',
+          endTime: ''
+        }
+      }));
+      await handleSave(examId);
+    }
+  };
+
+  const checkExamStatus = (examSchedule: ExamSchedule | undefined) => {
+    if (!examSchedule?.startTime || !examSchedule?.endTime) {
+      return { status: 'open', label: '开放考试', color: 'green' };
+    }
+    
+    const now = new Date();
+    const start = new Date(examSchedule.startTime);
+    const end = new Date(examSchedule.endTime);
+    
+    if (now < start) {
+      return { status: 'pending', label: '考试未开始', color: 'yellow' };
+    } else if (now > end) {
+      return { status: 'closed', label: '考试已结束', color: 'red' };
+    } else {
+      return { status: 'active', label: '考试进行中', color: 'green' };
     }
   };
 
@@ -129,45 +211,8 @@ export function AdminSettingsPage() {
       <div className="space-y-6">
         {exams.map((exam) => {
           const examSchedule = schedule[exam.id];
-          const startInputId = `start-${exam.id}`;
-          const endInputId = `end-${exam.id}`;
-
-          // 将时间转换为 datetime-local 格式
-          const formatDateTime = (dateString: string | null | undefined) => {
-            if (!dateString) return '';
-            try {
-              const date = new Date(dateString);
-              const year = date.getFullYear();
-              const month = String(date.getMonth() + 1).padStart(2, '0');
-              const day = String(date.getDate()).padStart(2, '0');
-              const hours = String(date.getHours()).padStart(2, '0');
-              const minutes = String(date.getMinutes()).padStart(2, '0');
-              return `${year}-${month}-${day}T${hours}:${minutes}`;
-            } catch {
-              return '';
-            }
-          };
-
-          // 检查当前是否在考试时间范围内
-          const checkExamStatus = () => {
-            if (!examSchedule?.startTime || !examSchedule?.endTime) {
-              return { status: 'open', label: '开放考试', color: 'green' };
-            }
-            
-            const now = new Date();
-            const start = new Date(examSchedule.startTime);
-            const end = new Date(examSchedule.endTime);
-            
-            if (now < start) {
-              return { status: 'pending', label: '考试未开始', color: 'yellow' };
-            } else if (now > end) {
-              return { status: 'closed', label: '考试已结束', color: 'red' };
-            } else {
-              return { status: 'active', label: '考试进行中', color: 'green' };
-            }
-          };
-
-          const status = checkExamStatus();
+          const inputs = inputValues[exam.id] || { startTime: '', endTime: '' };
+          const status = checkExamStatus(examSchedule);
 
           return (
             <div key={exam.id} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
@@ -207,16 +252,13 @@ export function AdminSettingsPage() {
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor={startInputId} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     开始时间
                   </label>
                   <input
                     type="datetime-local"
-                    id={startInputId}
-                    defaultValue={
-                      formatDateTime(examSchedule?.startTime) || 
-                      formatDateTime(exam.startTime)
-                    }
+                    value={inputs.startTime}
+                    onChange={(e) => handleInputChange(exam.id, 'startTime', e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   />
                   {examSchedule?.startTime && (
@@ -226,16 +268,13 @@ export function AdminSettingsPage() {
                   )}
                 </div>
                 <div>
-                  <label htmlFor={endInputId} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     结束时间
                   </label>
                   <input
                     type="datetime-local"
-                    id={endInputId}
-                    defaultValue={
-                      formatDateTime(examSchedule?.endTime) || 
-                      formatDateTime(exam.endTime)
-                    }
+                    value={inputs.endTime}
+                    onChange={(e) => handleInputChange(exam.id, 'endTime', e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
                   />
                   {examSchedule?.endTime && (
@@ -248,13 +287,7 @@ export function AdminSettingsPage() {
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
-                  onClick={async () => {
-                    const startInput = document.getElementById(startInputId) as HTMLInputElement;
-                    const endInput = document.getElementById(endInputId) as HTMLInputElement;
-                    const startTime = startInput?.value ? new Date(startInput.value).toISOString() : null;
-                    const endTime = endInput?.value ? new Date(endInput.value).toISOString() : null;
-                    await handleSave(exam.id, startTime, endTime);
-                  }}
+                  onClick={() => handleSave(exam.id)}
                   disabled={saving === exam.id}
                   className="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
                 >
