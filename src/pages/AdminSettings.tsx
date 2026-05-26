@@ -54,7 +54,7 @@ export function AdminSettingsPage() {
     }
   };
 
-  const handleSave = async (examId: string, startTime: string, endTime: string) => {
+  const handleSave = async (examId: string, startTime: string | null, endTime: string | null) => {
     setSaving(examId);
     setMessage(null);
 
@@ -71,7 +71,7 @@ export function AdminSettingsPage() {
       if (response.ok) {
         setSchedule(prev => ({
           ...prev,
-          [examId]: { startTime: startTime || null, endTime: endTime || null }
+          [examId]: { startTime, endTime }
         }));
         setMessage({ type: 'success', text: `${exams.find(e => e.id === examId)?.title || '考试'}设置已保存` });
       } else {
@@ -87,7 +87,7 @@ export function AdminSettingsPage() {
 
   const handleClear = async (examId: string) => {
     if (window.confirm('确定要清除此考试的时间限制吗？')) {
-      await handleSave(examId, '', '');
+      await handleSave(examId, null, null);
     }
   };
 
@@ -251,8 +251,8 @@ export function AdminSettingsPage() {
                   onClick={async () => {
                     const startInput = document.getElementById(startInputId) as HTMLInputElement;
                     const endInput = document.getElementById(endInputId) as HTMLInputElement;
-                    const startTime = startInput?.value ? new Date(startInput.value).toISOString() : '';
-                    const endTime = endInput?.value ? new Date(endInput.value).toISOString() : '';
+                    const startTime = startInput?.value ? new Date(startInput.value).toISOString() : null;
+                    const endTime = endInput?.value ? new Date(endInput.value).toISOString() : null;
                     await handleSave(exam.id, startTime, endTime);
                   }}
                   disabled={saving === exam.id}
