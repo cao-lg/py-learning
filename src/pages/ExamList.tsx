@@ -18,6 +18,13 @@ interface ExamIndex {
   exams: ExamInfo[];
 }
 
+interface ExamSchedule {
+  [examId: string]: {
+    startTime: string | null;
+    endTime: string | null;
+  };
+}
+
 export function ExamListPage() {
   const [exams, setExams] = useState<ExamInfo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -117,17 +124,43 @@ export function ExamListPage() {
   useEffect(() => {
     if (isAuthenticated) {
       setLoading(true);
-      fetch('/data/exam/_index.json')
-        .then(async (examRes) => {
+      
+      // 同时获取考试列表和考试时间设置
+      Promise.all([
+        fetch('/data/exam/_index.json'),
+        fetch('/api/exam-schedule')
+      ])
+        .then(async ([examRes, scheduleRes]) => {
           if (!examRes.ok) {
             throw new Error('Failed to load exam index');
           }
+          
           const data: ExamIndex = await examRes.json();
           
-          // 直接使用数据，不依赖exam-schedule API
-          setExams(data.exams);
+          // 获取管理员设置的考试时间
+          let schedule: ExamSchedule = {};
+          if (scheduleRes.ok) {
+            const scheduleData = await scheduleRes.json();
+            schedule = scheduleData.schedule || {};
+          } else {
+            console.error('Failed to fetch exam schedule:', scheduleRes.status);
+          }
+          
+          // 合并数据：将管理员设置的考试时间覆盖到考试数据中
+          const examsWithSchedule = data.exams.map(exam => {
+            const examSchedule = schedule[exam.id];
+            return {
+              ...exam,
+              startTime: examSchedule?.startTime || exam.startTime,
+              endTime: examSchedule?.endTime || exam.endTime,
+            };
+          });
+          
+          setExams(examsWithSchedule);
+          
+          // 计算每个考试的可用性状态
           const status: Record<string, ExamStatus> = {};
-          data.exams.forEach(exam => {
+          examsWithSchedule.forEach(exam => {
             status[exam.id] = checkExamAvailability(exam).status;
           });
           setExamStatus(status);
