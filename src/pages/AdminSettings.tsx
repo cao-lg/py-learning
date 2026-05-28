@@ -39,40 +39,6 @@ export function AdminSettingsPage() {
     loadData();
   }, []);
 
-  const loadData = async () => {
-    try {
-      const [examRes, scheduleRes] = await Promise.all([
-        fetch('/data/exam/_index.json'),
-        fetch('/api/exam-schedule', {
-          headers: { 'X-Admin-Password': ADMIN_PASSWORD }
-        })
-      ]);
-
-      const examData = await examRes.json();
-      setExams(examData.exams);
-
-      if (scheduleRes.ok) {
-        const scheduleData = await scheduleRes.json();
-        setSchedule(scheduleData.schedule || {});
-        
-        // 初始化输入值
-        const initialValues: ExamInputValues = {};
-        examData.exams.forEach(exam => {
-          const examSchedule = (scheduleData.schedule || {})[exam.id];
-          initialValues[exam.id] = {
-            startTime: formatDateTime(examSchedule?.startTime) || formatDateTime(exam.startTime) || '',
-            endTime: formatDateTime(examSchedule?.endTime) || formatDateTime(exam.endTime) || '',
-          };
-        });
-        setInputValues(initialValues);
-      }
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const formatDateTime = (dateString: string | null | undefined): string => {
     if (!dateString) return '';
     try {
@@ -85,6 +51,51 @@ export function AdminSettingsPage() {
       return `${year}-${month}-${day}T${hours}:${minutes}`;
     } catch {
       return '';
+    }
+  };
+
+  const initializeInputValues = (exams: ExamInfo[], scheduleData: Record<string, ExamSchedule>) => {
+    const initialValues: ExamInputValues = {};
+    exams.forEach(exam => {
+      const examSchedule = scheduleData[exam.id];
+      initialValues[exam.id] = {
+        startTime: formatDateTime(examSchedule?.startTime) || formatDateTime(exam.startTime) || '',
+        endTime: formatDateTime(examSchedule?.endTime) || formatDateTime(exam.endTime) || '',
+      };
+    });
+    return initialValues;
+  };
+
+  const loadData = async () => {
+    try {
+      const [examRes, scheduleRes] = await Promise.all([
+        fetch('/data/exam/_index.json'),
+        fetch('/api/exam-schedule', {
+          headers: { 'X-Admin-Password': ADMIN_PASSWORD }
+        })
+      ]);
+
+      const examData = await examRes.json();
+      setExams(examData.exams);
+
+      let scheduleData: Record<string, ExamSchedule> = {};
+      
+      if (scheduleRes.ok) {
+        const data = await scheduleRes.json();
+        scheduleData = data.schedule || {};
+        setSchedule(scheduleData);
+      } else {
+        console.error('Failed to fetch schedule:', scheduleRes.status, await scheduleRes.text());
+      }
+
+      // 始终初始化 inputValues
+      const initialValues = initializeInputValues(examData.exams, scheduleData);
+      setInputValues(initialValues);
+      
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -104,14 +115,23 @@ export function AdminSettingsPage() {
 
     const inputs = inputValues[examId];
     if (!inputs) {
-      setMessage({ type: 'error', text: '获取输入值失败' });
+      setMessage({ type: 'error', text: '获取输入值失败，请刷新页面重试' });
       setSaving(null);
       return;
     }
 
     // 将 datetime-local 格式转换为 ISO 字符串
-    const startTime = inputs.startTime ? new Date(inputs.startTime).toISOString() : null;
-    const endTime = inputs.endTime ? new Date(inputs.endTime).toISOString() : null;
+    // datetime-local 格式: "2026-06-01T09:00"
+    // 需要添加秒和毫秒
+    const startTimeStr = inputs.startTime ? `${inputs.startTime}:00.000Z` : null;
+    const endTimeStr = inputs.endTime ? `${inputs.endTime}:00.000Z` : null;
+
+    // 使用正确的日期格式
+    const startTime = startTimeStr ? new Date(startTimeStr).toISOString() : null;
+    const endTime = endTimeStr ? new Date(endTimeStr).toISOString() : null;
+
+    console.log('Saving exam schedule:', { examId, startTime, endTime });
+    console.log('Original input values:', inputs);
 
     try {
       const response = await fetch('/api/exam-schedule', {
@@ -123,21 +143,24 @@ export function AdminSettingsPage() {
         body: JSON.stringify({ examId, startTime, endTime }),
       });
 
-      if (response.ok) {
+      const responseData = await response.json().catch(() => ({}));
+      console.log('API response:', response.status, responseData);
+
+      if (response.ok && responseData.ok) {
         setSchedule(prev => ({
           ...prev,
           [examId]: { startTime, endTime }
         }));
         setMessage({ type: 'success', text: `${exams.find(e => e.id === examId)?.title || '考试'}设置已保存` });
       } else {
-        const errorData = await response.json().catch(() => null);
-        setMessage({ type: 'error', text: errorData?.error || '保存失败' });
+        setMessage({ type: 'error', text: responseData.error || `保存失败 (${response.status})` });
       }
     } catch (error) {
+      console.error('Save error:', error);
       setMessage({ type: 'error', text: '保存失败: ' + (error as Error).message });
     } finally {
       setSaving(null);
-      setTimeout(() => setMessage(null), 3000);
+      setTimeout(() => setMessage(null), 5000);
     }
   };
 
