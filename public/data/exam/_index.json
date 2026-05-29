@@ -129,9 +129,7 @@
       "totalScore": 100,
       "questionCount": 12,
       "difficulty": "medium",
-      "hasMultipleVersions": true,
-      "startTime": "2026-06-01T09:00:00Z",
-      "endTime": "2026-06-01T18:00:00Z"
+      "hasMultipleVersions": true
     }
   ]
 }

@@ -36,6 +36,8 @@ export function ExamPage() {
 
   const lastSyncRef = useRef<number>(0);
   const versionIdRef = useRef<string>('');
+  const tabSwitchCountRef = useRef<number>(0);
+  const violationRef = useRef<boolean>(false);
 
   const loadExam = async () => {
     setLoading(true);
@@ -206,11 +208,12 @@ export function ExamPage() {
   };
 
   const setupAuditListeners = () => {
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden && !violation) {
+    const handleVisibilityChange = () => {
+      if (document.hidden && !violationRef.current) {
         audit.focus_loss++;
         audit.tab_switch++;
-        const newCount = tabSwitchCount + 1;
+        tabSwitchCountRef.current++;
+        const newCount = tabSwitchCountRef.current;
         setTabSwitchCount(newCount);
         triggerSync();
 
@@ -221,8 +224,9 @@ export function ExamPage() {
           alert(`⚠️ 切屏警告！\n\n您已离开考试页面 ${newCount} 次。\n再离开 ${remaining} 次将自动终止考试！\n\n请保持在本页面进行考试。`);
         }
       }
-    });
+    };
 
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     document.addEventListener('paste', () => {
       audit.paste_attempts++;
     });
@@ -230,6 +234,10 @@ export function ExamPage() {
     document.addEventListener('fullscreenchange', () => {
       audit.fullscreen_change++;
     });
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   };
 
   const calculateScore = (): number => {
@@ -277,14 +285,19 @@ export function ExamPage() {
   }, []);
 
   useEffect(() => {
-    if (!loading && !violation) {
-      setupAuditListeners();
-      syncQueue.startAutoSync(30000);
-    }
+    violationRef.current = violation;
+  }, [violation]);
 
-    return () => {
-      syncQueue.stopAutoSync();
-    };
+  useEffect(() => {
+    if (!loading && !violation) {
+      const cleanup = setupAuditListeners();
+      syncQueue.startAutoSync(30000);
+
+      return () => {
+        syncQueue.stopAutoSync();
+        if (cleanup) cleanup();
+      };
+    }
   }, [loading, violation]);
 
   const handleAnswerChange = (questionId: string, code: string) => {
