@@ -27,6 +27,7 @@ export function ExamPage() {
   const [tabSwitchCount, setTabSwitchCount] = useState(0);
   const [violation, setViolation] = useState(false);
   const [violationMessage, setViolationMessage] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string>('');
   const [audit] = useState<ExamSession['audit']>({
     focus_loss: 0,
     tab_switch: 0,
@@ -44,10 +45,14 @@ export function ExamPage() {
     setError(null);
     try {
       const userId = localStorage.getItem('userId');
-      console.log('ExamPage - userId:', userId);
+      const storedUserName = localStorage.getItem('userName');
+      console.log('ExamPage - userId:', userId, 'userName:', storedUserName);
       if (!userId) {
         console.log('ExamPage - No userId found');
         throw new Error('请先设置身份');
+      }
+      if (storedUserName) {
+        setUserName(storedUserName);
       }
 
       const examIndexResponse = await fetch('/data/exam/_index.json');
@@ -462,6 +467,12 @@ export function ExamPage() {
     <div className="flex gap-6 h-[calc(100vh-200px)]">
       <aside className="w-48 flex-shrink-0 overflow-y-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          {userName && (
+            <div className="mb-3 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <span>👤</span>
+              <span className="font-medium text-gray-900 dark:text-white">{userName}</span>
+            </div>
+          )}
           <h2 className="font-semibold text-gray-900 dark:text-white">{examSet.title}</h2>
           <ExamTimer duration={examSet.duration} startTime={startTime} onExpire={handleExpire} />
           {tabSwitchCount > 0 && (
