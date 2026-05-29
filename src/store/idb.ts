@@ -5,8 +5,15 @@ const KEYS = {
   PRACTICE_CODE: 'practice_code_',
   EXAM_DRAFT: 'exam_draft_',
   EXAM_SESSION: 'exam_session_',
+  EXAM_VIOLATION: 'exam_violation_',
   SYNC_QUEUE: 'sync_queue',
 } as const;
+
+interface ExamViolation {
+  reason: string;
+  timestamp: number;
+  tabSwitchCount: number;
+}
 
 export const storage = {
   async savePracticeCode(questionId: string, code: string): Promise<void> {
@@ -39,6 +46,18 @@ export const storage = {
 
   async getExamSession(examId: string, userId: string): Promise<ExamSession | undefined> {
     return get<ExamSession>(KEYS.EXAM_SESSION + examId + '_' + userId);
+  },
+
+  async saveExamViolation(examId: string, violation: ExamViolation): Promise<void> {
+    await set(KEYS.EXAM_VIOLATION + examId, violation);
+  },
+
+  async getExamViolation(examId: string): Promise<ExamViolation | undefined> {
+    return get<ExamViolation>(KEYS.EXAM_VIOLATION + examId);
+  },
+
+  async clearExamViolation(examId: string): Promise<void> {
+    await del(KEYS.EXAM_VIOLATION + examId);
   },
 
   async addToSyncQueue(payload: unknown): Promise<void> {

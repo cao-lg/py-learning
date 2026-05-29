@@ -10,6 +10,8 @@ import { generateDeterministicSeed, shuffleArray } from '../utils/crypto';
 import { checkExamAvailability, formatDateTime } from '../utils/exam-schedule';
 import type { ExamSet, ExamQuestion, ExamSession, EvalResult, SyncPayload, Question, TestConfig, ExamInfo } from '../types';
 
+const MAX_TAB_SWITCHES = 3;
+
 export function ExamPage() {
   const { examId } = useParams<{ examId?: string }>();
   const [examSet, setExamSet] = useState<ExamSet | null>(null);
@@ -22,6 +24,9 @@ export function ExamPage() {
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<ExamSession | null>(null);
   const [startTime, setStartTime] = useState<number>(() => Date.now());
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
+  const [violation, setViolation] = useState(false);
+  const [violationMessage, setViolationMessage] = useState<string | null>(null);
   const [audit] = useState<ExamSession['audit']>({
     focus_loss: 0,
     tab_switch: 0,
@@ -30,13 +35,16 @@ export function ExamPage() {
   });
 
   const lastSyncRef = useRef<number>(0);
+  const versionIdRef = useRef<string>('');
 
   const loadExam = async () => {
     setLoading(true);
     setError(null);
     try {
       const userId = localStorage.getItem('userId');
+      console.log('ExamPage - userId:', userId);
       if (!userId) {
+        console.log('ExamPage - No userId found');
         throw new Error('请先设置身份');
       }
 
@@ -74,13 +82,29 @@ export function ExamPage() {
           versionId = existingSessionCheck.exam_id;
         } else {
           // 随机选择A、B、C卷
-          const versions = ['final_exam_A', 'final_exam_B', 'final_exam_C'];
-          const seed = await generateDeterministicSeed(userId, examId || 'final_exam');
-          // 确保seed是数字
-          const seedNumber = parseInt(seed, 16) || 0;
-          const versionIndex = Math.abs(seedNumber % 3);
-          versionId = versions[versionIndex];
+      const versions = ['final_exam_A', 'final_exam_B', 'final_exam_C'];
+      console.log('ExamPage - versions:', versions);
+      const seed = await generateDeterministicSeed(userId, examId || 'final_exam');
+      console.log('ExamPage - seed:', seed);
+      // 确保seed是数字
+      const seedNumber = parseInt(seed, 16) || 0;
+      console.log('ExamPage - seedNumber:', seedNumber);
+      const versionIndex = Math.abs(seedNumber % 3);
+      console.log('ExamPage - versionIndex:', versionIndex);
+      versionId = versions[versionIndex];
+      console.log('ExamPage - versionId:', versionId);
         }
+      }
+
+      versionIdRef.current = versionId;
+
+      // 检查是否因违规被禁止参加考试
+      const violationCheck = await storage.getExamViolation(versionId);
+      if (violationCheck) {
+        setViolation(true);
+        setViolationMessage('您因切屏次数过多已被禁止参加本次考试');
+        setLoading(false);
+        return;
       }
 
       const response = await fetch(`/data/exam/${versionId}.json`);
@@ -126,11 +150,76 @@ export function ExamPage() {
     }
   };
 
+  const handleAutoSubmit = async (reason: string) => {
+    if (!examSet || !session) return;
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    const score = calculateScore();
+
+    // 保存违规记录
+    await storage.saveExamViolation(examSet.id, {
+      reason,
+      timestamp: Date.now(),
+      tabSwitchCount,
+    });
+
+    const updatedSession: ExamSession = {
+      ...session,
+      status: 'submitted',
+      score,
+      submitted_at: new Date().toISOString(),
+    };
+
+    const payload = {
+      userId,
+      practice: {},
+      exam: {
+        [examSet.id]: {
+          examId: examSet.id,
+          score,
+          totalQuestions: questions.length,
+          startedAt: startTime,
+          completedAt: Date.now(),
+          answers,
+        },
+      },
+      audit: {
+        [examSet.id]: [
+          { type: 'focus_loss', timestamp: Date.now(), data: { count: audit.focus_loss } },
+          { type: 'tab_switch', timestamp: Date.now(), data: { count: tabSwitchCount, reason } },
+          { type: 'paste_attempts', timestamp: Date.now(), data: { count: audit.paste_attempts } },
+          { type: 'fullscreen_change', timestamp: Date.now(), data: { count: audit.fullscreen_change } },
+        ],
+      },
+    };
+
+    await syncQueue.enqueue(payload as SyncPayload);
+    await storage.saveExamSession(updatedSession);
+    await storage.clearExamDraft(examSet.id);
+
+    setSession(updatedSession);
+    setIsSubmitted(true);
+    setViolation(true);
+    setViolationMessage(reason);
+  };
+
   const setupAuditListeners = () => {
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
+      if (document.hidden && !violation) {
         audit.focus_loss++;
+        audit.tab_switch++;
+        const newCount = tabSwitchCount + 1;
+        setTabSwitchCount(newCount);
         triggerSync();
+
+        if (newCount >= MAX_TAB_SWITCHES) {
+          handleAutoSubmit(`切屏次数过多（${newCount}次），考试自动终止`);
+        } else {
+          const remaining = MAX_TAB_SWITCHES - newCount;
+          alert(`⚠️ 切屏警告！\n\n您已离开考试页面 ${newCount} 次。\n再离开 ${remaining} 次将自动终止考试！\n\n请保持在本页面进行考试。`);
+        }
       }
     });
 
@@ -173,24 +262,30 @@ export function ExamPage() {
       audit: {
         [examSet.id]: [
           { type: 'focus_loss', timestamp: Date.now(), data: { count: audit.focus_loss } },
+          { type: 'tab_switch', timestamp: Date.now(), data: { count: tabSwitchCount } },
         ],
       },
     };
 
     await syncQueue.enqueue(payload);
-  }, [examSet, session, answers, audit]);
+  }, [examSet, session, answers, audit, tabSwitchCount]);
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
     loadExam();
-    setupAuditListeners();
     /* eslint-enable react-hooks/set-state-in-effect */
-    syncQueue.startAutoSync(30000);
+  }, []);
+
+  useEffect(() => {
+    if (!loading && !violation) {
+      setupAuditListeners();
+      syncQueue.startAutoSync(30000);
+    }
 
     return () => {
       syncQueue.stopAutoSync();
     };
-  }, [examId]);
+  }, [loading, violation]);
 
   const handleAnswerChange = (questionId: string, code: string) => {
     setAnswers((prev) => {
@@ -204,7 +299,7 @@ export function ExamPage() {
   const handleSubmit = async () => {
     if (!examSet || !session) return;
 
-    const confirmed = window.confirm('Are you sure you want to submit? This action cannot be undone.');
+    const confirmed = window.confirm('确定要提交考试吗？提交后将无法修改。');
     if (!confirmed) return;
 
     const userId = localStorage.getItem('userId');
@@ -235,6 +330,7 @@ export function ExamPage() {
       audit: {
         [examSet.id]: [
           { type: 'focus_loss', timestamp: Date.now(), data: { count: audit.focus_loss } },
+          { type: 'tab_switch', timestamp: Date.now(), data: { count: tabSwitchCount } },
           { type: 'paste_attempts', timestamp: Date.now(), data: { count: audit.paste_attempts } },
           { type: 'fullscreen_change', timestamp: Date.now(), data: { count: audit.fullscreen_change } },
         ],
@@ -288,35 +384,60 @@ export function ExamPage() {
     );
   }
 
+  if (violation) {
+    return (
+      <div className="max-w-2xl mx-auto text-center py-12">
+        <div className="text-6xl mb-4">🚫</div>
+        <h1 className="text-3xl font-bold mb-4 text-red-600">考试已终止</h1>
+        <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800 mb-8">
+          <p className="text-red-700 dark:text-red-400 text-lg">
+            {violationMessage || '您因违反考试规则已被禁止继续参加本次考试'}
+          </p>
+          {tabSwitchCount > 0 && (
+            <p className="text-red-600 dark:text-red-500 mt-2">
+              切屏次数：{tabSwitchCount} / {MAX_TAB_SWITCHES}
+            </p>
+          )}
+        </div>
+        <p className="text-gray-600 dark:text-gray-400 mb-8">
+          如有异议，请联系监考老师。
+        </p>
+        <a href="/" className="btn btn-primary">
+          返回首页
+        </a>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="text-center py-12">
         <p className="text-red-500">{error}</p>
         <a href="/" className="btn btn-primary mt-4 inline-block">
-          Go Home
+          返回首页
         </a>
       </div>
     );
   }
 
   if (!examSet || questions.length === 0) {
-    return <div className="text-center py-12 text-gray-500">No exam loaded</div>;
+    return <div className="text-center py-12 text-gray-500">考试加载中...</div>;
   }
 
   if (isSubmitted) {
     return (
       <div className="max-w-2xl mx-auto text-center py-12">
         <div className="text-6xl mb-4">📝</div>
-        <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Exam Submitted</h1>
+        <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">考试已提交</h1>
         <p className="text-gray-600 dark:text-gray-400 mb-8">
-          Your exam has been submitted successfully.
+          您的考试已成功提交。
         </p>
         <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold mb-4">Your Score</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">您的成绩</h2>
           <p className="text-5xl font-bold text-purple-600">{Math.round(session?.score ?? calculateScore())}%</p>
         </div>
         <a href="/" className="btn btn-secondary mt-8 inline-block">
-          Back to Home
+          返回首页
         </a>
       </div>
     );
@@ -330,6 +451,11 @@ export function ExamPage() {
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="font-semibold text-gray-900 dark:text-white">{examSet.title}</h2>
           <ExamTimer duration={examSet.duration} startTime={startTime} onExpire={handleExpire} />
+          {tabSwitchCount > 0 && (
+            <div className="mt-2 text-xs text-orange-500">
+              ⚠️ 切屏 {tabSwitchCount}/{MAX_TAB_SWITCHES}
+            </div>
+          )}
         </div>
         <nav className="p-2">
           {questions.map((q, index) => (
@@ -355,7 +481,7 @@ export function ExamPage() {
         </nav>
         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
           <button onClick={handleSubmit} className="btn btn-primary w-full">
-            Submit Exam
+            提交考试
           </button>
         </div>
       </aside>
@@ -394,7 +520,7 @@ export function ExamPage() {
               onClick={() => handleShowAnswer(currentQuestion.id)}
               className="btn btn-secondary mt-4"
             >
-              Check Answer
+              检查答案
             </button>
           </div>
         </div>
