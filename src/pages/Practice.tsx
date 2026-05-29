@@ -130,10 +130,16 @@ export function PracticePage() {
   const loadSavedCode = useCallback(async () => {
     if (!currentQuestion) return;
     const savedCode = await storage.getPracticeCode(currentQuestion.id);
+    const savedResult = await storage.getPracticeResult(currentQuestion.id);
     if (savedCode) {
       setCode(savedCode);
     } else {
       setCode(currentQuestion.initialCode);
+    }
+    if (savedResult) {
+      setResult(savedResult);
+    } else {
+      setResult(null);
     }
   }, [currentQuestion]);
 
@@ -179,11 +185,11 @@ export function PracticePage() {
   const handleRun = () => {
     if (!currentQuestion) return;
     setIsRunning(true);
-    setResult(null);
     setLogs('');
 
     evaluatorRouter.evaluate(currentQuestion, code, (evalResult) => {
       setResult(evalResult);
+      storage.savePracticeResult(currentQuestion.id, evalResult);
       setIsRunning(false);
     });
   };
@@ -194,13 +200,13 @@ export function PracticePage() {
     if (confirmed) {
       setCode(currentQuestion.initialCode);
       await storage.clearPracticeCode(currentQuestion.id);
+      await storage.clearPracticeResult(currentQuestion.id);
       setResult(null);
     }
   };
 
   const handleQuestionSelect = (question: Question) => {
     setCurrentQuestion(question);
-    setResult(null);
   };
 
   const handleChapterChange = (newChapterId: string) => {

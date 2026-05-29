@@ -3,6 +3,7 @@ import type { ExamSession } from '../types';
 
 const KEYS = {
   PRACTICE_CODE: 'practice_code_',
+  PRACTICE_RESULT: 'practice_result_',
   EXAM_DRAFT: 'exam_draft_',
   EXAM_SESSION: 'exam_session_',
   EXAM_VIOLATION: 'exam_violation_',
@@ -21,6 +22,7 @@ export interface ExportData {
   userId: string;
   userName: string;
   practiceCodes: Record<string, string>;
+  practiceResults: Record<string, any>;
   examDrafts: Record<string, Record<string, string>>;
   examSessions: ExamSession[];
   examViolations: Record<string, ExamViolation>;
@@ -37,6 +39,18 @@ export const storage = {
 
   async clearPracticeCode(questionId: string): Promise<void> {
     await del(KEYS.PRACTICE_CODE + questionId);
+  },
+
+  async savePracticeResult(questionId: string, result: any): Promise<void> {
+    await set(KEYS.PRACTICE_RESULT + questionId, result);
+  },
+
+  async getPracticeResult(questionId: string): Promise<any> {
+    return get(KEYS.PRACTICE_RESULT + questionId);
+  },
+
+  async clearPracticeResult(questionId: string): Promise<void> {
+    await del(KEYS.PRACTICE_RESULT + questionId);
   },
 
   async saveExamDraft(examId: string, answers: Record<string, string>): Promise<void> {
@@ -89,6 +103,7 @@ export const storage = {
     const allKeys = await keys();
     
     const practiceCodes: Record<string, string> = {};
+    const practiceResults: Record<string, any> = {};
     const examDrafts: Record<string, Record<string, string>> = {};
     const examSessions: ExamSession[] = [];
     const examViolations: Record<string, ExamViolation> = {};
@@ -101,6 +116,12 @@ export const storage = {
         const code = await get<string>(key);
         if (code) {
           practiceCodes[questionId] = code;
+        }
+      } else if (keyStr.startsWith(KEYS.PRACTICE_RESULT)) {
+        const questionId = keyStr.replace(KEYS.PRACTICE_RESULT, '');
+        const result = await get(key);
+        if (result) {
+          practiceResults[questionId] = result;
         }
       } else if (keyStr.startsWith(KEYS.EXAM_DRAFT)) {
         const examId = keyStr.replace(KEYS.EXAM_DRAFT, '');
@@ -128,6 +149,7 @@ export const storage = {
       userId: localStorage.getItem('userId') || '',
       userName: localStorage.getItem('userName') || '',
       practiceCodes,
+      practiceResults,
       examDrafts,
       examSessions,
       examViolations,
@@ -142,20 +164,24 @@ export const storage = {
       localStorage.setItem('userName', data.userName);
     }
 
-    for (const [questionId, code] of Object.entries(data.practiceCodes)) {
+    for (const [questionId, code] of Object.entries(data.practiceCodes || {})) {
       await set(KEYS.PRACTICE_CODE + questionId, code);
     }
+    
+    for (const [questionId, result] of Object.entries(data.practiceResults || {})) {
+      await set(KEYS.PRACTICE_RESULT + questionId, result);
+    }
 
-    for (const [examId, draft] of Object.entries(data.examDrafts)) {
+    for (const [examId, draft] of Object.entries(data.examDrafts || {})) {
       await set(KEYS.EXAM_DRAFT + examId, draft);
     }
 
-    for (const session of data.examSessions) {
+    for (const session of data.examSessions || []) {
       const key = KEYS.EXAM_SESSION + session.exam_id + '_' + session.user_id;
       await set(key, session);
     }
 
-    for (const [examId, violation] of Object.entries(data.examViolations)) {
+    for (const [examId, violation] of Object.entries(data.examViolations || {})) {
       await set(KEYS.EXAM_VIOLATION + examId, violation);
     }
   },
