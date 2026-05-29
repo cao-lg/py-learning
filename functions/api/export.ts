@@ -16,12 +16,6 @@ interface ExportResponse {
         completed_at: number;
         exam_title: string;
       }[];
-      practiceRecords: {
-        chapter_id: string;
-        score: number;
-        total_questions: number;
-        completed_at: number;
-      }[];
     }[];
   };
   error?: string;
@@ -79,18 +73,6 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
       completed_at: number;
     }>();
 
-    const practiceRecordsResult = await env.DB.prepare(`
-      SELECT user_id, chapter_id, score, total_questions, completed_at 
-      FROM practice_records 
-      ORDER BY user_id, completed_at DESC
-    `).all<{
-      user_id: string;
-      chapter_id: string;
-      score: number;
-      total_questions: number;
-      completed_at: number;
-    }>();
-
     const examMap = new Map<string, any[]>();
     for (const record of examRecordsResult.results || []) {
       const exam_title = examTitleMap[record.exam_id] || record.exam_id;
@@ -107,26 +89,11 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
       examMap.get(record.user_id)!.push(examRecord);
     }
 
-    const practiceMap = new Map<string, any[]>();
-    for (const record of practiceRecordsResult.results || []) {
-      const practiceRecord = {
-        chapter_id: record.chapter_id,
-        score: record.score,
-        total_questions: record.total_questions,
-        completed_at: record.completed_at
-      };
-      if (!practiceMap.has(record.user_id)) {
-        practiceMap.set(record.user_id, []);
-      }
-      practiceMap.get(record.user_id)!.push(practiceRecord);
-    }
-
     const students = (usersResult.results || []).map(user => ({
       id: user.id,
       name: user.name,
       created_at: user.created_at,
       examRecords: examMap.get(user.id) || [],
-      practiceRecords: practiceMap.get(user.id) || [],
     }));
 
     const response: ExportResponse = {

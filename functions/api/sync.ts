@@ -4,18 +4,8 @@ interface Env {
 
 interface SyncRequest {
   userId: string;
-  practice?: Record<string, PracticeRecord>;
   exam?: Record<string, ExamRecord>;
   audit?: Record<string, AuditEntry[]>;
-  hashes?: Record<string, string>;
-}
-
-interface PracticeRecord {
-  chapterId: string;
-  score: number;
-  totalQuestions: number;
-  completedAt: number;
-  answers: Record<string, string>;
 }
 
 interface ExamRecord {
@@ -43,7 +33,7 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
 
   try {
     const body: SyncRequest = await request.json();
-    const { userId, practice, exam, audit } = body;
+    const { userId, exam, audit } = body;
 
     if (!userId) {
       return new Response(JSON.stringify({ ok: false, error: "userId required" }), {
@@ -53,23 +43,6 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     }
 
     const now = Date.now();
-
-    if (practice) {
-      for (const [chapterId, record] of Object.entries(practice)) {
-        await env.DB.prepare(`
-          INSERT OR REPLACE INTO practice_records (user_id, chapter_id, score, total_questions, answers, completed_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
-        `).bind(
-          userId,
-          chapterId,
-          record.score,
-          record.totalQuestions,
-          JSON.stringify(record.answers),
-          record.completedAt,
-          now
-        ).run();
-      }
-    }
 
     if (exam) {
       for (const [examId, record] of Object.entries(exam)) {
