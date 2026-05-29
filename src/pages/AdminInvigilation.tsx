@@ -32,8 +32,6 @@ const examTitles: Record<string, string> = {
 
 export function AdminInvigilationPage() {
   const [sessions, setSessions] = useState<ExamSessionInfo[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedExam, setSelectedExam] = useState<string>('all');
 
   useEffect(() => {
@@ -44,18 +42,13 @@ export function AdminInvigilationPage() {
 
   const fetchSessions = async () => {
     try {
-      setLoading(true);
       const response = await fetch('/api/invigilation');
       const data = await response.json();
       if (data.ok) {
         setSessions(data.sessions || []);
-      } else {
-        setError(data.error || '获取监考信息失败');
       }
     } catch (err) {
-      setError('连接失败');
-    } finally {
-      setLoading(false);
+      console.error('Failed to fetch invigilation data:', err);
     }
   };
 
