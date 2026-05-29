@@ -211,16 +211,6 @@ async function ensureIndexes(db: D1Database): Promise<void> {
     `).run();
     
     await db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_practice_records_user 
-      ON practice_records (user_id)
-    `).run();
-    
-    await db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_practice_records_chapter 
-      ON practice_records (chapter_id)
-    `).run();
-    
-    await db.prepare(`
       CREATE INDEX IF NOT EXISTS idx_exam_records_user 
       ON exam_records (user_id)
     `).run();

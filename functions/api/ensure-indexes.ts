@@ -13,24 +13,6 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     indexesCreated.push('idx_users_created_at');
     
     await env.DB.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_practice_records_user 
-      ON practice_records (user_id)
-    `).run();
-    indexesCreated.push('idx_practice_records_user');
-    
-    await env.DB.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_practice_records_chapter 
-      ON practice_records (chapter_id)
-    `).run();
-    indexesCreated.push('idx_practice_records_chapter');
-    
-    await env.DB.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_practice_records_completed 
-      ON practice_records (completed_at)
-    `).run();
-    indexesCreated.push('idx_practice_records_completed');
-    
-    await env.DB.prepare(`
       CREATE INDEX IF NOT EXISTS idx_exam_records_user 
       ON exam_records (user_id)
     `).run();

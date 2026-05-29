@@ -82,7 +82,6 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
       } else if (action === "delete") {
         // 删除用户及其相关数据
         await env.DB.prepare(`DELETE FROM users WHERE id = ?`).bind(userId).run();
-        await env.DB.prepare(`DELETE FROM practice_records WHERE user_id = ?`).bind(userId).run();
         await env.DB.prepare(`DELETE FROM exam_records WHERE user_id = ?`).bind(userId).run();
         await env.DB.prepare(`DELETE FROM audit_logs WHERE user_id = ?`).bind(userId).run();
 
