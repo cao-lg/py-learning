@@ -226,6 +226,11 @@ async function ensureIndexes(db: D1Database): Promise<void> {
     `).run();
     
     await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_exam_records_user_completed 
+      ON exam_records (user_id, completed_at DESC)
+    `).run();
+    
+    await db.prepare(`
       CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam_event 
       ON audit_logs (user_id, exam_id, event_type)
     `).run();
@@ -246,8 +251,8 @@ async function ensureIndexes(db: D1Database): Promise<void> {
     `).run();
     
     await db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_exam_violations_exam_user 
-      ON exam_violations (exam_id, user_id)
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_exam_user_timestamp 
+      ON audit_logs (exam_id, user_id, timestamp DESC)
     `).run();
   } catch (error) {
     console.warn('Index creation failed (may already exist):', error);

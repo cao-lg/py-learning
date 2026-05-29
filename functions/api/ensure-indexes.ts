@@ -31,6 +31,12 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     indexesCreated.push('idx_exam_records_exam');
     
     await env.DB.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_exam_records_user_completed 
+      ON exam_records (user_id, completed_at DESC)
+    `).run();
+    indexesCreated.push('idx_exam_records_user_completed');
+    
+    await env.DB.prepare(`
       CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam_event 
       ON audit_logs (user_id, exam_id, event_type)
     `).run();
@@ -55,10 +61,10 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     indexesCreated.push('idx_audit_logs_exam_event_timestamp');
     
     await env.DB.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_exam_violations_exam_user 
-      ON exam_violations (exam_id, user_id)
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_exam_user_timestamp 
+      ON audit_logs (exam_id, user_id, timestamp DESC)
     `).run();
-    indexesCreated.push('idx_exam_violations_exam_user');
+    indexesCreated.push('idx_audit_logs_exam_user_timestamp');
 
     return new Response(
       JSON.stringify({ 
