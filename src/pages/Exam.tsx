@@ -55,15 +55,36 @@ export function ExamPage() {
         setUserName(storedUserName);
       }
 
-      const examIndexResponse = await fetch('/data/exam/_index.json');
+      const [examIndexResponse, scheduleResponse] = await Promise.all([
+        fetch('/data/exam/_index.json'),
+        fetch('/api/exam-schedule')
+      ]);
+
       let examInfo: any = null;
       let hasMultipleVersions = false;
+      let scheduleData: Record<string, { startTime: string | null; endTime: string | null }> = {};
+      
+      if (scheduleResponse.ok) {
+        const scheduleJson = await scheduleResponse.json();
+        scheduleData = scheduleJson.schedule || {};
+      }
       
       if (examIndexResponse.ok) {
         const examIndex = await examIndexResponse.json();
         examInfo = examIndex.exams.find((e: ExamInfo) => e.id === examId);
         if (examInfo) {
           hasMultipleVersions = examInfo.hasMultipleVersions;
+          
+          const examSchedule = scheduleData[examId || ''];
+          if (examSchedule) {
+            if (examSchedule.startTime) {
+              examInfo.startTime = examSchedule.startTime;
+            }
+            if (examSchedule.endTime) {
+              examInfo.endTime = examSchedule.endTime;
+            }
+          }
+          
           const availability = checkExamAvailability(examInfo);
           if (availability.status === 'not_started') {
             setError(`考试尚未开始\n开始时间：${formatDateTime(availability.startsAt!)}`);
