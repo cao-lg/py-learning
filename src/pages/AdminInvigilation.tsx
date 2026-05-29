@@ -105,8 +105,7 @@ export function AdminInvigilationPage() {
   };
 
   const getExamList = () => {
-    const exams = new Set(sessions.map(s => s.examId));
-    return Array.from(exams).map(id => ({ id, title: examTitles[id] || id }));
+    return Object.entries(examTitles).map(([id, title]) => ({ id, title }));
   };
 
   const filteredSessions = selectedExam === 'all'
