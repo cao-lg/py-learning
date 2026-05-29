@@ -12,6 +12,7 @@ import { AdminStudentDetailPage } from './pages/AdminStudentDetail';
 import { AdminInvigilationPage } from './pages/AdminInvigilation';
 import { HomePage } from './pages/Home';
 import { LearnPage } from './pages/Learn';
+import Profile from './pages/Profile';
 
 function ProtectedNav() {
   return (
@@ -24,6 +25,9 @@ function ProtectedNav() {
       </a>
       <a href="/exam" className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
         考
+      </a>
+      <a href="/profile" className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
+        我的
       </a>
       <a href="/admin" className="text-gray-600 dark:text-gray-300 hover:text-purple-600">
         管理
@@ -91,6 +95,7 @@ export function App() {
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/admin/users/:id" element={<AdminStudentDetailPage />} />
           <Route path="/admin/invigilation" element={<AdminInvigilationPage />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

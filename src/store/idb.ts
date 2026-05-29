@@ -1,4 +1,4 @@
-import { get, set, del } from 'idb-keyval';
+import { get, set, del, keys, clear } from 'idb-keyval';
 import type { ExamSession } from '../types';
 
 const KEYS = {
@@ -13,6 +13,17 @@ interface ExamViolation {
   reason: string;
   timestamp: number;
   tabSwitchCount: number;
+}
+
+export interface ExportData {
+  version: string;
+  exportTime: number;
+  userId: string;
+  userName: string;
+  practiceCodes: Record<string, string>;
+  examDrafts: Record<string, Record<string, string>>;
+  examSessions: ExamSession[];
+  examViolations: Record<string, ExamViolation>;
 }
 
 export const storage = {
@@ -72,5 +83,104 @@ export const storage = {
 
   async clearSyncQueue(): Promise<void> {
     await set(KEYS.SYNC_QUEUE, []);
+  },
+
+  async exportAllData(): Promise<ExportData> {
+    const allKeys = await keys();
+    
+    const practiceCodes: Record<string, string> = {};
+    const examDrafts: Record<string, Record<string, string>> = {};
+    const examSessions: ExamSession[] = [];
+    const examViolations: Record<string, ExamViolation> = {};
+
+    for (const key of allKeys) {
+      const keyStr = String(key);
+      
+      if (keyStr.startsWith(KEYS.PRACTICE_CODE)) {
+        const questionId = keyStr.replace(KEYS.PRACTICE_CODE, '');
+        const code = await get<string>(key);
+        if (code) {
+          practiceCodes[questionId] = code;
+        }
+      } else if (keyStr.startsWith(KEYS.EXAM_DRAFT)) {
+        const examId = keyStr.replace(KEYS.EXAM_DRAFT, '');
+        const draft = await get<Record<string, string>>(key);
+        if (draft) {
+          examDrafts[examId] = draft;
+        }
+      } else if (keyStr.startsWith(KEYS.EXAM_SESSION)) {
+        const session = await get<ExamSession>(key);
+        if (session) {
+          examSessions.push(session);
+        }
+      } else if (keyStr.startsWith(KEYS.EXAM_VIOLATION)) {
+        const examId = keyStr.replace(KEYS.EXAM_VIOLATION, '');
+        const violation = await get<ExamViolation>(key);
+        if (violation) {
+          examViolations[examId] = violation;
+        }
+      }
+    }
+
+    return {
+      version: '1.0',
+      exportTime: Date.now(),
+      userId: localStorage.getItem('userId') || '',
+      userName: localStorage.getItem('userName') || '',
+      practiceCodes,
+      examDrafts,
+      examSessions,
+      examViolations,
+    };
+  },
+
+  async importData(data: ExportData): Promise<void> {
+    if (data.userId) {
+      localStorage.setItem('userId', data.userId);
+    }
+    if (data.userName) {
+      localStorage.setItem('userName', data.userName);
+    }
+
+    for (const [questionId, code] of Object.entries(data.practiceCodes)) {
+      await set(KEYS.PRACTICE_CODE + questionId, code);
+    }
+
+    for (const [examId, draft] of Object.entries(data.examDrafts)) {
+      await set(KEYS.EXAM_DRAFT + examId, draft);
+    }
+
+    for (const session of data.examSessions) {
+      const key = KEYS.EXAM_SESSION + session.exam_id + '_' + session.user_id;
+      await set(key, session);
+    }
+
+    for (const [examId, violation] of Object.entries(data.examViolations)) {
+      await set(KEYS.EXAM_VIOLATION + examId, violation);
+    }
+  },
+
+  async clearAllData(): Promise<void> {
+    await clear();
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+  },
+
+  async getAllPracticeCodes(): Promise<Record<string, string>> {
+    const allKeys = await keys();
+    const practiceCodes: Record<string, string> = {};
+    
+    for (const key of allKeys) {
+      const keyStr = String(key);
+      if (keyStr.startsWith(KEYS.PRACTICE_CODE)) {
+        const questionId = keyStr.replace(KEYS.PRACTICE_CODE, '');
+        const code = await get<string>(key);
+        if (code) {
+          practiceCodes[questionId] = code;
+        }
+      }
+    }
+    
+    return practiceCodes;
   },
 };
