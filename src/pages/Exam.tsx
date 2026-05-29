@@ -274,25 +274,16 @@ export function ExamPage() {
   const triggerSync = useCallback(async (force = false) => {
     if (!examSet || !session) return;
     const now = Date.now();
-    if (!force && now - lastSyncRef.current < 10000) return;
+    if (!force && now - lastSyncRef.current < 30000) return; // 延长到 30 秒
     lastSyncRef.current = now;
 
     const userId = localStorage.getItem('userId');
     if (!userId) return;
 
+    // 只同步 audit 数据（监考需要），不同步完整的考试答案
     const payload: SyncPayload = {
       userId,
       practice: {},
-      exam: {
-        [examSet.id]: {
-          examId: examSet.id,
-          answers,
-          score: calculateScore(),
-          totalQuestions: questions.length,
-          startedAt: startTime,
-          completedAt: Date.now(),
-        },
-      },
       audit: {
         [examSet.id]: [
           { type: 'focus_loss', timestamp: Date.now(), data: { count: audit.focus_loss } },
@@ -301,8 +292,22 @@ export function ExamPage() {
       },
     };
 
+    // 只有提交考试时才同步完整的 exam 数据
+    if (isSubmitted) {
+      payload.exam = {
+        [examSet.id]: {
+          examId: examSet.id,
+          answers,
+          score: calculateScore(),
+          totalQuestions: questions.length,
+          startedAt: startTime,
+          completedAt: Date.now(),
+        },
+      };
+    }
+
     await syncQueue.enqueue(payload);
-  }, [examSet, session, answers, audit, tabSwitchCount]);
+  }, [examSet, session, answers, audit, tabSwitchCount, isSubmitted]);
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */

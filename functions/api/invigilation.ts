@@ -12,93 +12,92 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     await ensureIndexes(env.DB);
 
-    const auditResults = await env.DB.prepare(`
-      SELECT al.user_id, al.exam_id, u.name as user_name,
-             MAX(al.timestamp) as last_activity
-      FROM audit_logs al
-      LEFT JOIN users u ON al.user_id = u.id
-      GROUP BY al.user_id, al.exam_id, u.name
-      ORDER BY last_activity DESC
-    `).all();
-
-    const examResults = await env.DB.prepare(`
-      SELECT er.user_id, er.exam_id, er.started_at, er.completed_at, 
-             u.name as user_name
-      FROM exam_records er
-      LEFT JOIN users u ON er.user_id = u.id
-    `).all();
-
-    const examMap = new Map<string, any>();
-    for (const row of examResults.results || []) {
-      const key = `${row.user_id}_${row.exam_id}`;
-      examMap.set(key, row);
+    // 获取所有用户
+    const usersResult = await env.DB.prepare(`SELECT id, name FROM users`).all();
+    const userMap = new Map<string, string>();
+    for (const row of usersResult.results || []) {
+      userMap.set(row.id, row.name);
     }
 
-    const tabSwitchResults = await env.DB.prepare(`
-      SELECT al.user_id, al.exam_id, al.event_data
-      FROM audit_logs al
-      WHERE al.event_type = 'tab_switch'
-      AND al.timestamp = (
-        SELECT MAX(al2.timestamp) 
-        FROM audit_logs al2 
-        WHERE al2.user_id = al.user_id 
-        AND al2.exam_id = al.exam_id 
-        AND al2.event_type = 'tab_switch'
-      )
+    // 一次性获取所有需要的 audit_logs 数据（包括最后活动时间和最新切屏计数）
+    const auditResult = await env.DB.prepare(`
+      SELECT user_id, exam_id, event_type, event_data, timestamp
+      FROM audit_logs
+      ORDER BY user_id, exam_id, timestamp DESC
     `).all();
 
-    const tabSwitchMap = new Map<string, number>();
-    for (const row of tabSwitchResults.results || []) {
+    // 处理 audit_logs 数据
+    const userExamData = new Map<string, { lastActivity: number; tabSwitchCount: number }>();
+    
+    for (const row of auditResult.results || []) {
       const key = `${row.user_id}_${row.exam_id}`;
-      try {
-        const data = typeof row.event_data === 'string' 
-          ? JSON.parse(row.event_data) 
-          : row.event_data;
-        tabSwitchMap.set(key, data.count || 0);
-      } catch {
-        tabSwitchMap.set(key, 0);
+      if (!userExamData.has(key)) {
+        userExamData.set(key, { lastActivity: 0, tabSwitchCount: 0 });
+      }
+      const data = userExamData.get(key)!;
+      
+      // 更新最后活动时间
+      if (row.timestamp > data.lastActivity) {
+        data.lastActivity = row.timestamp;
+      }
+      
+      // 如果是切屏事件且还没有切屏计数，更新计数
+      if (row.event_type === 'tab_switch' && data.tabSwitchCount === 0) {
+        try {
+          const eventData = typeof row.event_data === 'string' 
+            ? JSON.parse(row.event_data) 
+            : row.event_data;
+          data.tabSwitchCount = eventData.count || 0;
+        } catch {
+          // ignore
+        }
       }
     }
 
+    // 获取所有考试记录
+    const examRecordsResult = await env.DB.prepare(`
+      SELECT user_id, exam_id, started_at, completed_at
+      FROM exam_records
+      ORDER BY started_at DESC
+    `).all();
+
+    const examRecordMap = new Map<string, any>();
+    for (const row of examRecordsResult.results || []) {
+      const key = `${row.user_id}_${row.exam_id}`;
+      examRecordMap.set(key, row);
+    }
+
+    // 收集所有唯一的 (user_id, exam_id) 组合
     const allKeys = new Set<string>();
-    for (const row of auditResults.results || []) {
-      allKeys.add(`${row.user_id}_${row.exam_id}`);
-    }
-    for (const row of examResults.results || []) {
-      allKeys.add(`${row.user_id}_${row.exam_id}`);
-    }
+    for (const key of userExamData.keys()) allKeys.add(key);
+    for (const key of examRecordMap.keys()) allKeys.add(key);
 
+    // 构建最终结果
     for (const key of allKeys) {
-      const auditRow = Array.from(auditResults.results || []).find(
-        r => `${r.user_id}_${r.exam_id}` === key
-      );
-      const examRow = examMap.get(key);
-
-      if (!auditRow && !examRow) continue;
-
-      const userId = auditRow?.user_id || examRow?.user_id;
-      const examId = auditRow?.exam_id || examRow?.exam_id;
-      const userName = auditRow?.user_name || examRow?.user_name || '未知用户';
-      const tabSwitchCount = tabSwitchMap.get(key) || 0;
+      const [userId, examId] = key.split('_');
+      const auditData = userExamData.get(key);
+      const examRecord = examRecordMap.get(key);
+      const userName = userMap.get(userId) || '未知用户';
 
       let startTime = Date.now();
-      let status = 'ongoing';
+      let status: 'ongoing' | 'submitted' = 'ongoing';
 
-      if (examRow) {
-        if (examRow.started_at) {
-          if (typeof examRow.started_at === 'number') {
-            startTime = examRow.started_at;
-          } else if (typeof examRow.started_at === 'string') {
-            const parsed = parseFloat(examRow.started_at);
-            startTime = !isNaN(parsed) ? parsed : new Date(examRow.started_at).getTime();
+      if (examRecord) {
+        // 处理 started_at
+        if (examRecord.started_at) {
+          if (typeof examRecord.started_at === 'number') {
+            startTime = examRecord.started_at;
+          } else if (typeof examRecord.started_at === 'string') {
+            const parsed = parseFloat(examRecord.started_at);
+            startTime = !isNaN(parsed) ? parsed : new Date(examRecord.started_at).getTime();
           } else {
-            startTime = new Date(examRow.started_at).getTime();
+            startTime = new Date(examRecord.started_at).getTime();
           }
         }
-        status = examRow.completed_at ? 'submitted' : 'ongoing';
-      } else if (auditRow?.last_activity) {
-        startTime = typeof auditRow.last_activity === 'number' 
-          ? auditRow.last_activity 
+        status = examRecord.completed_at ? 'submitted' : 'ongoing';
+      } else if (auditData?.lastActivity) {
+        startTime = typeof auditData.lastActivity === 'number' 
+          ? auditData.lastActivity 
           : Date.now();
       }
 
@@ -107,7 +106,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
         userId,
         userName,
         status,
-        tabSwitchCount,
+        tabSwitchCount: auditData?.tabSwitchCount || 0,
         startTime,
       });
     }

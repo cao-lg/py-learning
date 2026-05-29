@@ -53,9 +53,8 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
              COUNT(DISTINCT e.id) as exam_count,
              COALESCE(SUM(e.score), 0) as total_score
       FROM users u
-      LEFT JOIN exam_records e ON u.id = e.user_id
+      INNER JOIN exam_records e ON u.id = e.user_id
       GROUP BY u.id, u.name
-      HAVING exam_count > 0
       ORDER BY total_score DESC
       LIMIT 10
     `).all<{ user_id: string; user_name: string; exam_count: number; total_score: number }>();
