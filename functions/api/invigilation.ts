@@ -10,40 +10,45 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
   try {
     const results = await env.DB.prepare(`
       SELECT 
-        es.exam_id,
-        es.user_id,
-        es.status,
-        es.started_at,
-        es.audit,
+        er.user_id,
+        er.exam_id,
+        er.started_at,
+        er.completed_at,
         u.name as user_name
-      FROM exam_sessions es
-      LEFT JOIN users u ON es.user_id = u.id
-      WHERE es.status != 'deleted'
-      ORDER BY es.started_at DESC
+      FROM exam_records er
+      LEFT JOIN users u ON er.user_id = u.id
+      ORDER BY er.started_at DESC
     `).all();
 
-    const sessions = results.results.map((row: any) => {
+    const sessions: any[] = [];
+    
+    for (const row of results.results) {
+      const auditResult = await env.DB.prepare(`
+        SELECT event_data FROM audit_logs 
+        WHERE user_id = ? AND exam_id = ? AND event_type = 'tab_switch'
+        ORDER BY timestamp DESC
+        LIMIT 1
+      `).bind(row.user_id, row.exam_id).first();
+
       let tabSwitchCount = 0;
-      try {
-        if (row.audit && typeof row.audit === 'string') {
-          const audit = JSON.parse(row.audit);
-          tabSwitchCount = audit.tab_switch || 0;
-        } else if (row.audit && typeof row.audit === 'object') {
-          tabSwitchCount = row.audit.tab_switch || 0;
+      if (auditResult && auditResult.event_data) {
+        try {
+          const data = JSON.parse(auditResult.event_data);
+          tabSwitchCount = data.count || 0;
+        } catch {
+          tabSwitchCount = 0;
         }
-      } catch {
-        tabSwitchCount = 0;
       }
 
-      return {
+      sessions.push({
         examId: row.exam_id,
         userId: row.user_id,
         userName: row.user_name || '未知用户',
-        status: row.status,
+        status: row.completed_at ? 'submitted' : 'ongoing',
         tabSwitchCount,
         startTime: row.started_at ? new Date(row.started_at).getTime() : Date.now(),
-      };
-    });
+      });
+    }
 
     return new Response(
       JSON.stringify({ ok: true, sessions }),
@@ -88,33 +93,23 @@ async function handleResetTabSwitch(request: Request, env: Env) {
     }
 
     const result = await env.DB.prepare(`
-      SELECT audit FROM exam_sessions WHERE user_id = ? AND exam_id = ?
+      SELECT event_data FROM audit_logs 
+      WHERE user_id = ? AND exam_id = ? AND event_type = 'tab_switch'
+      ORDER BY timestamp DESC
+      LIMIT 1
     `).bind(userId, examId).first();
 
     if (!result) {
       return new Response(
-        JSON.stringify({ ok: false, error: '未找到该会话' }),
+        JSON.stringify({ ok: false, error: '未找到该会话的切屏记录' }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    let audit = { focus_loss: 0, tab_switch: 0, paste_attempts: 0, fullscreen_change: 0 };
-    try {
-      if (result.audit && typeof result.audit === 'string') {
-        audit = JSON.parse(result.audit);
-      } else if (result.audit && typeof result.audit === 'object') {
-        audit = result.audit;
-      }
-    } catch {
-      // 保持默认值
-    }
-
-    audit.tab_switch = 0;
-
     await env.DB.prepare(`
-      UPDATE exam_sessions SET audit = ?, updated_at = CURRENT_TIMESTAMP
-      WHERE user_id = ? AND exam_id = ?
-    `).bind(JSON.stringify(audit), userId, examId).run();
+      INSERT INTO audit_logs (user_id, exam_id, event_type, event_data, timestamp)
+      VALUES (?, ?, 'tab_switch', ?, ?)
+    `).bind(userId, examId, JSON.stringify({ count: 0, reason: 'reset by admin' }), Date.now()).run();
 
     return new Response(
       JSON.stringify({ ok: true, message: '切屏次数已重置' }),
