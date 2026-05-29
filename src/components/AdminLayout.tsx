@@ -32,6 +32,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
   const navItems = [
     { path: '/admin', label: '统计概览', icon: '📊' },
     { path: '/admin/users', label: '用户管理', icon: '👥' },
+    { path: '/admin/invigilation', label: '监考管理', icon: '👀' },
     { path: '/admin/settings', label: '考试设置', icon: '⚙️' },
   ];
 
