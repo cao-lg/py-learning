@@ -43,6 +43,18 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     indexesCreated.push('idx_audit_logs_user_exam');
     
     await env.DB.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam_event_timestamp 
+      ON audit_logs (user_id, exam_id, event_type, timestamp)
+    `).run();
+    indexesCreated.push('idx_audit_logs_user_exam_event_timestamp');
+    
+    await env.DB.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_exam_event_timestamp 
+      ON audit_logs (exam_id, event_type, timestamp)
+    `).run();
+    indexesCreated.push('idx_audit_logs_exam_event_timestamp');
+    
+    await env.DB.prepare(`
       CREATE INDEX IF NOT EXISTS idx_exam_violations_exam_user 
       ON exam_violations (exam_id, user_id)
     `).run();
