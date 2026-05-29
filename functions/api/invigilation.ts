@@ -10,6 +10,8 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
   try {
     const sessions: any[] = [];
 
+    await ensureIndexes(env.DB);
+
     const auditResults = await env.DB.prepare(`
       SELECT al.user_id, al.exam_id, u.name as user_name,
              MAX(al.timestamp) as last_activity
@@ -198,5 +200,31 @@ async function handleClearViolation(request: Request, env: Env) {
       JSON.stringify({ ok: false, error: '清除失败' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
+  }
+}
+
+async function ensureIndexes(db: D1Database): Promise<void> {
+  try {
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam_event 
+      ON audit_logs (user_id, exam_id, event_type)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam 
+      ON audit_logs (user_id, exam_id)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_exam_records_user 
+      ON exam_records (user_id)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_exam_records_user_exam 
+      ON exam_records (user_id, exam_id)
+    `).run();
+  } catch (error) {
+    console.warn('Index creation failed (may already exist):', error);
   }
 }
