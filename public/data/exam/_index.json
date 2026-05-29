@@ -118,8 +118,8 @@
       "totalScore": 100,
       "questionCount": 5,
       "difficulty": "medium",
-      "startTime": "2026-04-15T09:00:00Z",
-      "endTime": "2026-04-15T18:00:00Z"
+      "startTime": "2026-06-01T09:00:00Z",
+      "endTime": "2026-06-30T23:59:59Z"
     },
     {
       "id": "final_exam",
