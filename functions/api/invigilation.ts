@@ -8,8 +8,10 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
   const { env } = context;
 
   try {
-    const results = await env.DB.prepare(`
-      SELECT DISTINCT al.user_id, al.exam_id, u.name as user_name,
+    const sessions: any[] = [];
+
+    const auditResults = await env.DB.prepare(`
+      SELECT al.user_id, al.exam_id, u.name as user_name,
              MAX(al.timestamp) as last_activity
       FROM audit_logs al
       LEFT JOIN users u ON al.user_id = u.id
@@ -17,121 +19,98 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       ORDER BY last_activity DESC
     `).all();
 
-    console.log('Audit records found:', results.results.length);
-    if (results.results.length > 0) {
-      console.log('First audit record:', JSON.stringify(results.results[0]));
+    const examResults = await env.DB.prepare(`
+      SELECT er.user_id, er.exam_id, er.started_at, er.completed_at, 
+             u.name as user_name
+      FROM exam_records er
+      LEFT JOIN users u ON er.user_id = u.id
+    `).all();
+
+    const examMap = new Map<string, any>();
+    for (const row of examResults.results || []) {
+      const key = `${row.user_id}_${row.exam_id}`;
+      examMap.set(key, row);
     }
 
-    const sessions: any[] = [];
-    
-    for (const row of results.results) {
-      console.log(`Processing audit record: user_id=${row.user_id}, exam_id=${row.exam_id}`);
-      
-      const tabSwitchResult = await env.DB.prepare(`
-        SELECT event_data, timestamp FROM audit_logs 
-        WHERE user_id = ? AND exam_id = ? AND event_type = 'tab_switch'
-        ORDER BY timestamp DESC
-        LIMIT 1
-      `).bind(row.user_id, row.exam_id).first();
+    const tabSwitchResults = await env.DB.prepare(`
+      SELECT al.user_id, al.exam_id, al.event_data
+      FROM audit_logs al
+      WHERE al.event_type = 'tab_switch'
+      AND al.timestamp = (
+        SELECT MAX(al2.timestamp) 
+        FROM audit_logs al2 
+        WHERE al2.user_id = al.user_id 
+        AND al2.exam_id = al.exam_id 
+        AND al2.event_type = 'tab_switch'
+      )
+    `).all();
 
-      console.log('Tab switch result:', tabSwitchResult);
-
-      let tabSwitchCount = 0;
-      if (tabSwitchResult && tabSwitchResult.event_data) {
-        try {
-          const data = typeof tabSwitchResult.event_data === 'string' 
-            ? JSON.parse(tabSwitchResult.event_data) 
-            : tabSwitchResult.event_data;
-          tabSwitchCount = data.count || 0;
-        } catch (e) {
-          console.error('Failed to parse audit data:', e);
-          tabSwitchCount = 0;
-        }
+    const tabSwitchMap = new Map<string, number>();
+    for (const row of tabSwitchResults.results || []) {
+      const key = `${row.user_id}_${row.exam_id}`;
+      try {
+        const data = typeof row.event_data === 'string' 
+          ? JSON.parse(row.event_data) 
+          : row.event_data;
+        tabSwitchMap.set(key, data.count || 0);
+      } catch {
+        tabSwitchMap.set(key, 0);
       }
+    }
 
-      const examRecord = await env.DB.prepare(`
-        SELECT started_at, completed_at FROM exam_records 
-        WHERE user_id = ? AND exam_id = ?
-      `).bind(row.user_id, row.exam_id).first();
+    const allKeys = new Set<string>();
+    for (const row of auditResults.results || []) {
+      allKeys.add(`${row.user_id}_${row.exam_id}`);
+    }
+    for (const row of examResults.results || []) {
+      allKeys.add(`${row.user_id}_${row.exam_id}`);
+    }
+
+    for (const key of allKeys) {
+      const auditRow = Array.from(auditResults.results || []).find(
+        r => `${r.user_id}_${r.exam_id}` === key
+      );
+      const examRow = examMap.get(key);
+
+      if (!auditRow && !examRow) continue;
+
+      const userId = auditRow?.user_id || examRow?.user_id;
+      const examId = auditRow?.exam_id || examRow?.exam_id;
+      const userName = auditRow?.user_name || examRow?.user_name || '未知用户';
+      const tabSwitchCount = tabSwitchMap.get(key) || 0;
 
       let startTime = Date.now();
       let status = 'ongoing';
 
-      if (examRecord) {
-        if (examRecord.started_at) {
-          if (typeof examRecord.started_at === 'number') {
-            startTime = examRecord.started_at;
-          } else if (typeof examRecord.started_at === 'string') {
-            const parsed = parseFloat(examRecord.started_at);
-            if (!isNaN(parsed)) {
-              startTime = parsed;
-            } else {
-              startTime = new Date(examRecord.started_at).getTime();
-            }
+      if (examRow) {
+        if (examRow.started_at) {
+          if (typeof examRow.started_at === 'number') {
+            startTime = examRow.started_at;
+          } else if (typeof examRow.started_at === 'string') {
+            const parsed = parseFloat(examRow.started_at);
+            startTime = !isNaN(parsed) ? parsed : new Date(examRow.started_at).getTime();
           } else {
-            startTime = new Date(examRecord.started_at).getTime();
+            startTime = new Date(examRow.started_at).getTime();
           }
         }
-        status = examRecord.completed_at ? 'submitted' : 'ongoing';
-      } else if (row.last_activity) {
-        startTime = typeof row.last_activity === 'number' ? row.last_activity : Date.now();
+        status = examRow.completed_at ? 'submitted' : 'ongoing';
+      } else if (auditRow?.last_activity) {
+        startTime = typeof auditRow.last_activity === 'number' 
+          ? auditRow.last_activity 
+          : Date.now();
       }
 
       sessions.push({
-        examId: row.exam_id,
-        userId: row.user_id,
-        userName: row.user_name || '未知用户',
+        examId,
+        userId,
+        userName,
         status,
         tabSwitchCount,
         startTime,
       });
     }
 
-    const examRecordResults = await env.DB.prepare(`
-      SELECT er.user_id, er.exam_id, er.started_at, er.completed_at, u.name as user_name
-      FROM exam_records er
-      LEFT JOIN users u ON er.user_id = u.id
-      WHERE NOT EXISTS (
-        SELECT 1 FROM audit_logs al 
-        WHERE al.user_id = er.user_id AND al.exam_id = er.exam_id
-      )
-      ORDER BY er.started_at DESC
-    `).all();
-
-    console.log('Exam records without audit:', examRecordResults.results.length);
-
-    for (const row of examRecordResults.results) {
-      let tabSwitchCount = 0;
-      
-      let startTime = Date.now();
-      if (row.started_at) {
-        if (typeof row.started_at === 'number') {
-          startTime = row.started_at;
-        } else if (typeof row.started_at === 'string') {
-          const parsed = parseFloat(row.started_at);
-          if (!isNaN(parsed)) {
-            startTime = parsed;
-          } else {
-            startTime = new Date(row.started_at).getTime();
-          }
-        } else {
-          startTime = new Date(row.started_at).getTime();
-        }
-      }
-
-      sessions.push({
-        examId: row.exam_id,
-        userId: row.user_id,
-        userName: row.user_name || '未知用户',
-        status: row.completed_at ? 'submitted' : 'ongoing',
-        tabSwitchCount,
-        startTime,
-      });
-    }
-
     sessions.sort((a, b) => b.startTime - a.startTime);
-
-    console.log('Total sessions to return:', sessions.length);
 
     return new Response(
       JSON.stringify({ ok: true, sessions, total: sessions.length }),
