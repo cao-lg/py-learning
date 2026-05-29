@@ -206,13 +206,18 @@ async function handleClearViolation(request: Request, env: Env) {
 async function ensureIndexes(db: D1Database): Promise<void> {
   try {
     await db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam_event 
-      ON audit_logs (user_id, exam_id, event_type)
+      CREATE INDEX IF NOT EXISTS idx_users_created_at 
+      ON users (created_at)
     `).run();
     
     await db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam 
-      ON audit_logs (user_id, exam_id)
+      CREATE INDEX IF NOT EXISTS idx_practice_records_user 
+      ON practice_records (user_id)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_practice_records_chapter 
+      ON practice_records (chapter_id)
     `).run();
     
     await db.prepare(`
@@ -223,6 +228,26 @@ async function ensureIndexes(db: D1Database): Promise<void> {
     await db.prepare(`
       CREATE INDEX IF NOT EXISTS idx_exam_records_user_exam 
       ON exam_records (user_id, exam_id)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_exam_records_exam 
+      ON exam_records (exam_id)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam_event 
+      ON audit_logs (user_id, exam_id, event_type)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_exam 
+      ON audit_logs (user_id, exam_id)
+    `).run();
+    
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_exam_violations_exam_user 
+      ON exam_violations (exam_id, user_id)
     `).run();
   } catch (error) {
     console.warn('Index creation failed (may already exist):', error);
