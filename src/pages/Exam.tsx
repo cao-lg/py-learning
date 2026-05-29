@@ -220,7 +220,7 @@ export function ExamPage() {
         tabSwitchCountRef.current++;
         const newCount = tabSwitchCountRef.current;
         setTabSwitchCount(newCount);
-        triggerSync();
+        triggerSync(true);
 
         if (newCount >= MAX_TAB_SWITCHES) {
           handleAutoSubmit(`切屏次数过多（${newCount}次），考试自动终止`);
@@ -250,10 +250,10 @@ export function ExamPage() {
     return questions.length > 0 ? (passedCount / questions.length) * 100 : 0;
   };
 
-  const triggerSync = useCallback(async () => {
+  const triggerSync = useCallback(async (force = false) => {
     if (!examSet || !session) return;
     const now = Date.now();
-    if (now - lastSyncRef.current < 10000) return;
+    if (!force && now - lastSyncRef.current < 10000) return;
     lastSyncRef.current = now;
 
     const userId = localStorage.getItem('userId');
