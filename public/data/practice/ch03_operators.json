@@ -1,13 +1,13 @@
 {
   "id": "ch03_operators",
   "title": "Python 基础 - 第三章：运算符",
-  "description": "学习算术、比较和逻辑运算符",
+  "description": "学习算术、比较、逻辑和位运算符",
   "questions": [
     {
       "id": "op01_floor_div_mod",
       "type": "output",
       "title": "整除与取模",
-      "instruction": "给定 `n = 100`，计算并打印：\n1. n 除以 7 的商（整除）\n2. n 除以 7 的余数",
+      "instruction": "给定 `n = 100`，计算并打印：\n1. n 除以 7 的商（整除）\n2. n 除以 7 的余数\n\n期望输出：\n```\n14\n2\n```",
       "initialCode": "n = 100\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "14\n2",
@@ -21,7 +21,7 @@
       "id": "op02_power_parentheses",
       "type": "output",
       "title": "幂运算与括号",
-      "instruction": "计算 `2 的 3 次方再 + 1`，然后乘以 2。\n\n即：(2³ + 1) × 2",
+      "instruction": "计算 `2 的 3 次方再 + 1`，然后乘以 2。\n\n即：(2³ + 1) × 2\n\n期望输出：\n```\n18\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "18",
@@ -35,7 +35,7 @@
       "id": "op03_divmod",
       "type": "output",
       "title": "divmod 函数",
-      "instruction": "使用 divmod() 函数计算 100 除以 7 的商和余数，打印结果。\n\ndivmod(a, b) 返回 (商, 余数)",
+      "instruction": "使用 divmod() 函数计算 100 除以 7 的商和余数，打印结果。\n\ndivmod(a, b) 返回 (商, 余数)\n\n期望输出：\n```\n(14, 2)\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "(14, 2)",
@@ -49,7 +49,7 @@
       "id": "op04_abs",
       "type": "output",
       "title": "绝对值",
-      "instruction": "计算并打印 -15 的绝对值，以及 -3.14 的绝对值。",
+      "instruction": "计算并打印 -15 的绝对值，以及 -3.14 的绝对值。\n\n期望输出：\n```\n15\n3.14\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "15\n3.14",
@@ -63,7 +63,7 @@
       "id": "op05_round",
       "type": "output",
       "title": "四舍五入",
-      "instruction": "对以下数值进行四舍五入：\n1. round(3.14159, 2) - 保留2位\n2. round(2.5) - 银行家舍入\n3. round(3.5)",
+      "instruction": "对以下数值进行四舍五入：\n1. round(3.14159, 2) - 保留2位\n2. round(2.5) - 银行家舍入\n3. round(3.5)\n\n期望输出：\n```\n3.14\n2\n4\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "3.14\n2\n4",
@@ -77,7 +77,7 @@
       "id": "op06_min_max",
       "type": "output",
       "title": "最小值与最大值",
-      "instruction": "已知数据 `[3, 1, 4, 1, 5, 9, 2, 6]`，打印：\n1. 最小值\n2. 最大值\n3. 最小值和最大值出现的次数",
+      "instruction": "已知数据 `[3, 1, 4, 1, 5, 9, 2, 6]`，打印：\n1. 最小值\n2. 最大值\n3. 最小值和最大值出现的次数\n\n期望输出：\n```\n1\n9\n2\n```",
       "initialCode": "data = [3, 1, 4, 1, 5, 9, 2, 6]\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "1\n9\n2",
@@ -91,7 +91,7 @@
       "id": "op07_sum_len",
       "type": "output",
       "title": "求和与计数",
-      "instruction": "已知列表 `[1, 2, 3, 4, 5]`，不使用 sum() 函数，手动计算并打印所有元素的和。",
+      "instruction": "已知列表 `[1, 2, 3, 4, 5]`，不使用 sum() 函数，手动计算并打印所有元素的和。\n\n期望输出：\n```\n15\n```",
       "initialCode": "nums = [1, 2, 3, 4, 5]\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "15",
@@ -105,7 +105,7 @@
       "id": "op08_comparison_chain",
       "type": "output",
       "title": "比较运算符链",
-      "instruction": "判断以下表达式的值并打印：\n1 < 2 < 3 < 4\n1 < 2 < 3 > 4\n0 < 1 > -1",
+      "instruction": "判断以下表达式的值并打印：\n1 < 2 < 3 < 4\n1 < 2 < 3 > 4\n0 < 1 > -1\n\n期望输出：\n```\nTrue\nFalse\nTrue\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "True\nFalse\nTrue",
@@ -119,7 +119,7 @@
       "id": "op09_is_not",
       "type": "output",
       "title": "is 与 == 的区别",
-      "instruction": "判断并打印：\n1. 1000 is 1000\n2. 1000 == 1000\n3. None is None",
+      "instruction": "判断并打印：\n1. 1000 is 1000\n2. 1000 == 1000\n3. None is None\n\n期望输出：\n```\nTrue\nTrue\nTrue\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "True\nTrue\nTrue",
@@ -134,7 +134,7 @@
       "id": "op10_logical_prio",
       "type": "output",
       "title": "逻辑运算符优先级",
-      "instruction": "计算并打印：\n1. True or False and False\n2. (True or False) and False\n3. not True or False",
+      "instruction": "计算并打印：\n1. True or False and False\n2. (True or False) and False\n3. not True or False\n\n期望输出：\n```\nTrue\nFalse\nFalse\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "True\nFalse\nFalse",
@@ -148,7 +148,7 @@
       "id": "op11_short_circuit",
       "type": "output",
       "title": "短路求值",
-      "instruction": "已知 `x = 0`，判断并打印以下表达式的值：\n1. x > 0 and 10 / x > 1\n2. x > 0 or 10 / x > 1\n\n观察哪个会报错（除以零）",
+      "instruction": "已知 `x = 0`，判断并打印以下表达式的值：\n1. x > 0 and 10 / x > 1\n2. x > 0 or 10 / x > 1\n\n观察哪个会报错（除以零）\n\n期望输出：\n```\nFalse\nTraceback (division by zero)\n```",
       "initialCode": "x = 0\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "False\nTraceback (division by zero)",
@@ -163,7 +163,7 @@
       "id": "op12_bit_and",
       "type": "output",
       "title": "按位与",
-      "instruction": "计算并打印 12 & 25 的结果（二进制位运算）。",
+      "instruction": "计算并打印 12 & 25 的结果（二进制位运算）。\n\n期望输出：\n```\n8\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "8",
@@ -177,7 +177,7 @@
       "id": "op13_bit_or",
       "type": "output",
       "title": "按位或",
-      "instruction": "计算并打印 12 | 25 的结果。",
+      "instruction": "计算并打印 12 | 25 的结果。\n\n期望输出：\n```\n29\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "29",
@@ -191,7 +191,7 @@
       "id": "op14_bit_xor",
       "type": "output",
       "title": "按位异或",
-      "instruction": "计算并打印 12 ^ 25 的结果。\n\n异或：相同为0，不同为1",
+      "instruction": "计算并打印 12 ^ 25 的结果。\n\n异或：相同为0，不同为1\n\n期望输出：\n```\n21\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "21",
@@ -205,7 +205,7 @@
       "id": "op15_bit_shift",
       "type": "output",
       "title": "位移运算",
-      "instruction": "计算并打印：\n1. 1 << 3（左移3位 = 乘以2³）\n2. 16 >> 2（右移2位 = 除以2²）",
+      "instruction": "计算并打印：\n1. 1 << 3（左移3位 = 乘以2³）\n2. 16 >> 2（右移2位 = 除以2²）\n\n期望输出：\n```\n8\n4\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "8\n4",
@@ -219,7 +219,7 @@
       "id": "op16_infinite_precision",
       "type": "output",
       "title": "大整数运算",
-      "instruction": "计算并打印 `2 的 100 次方` 的值。\n\nPython 支持任意精度整数！",
+      "instruction": "计算并打印 `2 的 100 次方` 的值。\n\nPython 支持任意精度整数！\n\n期望输出：\n```\n1267650600228229401496703205376\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "1267650600228229401496703205376",
@@ -233,7 +233,7 @@
       "id": "op17_complex_number",
       "type": "output",
       "title": "复数运算",
-      "instruction": "已知复数 `z = 3 + 4j`，计算并打印：\n1. z 的模（绝对值）\n2. z 的共轭复数",
+      "instruction": "已知复数 `z = 3 + 4j`，计算并打印：\n1. z 的模（绝对值）\n2. z 的共轭复数\n\n期望输出：\n```\n5.0\n(3-4j)\n```",
       "initialCode": "z = 3 + 4j\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "5.0\n(3-4j)",
@@ -244,10 +244,10 @@
       ]
     },
     {
-      "id": "op18 Walrus",
+      "id": "op18_walrus",
       "type": "output",
       "title": "赋值表达式 Walrus",
-      "instruction": "使用 Walrus 运算符 `:=` 在条件判断中赋值，打印 0 到 10 的偶数。\n\n提示：在 while 条件中使用 Walrus 赋值",
+      "instruction": "使用 Walrus 运算符 `:=` 在条件判断中赋值，打印 0 到 10 的偶数。\n\n提示：在 while 条件中使用 Walrus 赋值\n\n期望输出：\n```\n0\n2\n4\n6\n8\n10\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "0\n2\n4\n6\n8\n10",
@@ -261,7 +261,7 @@
       "id": "op19_chained_cmp",
       "type": "output",
       "title": "连续比较",
-      "instruction": "判断并打印：\na = 5\nb = 10\nc = 15\na < b == c > a",
+      "instruction": "判断并打印：\na = 5\nb = 10\nc = 15\na < b == c > a\n\n期望输出：\n```\nFalse\n```",
       "initialCode": "a = 5\nb = 10\nc = 15\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "False",
@@ -275,7 +275,7 @@
       "id": "op20_aug_assign",
       "type": "output",
       "title": "增强赋值与类型",
-      "instruction": "已知 `x = 5`，执行 `x /= 2`，然后打印 x 及其类型。",
+      "instruction": "已知 `x = 5`，执行 `x /= 2`，然后打印 x 及其类型。\n\n期望输出：\n```\n2.5\n<class 'float'>\n```",
       "initialCode": "x = 5\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "2.5\n<class 'float'>",
@@ -283,6 +283,146 @@
       },
       "hints": [
         { "text": "/= 结果总是浮点数", "visible": true }
+      ]
+    },
+    {
+      "id": "op21_pow_mod",
+      "type": "output",
+      "title": "pow 函数三参数",
+      "instruction": "使用 pow() 函数计算 `2^10 mod 1000`。\n\npow(base, exp, mod) 高效计算模幂\n\n期望输出：\n```\n24\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "24",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "pow(2, 10, 1000) = 1024 mod 1000 = 24", "visible": true }
+      ]
+    },
+    {
+      "id": "op22_negation",
+      "type": "output",
+      "title": "取反运算",
+      "instruction": "打印 `~5` 的结果。\n\n提示：~n = -(n+1)\n\n期望输出：\n```\n-6\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "-6",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "~n = -n - 1", "visible": true }
+      ]
+    },
+    {
+      "id": "op23_and_or_combo",
+      "type": "output",
+      "title": "and 和 or 组合",
+      "instruction": "打印以下表达式的值：\n1. 0 or False and 1\n2. 1 and 0 or 'default'\n\n期望输出：\n```\nFalse\ndefault\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "False\ndefault",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "and 优先级高于 or", "visible": true }
+      ]
+    },
+    {
+      "id": "op24_membership",
+      "type": "output",
+      "title": "成员运算符",
+      "instruction": "判断并打印：\n1. 2 in [1, 2, 3]\n2. 'a' in 'apple'\n3. 'x' in {'x': 1}（字典检查的是键）\n\n期望输出：\n```\nTrue\nTrue\nTrue\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True\nTrue\nTrue",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "in 检查成员关系", "visible": true }
+      ]
+    },
+    {
+      "id": "op25_identity",
+      "type": "output",
+      "title": "身份运算符",
+      "instruction": "判断并打印：\n1. [1, 2] is [1, 2]\n2. [1, 2] == [1, 2]\n3. a = [1, 2]; b = a; a is b\n\n期望输出：\n```\nFalse\nTrue\nTrue\n```",
+      "initialCode": "a = [1, 2]\nb = a\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "False\nTrue\nTrue",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "is 检查身份（内存地址），== 检查值", "visible": true }
+      ]
+    },
+    {
+      "id": "op26_ternary",
+      "type": "output",
+      "title": "三元运算符",
+      "instruction": "已知 `x = 10`，用三元表达式打印 'positive' 或 'negative'。\n\n期望输出：\n```\npositive\n```",
+      "initialCode": "x = 10\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "positive",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "'positive' if x > 0 else 'negative'", "visible": true }
+      ]
+    },
+    {
+      "id": "op27_logical_value",
+      "type": "output",
+      "title": "逻辑返回值",
+      "instruction": "打印以下表达式的值：\n1. 0 and 100\n2. 100 and 0\n3. 0 or 'fallback'\n4. 100 or 'fallback'\n\n期望输出：\n```\n0\n0\nfallback\n100\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "0\n0\nfallback\n100",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "and/or 返回最后一个求值", "visible": true }
+      ]
+    },
+    {
+      "id": "op28_chained_assignment",
+      "type": "output",
+      "title": "链式赋值",
+      "instruction": "使用链式赋值让 a, b, c 都等于 [1, 2, 3]，然后修改 a[0] = 99，打印 a, b, c。\n\n观察它们是否是同一个对象。\n\n期望输出：\n```\n[99, 2, 3]\n[99, 2, 3]\n[99, 2, 3]\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[99, 2, 3]\n[99, 2, 3]\n[99, 2, 3]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "a = b = c = [1, 2, 3] 引用同一个列表", "visible": true }
+      ]
+    },
+    {
+      "id": "op29_int_div",
+      "type": "output",
+      "title": "整数除法与浮点",
+      "instruction": "计算并打印：\n1. 7 / 2\n2. 7 // 2\n3. 7.0 // 2\n4. 7 // 2.0\n\n期望输出：\n```\n3.5\n3\n3.0\n3.0\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "3.5\n3\n3.0\n3.0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "// 整除，如果有浮点数参与则返回浮点", "visible": true }
+      ]
+    },
+    {
+      "id": "op30_mod_float",
+      "type": "output",
+      "title": "浮点取模",
+      "instruction": "计算并打印：\n1. 5 % 2\n2. 5.5 % 2\n3. -5 % 2\n\n期望输出：\n```\n1\n1.5\n1\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "1\n1.5\n1",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "Python 的 % 总是返回与除数同号的结果", "visible": true }
       ]
     }
   ]

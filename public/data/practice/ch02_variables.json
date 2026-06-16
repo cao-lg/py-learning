@@ -7,7 +7,7 @@
       "id": "v01_var_swap",
       "type": "output",
       "title": "变量交换",
-      "instruction": "已知 `x = 'hello'`, `y = 'world'`。不使用第三变量，将它们交换，然后打印 `x y`（中间加空格）。",
+      "instruction": "已知 `x = 'hello'`, `y = 'world'`。不使用第三变量，将它们交换，然后打印 `x y`（中间加空格）。\n\n期望输出：\n```\nworld hello\n```",
       "initialCode": "x = 'hello'\ny = 'world'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "world hello",
@@ -21,7 +21,7 @@
       "id": "v02_compound",
       "type": "output",
       "title": "复合赋值运算",
-      "instruction": "已知 `n = 5`，依次执行：\n1. n += 3\n2. n *= 2\n3. n -= 4\n\n最后打印 n 的值。",
+      "instruction": "已知 `n = 5`，依次执行：\n1. n += 3\n2. n *= 2\n3. n -= 4\n\n最后打印 n 的值。\n\n期望输出：\n```\n12\n```",
       "initialCode": "n = 5\n# 执行 n += 3\n# 执行 n *= 2\n# 执行 n -= 4\n# 打印 n\n",
       "testConfig": {
         "expected": "12",
@@ -35,7 +35,7 @@
       "id": "v03_augmented",
       "type": "output",
       "title": "链式赋值",
-      "instruction": "使用链式赋值，同时创建三个变量 `a`, `b`, `c`，它们都等于 `100`。\n\n然后打印 `a + b + c`。",
+      "instruction": "使用链式赋值，同时创建三个变量 `a`, `b`, `c`，它们都等于 `100`。\n\n然后打印 `a + b + c`。\n\n期望输出：\n```\n300\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "300",
@@ -49,7 +49,7 @@
       "id": "v04_delete_var",
       "type": "output",
       "title": "变量删除",
-      "instruction": "已知 `x = 10`，删除 x，然后尝试打印 x（会报错）。\n\n修改代码：先打印 x 的值，再删除它。",
+      "instruction": "已知 `x = 10`，删除 x，然后尝试打印 x（会报错）。\n\n修改代码：先打印 x 的值，再删除它。\n\n期望输出：\n```\n10\n```",
       "initialCode": "x = 10\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "10",
@@ -63,7 +63,7 @@
       "id": "v05_type_judge",
       "type": "output",
       "title": "类型判断",
-      "instruction": "判断并打印以下表达式的结果类型：\n`type(10 / 2)`",
+      "instruction": "判断并打印以下表达式的结果类型：\n`type(10 / 2)`\n\n期望输出：\n```\n<class 'float'>\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "<class 'float'>",
@@ -77,7 +77,7 @@
       "id": "v06_string_index",
       "type": "output",
       "title": "字符串索引",
-      "instruction": "已知字符串 `s = 'Python Programming'`，打印：\n1. 字符串长度\n2. 索引为 0 的字符\n3. 索引为 -1 的字符\n4. 索引为 7 的字符",
+      "instruction": "已知字符串 `s = 'Python Programming'`，打印：\n1. 字符串长度\n2. 索引为 0 的字符\n3. 索引为 -1 的字符\n4. 索引为 7 的字符\n\n期望输出：\n```\n18\nP\ng\n\n```",
       "initialCode": "s = 'Python Programming'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "18\nP\ng\n",
@@ -91,7 +91,7 @@
       "id": "v07_string_slice",
       "type": "output",
       "title": "字符串切片",
-      "instruction": "已知字符串 `s = 'Hello, World!'`，打印：\n1. 前5个字符\n2. 第7个到最后\n3. 倒数5个字符\n4. 每隔一个字符（步长2）",
+      "instruction": "已知字符串 `s = 'Hello, World!'`，打印：\n1. 前5个字符\n2. 第7个到最后\n3. 倒数5个字符\n4. 每隔一个字符（步长2）\n\n期望输出：\n```\nHello\nWorld!\nld!\nHlo ol!\n```",
       "initialCode": "s = 'Hello, World!'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "Hello\nWorld!\nld!\nHlo ol!",
@@ -105,7 +105,7 @@
       "id": "v08_string_methods",
       "type": "output",
       "title": "字符串方法",
-      "instruction": "已知字符串 `s = '  Python  '`，依次执行：\n1. 去除两端空格\n2. 转换为大写\n3. 计算长度\n\n打印长度。",
+      "instruction": "已知字符串 `s = '  Python  '`，依次执行：\n1. 去除两端空格\n2. 转换为大写\n3. 计算长度\n\n打印长度。\n\n期望输出：\n```\n6\n```",
       "initialCode": "s = '  Python  '\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "6",
@@ -119,7 +119,7 @@
       "id": "v09_string_find",
       "type": "output",
       "title": "字符串查找",
-      "instruction": "已知字符串 `s = 'I love Python, Python is great'`，打印：\n1. 'Python' 首次出现的索引\n2. 'Python' 最后一次出现的索引",
+      "instruction": "已知字符串 `s = 'I love Python, Python is great'`，打印：\n1. 'Python' 首次出现的索引\n2. 'Python' 最后一次出现的索引\n\n期望输出：\n```\n7\n15\n```",
       "initialCode": "s = 'I love Python, Python is great'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "7\n15",
@@ -133,7 +133,7 @@
       "id": "v10_string_replace",
       "type": "output",
       "title": "字符串替换",
-      "instruction": "已知字符串 `s = 'one two one three one'`，将所有的 'one' 替换为 '1'，然后打印结果。",
+      "instruction": "已知字符串 `s = 'one two one three one'`，将所有的 'one' 替换为 '1'，然后打印结果。\n\n期望输出：\n```\n1 two 1 three 1\n```",
       "initialCode": "s = 'one two one three one'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "1 two 1 three 1",
@@ -147,7 +147,7 @@
       "id": "v11_list_creation",
       "type": "output",
       "title": "列表创建",
-      "instruction": "使用两种方法创建列表：\n1. 用 list() 将字符串 'abc' 转换为列表\n2. 直接用方括号\n\n打印两个列表。",
+      "instruction": "使用两种方法创建列表：\n1. 用 list() 将字符串 'abc' 转换为列表\n2. 直接用方括号\n\n打印两个列表。\n\n期望输出：\n```\n['a', 'b', 'c']\n['a', 'b', 'c']\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "['a', 'b', 'c']\n['a', 'b', 'c']",
@@ -161,7 +161,7 @@
       "id": "v12_list_operations",
       "type": "output",
       "title": "列表操作",
-      "instruction": "已知列表 `lst = [1, 2, 3]`，依次执行：\n1. 末尾添加 4\n2. 索引0位置插入 0\n3. 删除索引2的元素\n\n打印最终列表。",
+      "instruction": "已知列表 `lst = [1, 2, 3]`，依次执行：\n1. 末尾添加 4\n2. 索引0位置插入 0\n3. 删除索引2的元素\n\n打印最终列表。\n\n期望输出：\n```\n[0, 1, 3, 4]\n```",
       "initialCode": "lst = [1, 2, 3]\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "[0, 1, 3, 4]",
@@ -175,7 +175,7 @@
       "id": "v13_list_comprehension",
       "type": "output",
       "title": "列表推导式",
-      "instruction": "使用列表推导式，生成 1-10 各数的平方的列表，打印结果。\n\n格式：[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]",
+      "instruction": "使用列表推导式，生成 1-10 各数的平方的列表，打印结果。\n\n格式：[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]\n\n期望输出：\n```\n[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]",
@@ -189,7 +189,7 @@
       "id": "v14_list_filter",
       "type": "output",
       "title": "列表过滤",
-      "instruction": "给定列表 `nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`，使用列表推导式筛选出所有偶数，打印结果。",
+      "instruction": "给定列表 `nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`，使用列表推导式筛选出所有偶数，打印结果。\n\n期望输出：\n```\n[2, 4, 6, 8, 10]\n```",
       "initialCode": "nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "[2, 4, 6, 8, 10]",
@@ -203,7 +203,7 @@
       "id": "v15_dict_creation",
       "type": "output",
       "title": "字典创建",
-      "instruction": "创建字典存储水果价格：苹果 3.5元，香蕉 2.8元，橙子 4.2元。\n\n然后打印橙子的价格。",
+      "instruction": "创建字典存储水果价格：苹果 3.5元，香蕉 2.8元，橙子 4.2元。\n\n然后打印橙子的价格。\n\n期望输出：\n```\n4.2\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "4.2",
@@ -217,7 +217,7 @@
       "id": "v16_dict_methods",
       "type": "output",
       "title": "字典方法",
-      "instruction": "已知字典 `d = {'a': 1, 'b': 2, 'c': 3}`，打印：\n1. 所有键\n2. 所有值\n3. 所有键值对",
+      "instruction": "已知字典 `d = {'a': 1, 'b': 2, 'c': 3}`，打印：\n1. 所有键\n2. 所有值\n3. 所有键值对\n\n期望输出：\n```\ndict_keys(['a', 'b', 'c'])\ndict_values([1, 2, 3])\ndict_items([('a', 1), ('b', 2), ('c', 3)])\n```",
       "initialCode": "d = {'a': 1, 'b': 2, 'c': 3}\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "dict_keys(['a', 'b', 'c'])\ndict_values([1, 2, 3])\ndict_items([('a', 1), ('b', 2), ('c', 3)])",
@@ -231,7 +231,7 @@
       "id": "v17_dict_get",
       "type": "output",
       "title": "字典安全访问",
-      "instruction": "已知字典 `d = {'name': 'Alice', 'age': 25}`，使用 get 方法获取：\n1. 'name'（存在）\n2. 'city'（不存在，默认值 'Unknown'）",
+      "instruction": "已知字典 `d = {'name': 'Alice', 'age': 25}`，使用 get 方法获取：\n1. 'name'（存在）\n2. 'city'（不存在，默认值 'Unknown'）\n\n期望输出：\n```\nAlice\nUnknown\n```",
       "initialCode": "d = {'name': 'Alice', 'age': 25}\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "Alice\nUnknown",
@@ -245,7 +245,7 @@
       "id": "v18_tuple_unpack",
       "type": "output",
       "title": "元组拆包",
-      "instruction": "元组 `(1, 2, 3, 4, 5)` 使用拆包，分别赋值给 a, b, *rest，打印 a, b 和 rest。",
+      "instruction": "元组 `(1, 2, 3, 4, 5)` 使用拆包，分别赋值给 a, b, *rest，打印 a, b 和 rest。\n\n期望输出：\n```\n1\n2\n[3, 4, 5]\n```",
       "initialCode": "t = (1, 2, 3, 4, 5)\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "1\n2\n[3, 4, 5]",
@@ -259,7 +259,7 @@
       "id": "v19_set_operations",
       "type": "output",
       "title": "集合运算",
-      "instruction": "已知集合 `A = {1, 2, 3, 4, 5}` 和 `B = {4, 5, 6, 7, 8}`，打印：\n1. A ∪ B（并集）\n2. A ∩ B（交集）\n3. A - B（差集）",
+      "instruction": "已知集合 `A = {1, 2, 3, 4, 5}` 和 `B = {4, 5, 6, 7, 8}`，打印：\n1. A ∪ B（并集）\n2. A ∩ B（交集）\n3. A - B（差集）\n\n期望输出：\n```\n{1, 2, 3, 4, 5, 6, 7, 8}\n{4, 5}\n{1, 2, 3}\n```",
       "initialCode": "A = {1, 2, 3, 4, 5}\nB = {4, 5, 6, 7, 8}\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "{1, 2, 3, 4, 5, 6, 7, 8}\n{4, 5}\n{1, 2, 3}",
@@ -273,7 +273,7 @@
       "id": "v20_bool_conversion",
       "type": "output",
       "title": "布尔转换",
-      "instruction": "判断以下值作为 bool 时的值并打印：\n1. bool(0)\n2. bool('')\n3. bool([])\n4. bool('False')",
+      "instruction": "判断以下值作为 bool 时的值并打印：\n1. bool(0)\n2. bool('')\n3. bool([])\n4. bool('False')\n\n期望输出：\n```\nFalse\nFalse\nFalse\nTrue\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "False\nFalse\nFalse\nTrue",
@@ -282,6 +282,148 @@
       "hints": [
         { "text": "空值、0、空字符串/列表/字典都是 False", "visible": true },
         { "text": "非空字符串包括 'False' 都是 True", "visible": false }
+      ]
+    },
+    {
+      "id": "v21_string_format",
+      "type": "output",
+      "title": "f-string 格式化",
+      "instruction": "已知 name='Alice'，age=25，score=92.5。\n用 f-string 输出一行：`Alice is 25 years old, score: 92.50`\n\n期望输出：\n```\nAlice is 25 years old, score: 92.50\n```",
+      "initialCode": "name = 'Alice'\nage = 25\nscore = 92.5\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Alice is 25 years old, score: 92.50",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "f'{name} is {age} years old, score: {score:.2f}'", "visible": true }
+      ]
+    },
+    {
+      "id": "v22_string_join",
+      "type": "output",
+      "title": "字符串连接",
+      "instruction": "已知列表 `words = ['Python', 'is', 'awesome']`，使用 join 方法连接为字符串，\n各词之间用空格分隔。\n\n期望输出：\n```\nPython is awesome\n```",
+      "initialCode": "words = ['Python', 'is', 'awesome']\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Python is awesome",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "' '.join(words)", "visible": true }
+      ]
+    },
+    {
+      "id": "v23_string_split",
+      "type": "output",
+      "title": "字符串分割",
+      "instruction": "已知字符串 `s = 'apple,banana,orange'`，按逗号分割为列表，打印结果。\n\n期望输出：\n```\n['apple', 'banana', 'orange']\n```",
+      "initialCode": "s = 'apple,banana,orange'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "['apple', 'banana', 'orange']",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "s.split(',')", "visible": true }
+      ]
+    },
+    {
+      "id": "v24_list_sort",
+      "type": "output",
+      "title": "列表排序",
+      "instruction": "已知列表 `nums = [3, 1, 4, 1, 5, 9, 2, 6]`，分别打印：\n1. 升序排列\n2. 降序排列\n3. 升序排列后不修改原列表（用 sorted）\n\n期望输出：\n```\n[1, 1, 2, 3, 4, 5, 6, 9]\n[9, 6, 5, 4, 3, 2, 1, 1]\n[1, 1, 2, 3, 4, 5, 6, 9]\n```",
+      "initialCode": "nums = [3, 1, 4, 1, 5, 9, 2, 6]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "[1, 1, 2, 3, 4, 5, 6, 9]\n[9, 6, 5, 4, 3, 2, 1, 1]\n[1, 1, 2, 3, 4, 5, 6, 9]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "sorted() 返回新列表，sort() 原地排序", "visible": true },
+        { "text": "reverse=True 降序", "visible": false }
+      ]
+    },
+    {
+      "id": "v25_dict_comprehension",
+      "type": "output",
+      "title": "字典推导式",
+      "instruction": "使用字典推导式创建 `{x: x**2 for x in range(1, 4)}`。\n\n期望输出：\n```\n{1: 1, 2: 4, 3: 9}\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1: 1, 2: 4, 3: 9}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "{x: x**2 for x in range(1, 4)}", "visible": true }
+      ]
+    },
+    {
+      "id": "v26_nested_list",
+      "type": "output",
+      "title": "嵌套列表",
+      "instruction": "已知矩阵 `matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]`，打印：\n1. 第二行第三列的元素（6）\n2. 第一列的所有元素 [1, 4, 7]\n\n期望输出：\n```\n6\n[1, 4, 7]\n```",
+      "initialCode": "matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "6\n[1, 4, 7]",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "matrix[1][2] 访问元素", "visible": true },
+        { "text": "[row[0] for row in matrix] 获取列", "visible": false }
+      ]
+    },
+    {
+      "id": "v27_tuple_create",
+      "type": "output",
+      "title": "元组创建和访问",
+      "instruction": "已知元组 `t = (10, 20, 30, 40, 50)`，打印：\n1. 第一个元素\n2. 最后一个元素\n3. 元组长度\n\n期望输出：\n```\n10\n50\n5\n```",
+      "initialCode": "t = (10, 20, 30, 40, 50)\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "10\n50\n5",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "t[0], t[-1], len(t)", "visible": true }
+      ]
+    },
+    {
+      "id": "v28_dict_nested",
+      "type": "output",
+      "title": "嵌套字典",
+      "instruction": "已知嵌套字典 `users = {'alice': {'age': 25, 'city': 'Beijing'}, 'bob': {'age': 30, 'city': 'Shanghai'}}`，\n打印 alice 的城市。\n\n期望输出：\n```\nBeijing\n```",
+      "initialCode": "users = {'alice': {'age': 25, 'city': 'Beijing'}, 'bob': {'age': 30, 'city': 'Shanghai'}}\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "Beijing",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "users['alice']['city']", "visible": true }
+      ]
+    },
+    {
+      "id": "v29_list_zip",
+      "type": "output",
+      "title": "zip 函数",
+      "instruction": "已知 `names = ['Alice', 'Bob', 'Charlie']` 和 `ages = [25, 30, 35]`，\n使用 zip 函数将两个列表组合成字典，打印结果。\n\n期望输出：\n```\n{'Alice': 25, 'Bob': 30, 'Charlie': 35}\n```",
+      "initialCode": "names = ['Alice', 'Bob', 'Charlie']\nages = [25, 30, 35]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{'Alice': 25, 'Bob': 30, 'Charlie': 35}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "dict(zip(names, ages))", "visible": true }
+      ]
+    },
+    {
+      "id": "v30_set_creation",
+      "type": "output",
+      "title": "集合创建和去重",
+      "instruction": "给定列表 `nums = [1, 2, 2, 3, 4, 4, 5]`，将其转换为集合（自动去重），打印结果。\n\n期望输出：\n```\n{1, 2, 3, 4, 5}\n```",
+      "initialCode": "nums = [1, 2, 2, 3, 4, 4, 5]\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "{1, 2, 3, 4, 5}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "set(nums)", "visible": true }
       ]
     }
   ]

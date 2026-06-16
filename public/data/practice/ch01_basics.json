@@ -1,13 +1,13 @@
 {
   "id": "ch01_basics",
   "title": "Python 基础 - 第一章：Python 简介",
-  "description": "学习 Python 基本语法和第一个程序",
+  "description": "学习 Python 基本语法、表达式和第一个程序",
   "questions": [
     {
       "id": "q01_hello",
       "type": "output",
       "title": "Hello World",
-      "instruction": "编写程序，使用 `print()` 函数输出字符串 `Hello, World!`。\n\n这是你的第一个 Python 程序！",
+      "instruction": "编写程序，使用 `print()` 函数输出字符串 `Hello, World!`。\n\n这是你的第一个 Python 程序！\n\n期望输出：\n```\nHello, World!\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "Hello, World!",
@@ -22,21 +22,21 @@
       "id": "q02_multiline",
       "type": "output",
       "title": "多行输出",
-      "instruction": "使用一条 `print()` 语句，输出以下三行：\n第一行：Open\n第二行：the\n第三行：Door",
+      "instruction": "使用一条 `print()` 语句，输出以下三行：\n第一行：Open\n第二行：the\n第三行：Door\n\n期望输出：\n```\nOpen\nthe\nDoor\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "Open\nthe\nDoor",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用 \\\\n 表示换行", "visible": true }
+        { "text": "使用 \\n 表示换行", "visible": true }
       ]
     },
     {
       "id": "q03_calc",
       "type": "output",
       "title": "表达式计算",
-      "instruction": "计算 `(15 + 35) * 2 - 100 / 4`，打印结果。",
+      "instruction": "计算 `(15 + 35) * 2 - 100 / 4`，打印结果。\n\n期望输出：\n```\n75.0\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "75.0",
@@ -50,7 +50,7 @@
       "id": "q04_mod_calc",
       "type": "output",
       "title": "取模运算",
-      "instruction": "一个三位数 369，输出它的百位、十位、个位数字之和。\n\n例如：369 -> 3 + 6 + 9 = 18",
+      "instruction": "一个三位数 369，输出它的百位、十位、个位数字之和。\n\n例如：369 -> 3 + 6 + 9 = 18\n\n期望输出：\n```\n18\n```",
       "initialCode": "num = 369\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "18",
@@ -65,7 +65,7 @@
       "id": "q05_swap_calc",
       "type": "output",
       "title": "交换与计算",
-      "instruction": "已知 `a = 7`, `b = 3`。不使用第三变量，交换它们的值，然后计算 `a的b次方`，打印结果。",
+      "instruction": "已知 `a = 7`, `b = 3`。不使用第三变量，交换它们的值，然后计算 `a的b次方`，打印结果。\n\n期望输出：\n```\n343\n```",
       "initialCode": "a = 7\nb = 3\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "343",
@@ -79,7 +79,7 @@
       "id": "q06_math_expr",
       "type": "output",
       "title": "数学表达式",
-      "instruction": "计算 `2的20次方除以17的余数`，打印结果。\n\n提示：这是密码学中常用的模幂运算",
+      "instruction": "计算 `2的20次方除以17的余数`，打印结果。\n\n提示：这是密码学中常用的模幂运算\n\n期望输出：\n```\n16\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "16",
@@ -93,7 +93,7 @@
       "id": "q07_grade_calc",
       "type": "output",
       "title": "成绩等级转换",
-      "instruction": "已知百分制成绩 `score = 87`，将其转换为五分制等级：\n90-100 -> A (4.0)\n80-89 -> B (3.0)\n70-79 -> C (2.0)\n60-69 -> D (1.0)\n60以下 -> F (0.0)\n\n打印对应的绩点。",
+      "instruction": "已知百分制成绩 `score = 87`，将其转换为五分制等级：\n90-100 -> A (4.0)\n80-89 -> B (3.0)\n70-79 -> C (2.0)\n60-69 -> D (1.0)\n60以下 -> F (0.0)\n\n打印对应的绩点。\n\n期望输出：\n```\n3.0\n```",
       "initialCode": "score = 87\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "3.0",
@@ -107,7 +107,7 @@
       "id": "q08_circle",
       "type": "output",
       "title": "圆的相关计算",
-      "instruction": "已知圆的半径 `r = 5`，计算并打印：\n1. 圆的周长 (2 * π * r)\n2. 圆的面积 (π * r²)\n\n使用 `math` 模块的 `pi` 常量。\n\n格式：每行一个数字，保留2位小数",
+      "instruction": "已知圆的半径 `r = 5`，计算并打印：\n1. 圆的周长 (2 * π * r)\n2. 圆的面积 (π * r²)\n\n使用 `math` 模块的 `pi` 常量。\n格式：每行一个数字，保留2位小数\n\n期望输出：\n```\n31.42\n78.54\n```",
       "initialCode": "import math\nr = 5\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "31.42\n78.54",
@@ -122,7 +122,7 @@
       "id": "q09_temp_conv",
       "type": "output",
       "title": "温度转换",
-      "instruction": "编写代码，将摄氏温度 `c = 100` 转换为华氏温度。\n\n公式：F = C × 9/5 + 32\n\n打印转换后的华氏温度，保留1位小数。",
+      "instruction": "编写代码，将摄氏温度 `c = 100` 转换为华氏温度。\n\n公式：F = C × 9/5 + 32\n\n打印转换后的华氏温度，保留1位小数。\n\n期望输出：\n```\n212.0\n```",
       "initialCode": "c = 100\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "212.0",
@@ -136,7 +136,7 @@
       "id": "q10_time_conv",
       "type": "output",
       "title": "时间转换",
-      "instruction": "已知总秒数 `total_seconds = 3723`，将其转换为\"X小时Y分钟Z秒\"的格式并打印。\n\n例如：3723秒 = 1小时2分钟3秒",
+      "instruction": "已知总秒数 `total_seconds = 3723`，将其转换为\"X小时Y分钟Z秒\"的格式并打印。\n\n例如：3723秒 = 1小时2分钟3秒\n\n期望输出：\n```\n1:2:3\n```",
       "initialCode": "total_seconds = 3723\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "1:2:3",
@@ -151,7 +151,7 @@
       "id": "q11_string_ops",
       "type": "output",
       "title": "字符串运算",
-      "instruction": "已知字符串 `s = 'Python'`，打印：\n1. 字符串长度\n2. 首字母（大写）\n3. 末字母（小写）",
+      "instruction": "已知字符串 `s = 'Python'`，打印：\n1. 字符串长度\n2. 首字母（大写）\n3. 末字母（小写）\n\n期望输出：\n```\n6\nP\nn\n```",
       "initialCode": "s = 'Python'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "6\nP\nn",
@@ -166,7 +166,7 @@
       "id": "q12_fstring_calc",
       "type": "output",
       "title": "格式化输出计算结果",
-      "instruction": "计算 `157 / 3`（保留2位小数），然后用 f-string 输出：`商是 XX.XX`",
+      "instruction": "计算 `157 / 3`（保留2位小数），然后用 f-string 输出：`商是 XX.XX`\n\n期望输出：\n```\n商是 52.33\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "商是 52.33",
@@ -180,7 +180,7 @@
       "id": "q13_triangle",
       "type": "output",
       "title": "三角形面积",
-      "instruction": "计算三角形面积，已知底边 `base = 10`，高 `height = 5`。\n\n公式：面积 = 底 × 高 ÷ 2\n\n打印面积。",
+      "instruction": "计算三角形面积，已知底边 `base = 10`，高 `height = 5`。\n\n公式：面积 = 底 × 高 ÷ 2\n\n打印面积。\n\n期望输出：\n```\n25.0\n```",
       "initialCode": "base = 10\nheight = 5\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "25.0",
@@ -194,7 +194,7 @@
       "id": "q14_distance",
       "type": "output",
       "title": "两点距离公式",
-      "instruction": "已知平面上两点 A(3, 4) 和 B(0, 0)，计算它们之间的欧几里得距离。\n\n公式：距离 = √((x2-x1)² + (y2-y1)²)\n\n打印距离，保留2位小数。\n\n提示：使用 math.sqrt()",
+      "instruction": "已知平面上两点 A(3, 4) 和 B(0, 0)，计算它们之间的欧几里得距离。\n\n公式：距离 = √((x2-x1)² + (y2-y1)²)\n\n打印距离，保留2位小数。\n\n期望输出：\n```\n5.0\n```",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "5.0",
@@ -208,7 +208,7 @@
       "id": "q15_bmi",
       "type": "output",
       "title": "BMI计算",
-      "instruction": "计算 BMI 指数。已知体重 `weight = 70` kg，身高 `height = 1.75` m。\n\n公式：BMI = 体重(kg) / 身高(m)²\n\n打印 BMI 值，保留1位小数。",
+      "instruction": "计算 BMI 指数。已知体重 `weight = 70` kg，身高 `height = 1.75` m。\n\n公式：BMI = 体重(kg) / 身高(m)²\n\n打印 BMI 值，保留1位小数。\n\n期望输出：\n```\n22.9\n```",
       "initialCode": "weight = 70\nheight = 1.75\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "22.9",
@@ -216,6 +216,78 @@
       },
       "hints": [
         { "text": "BMI = weight / (height ** 2)", "visible": true }
+      ]
+    },
+    {
+      "id": "q16_compound_interest",
+      "type": "output",
+      "title": "复利计算",
+      "instruction": "本金 `principal = 10000`，年利率 `rate = 0.05`，复利计算 10 年。\n\n公式：本息合计 = 本金 × (1 + 年利率)^年数\n\n打印最终本息，保留2位小数。\n\n期望输出：\n```\n16288.95\n```",
+      "initialCode": "principal = 10000\nrate = 0.05\nyears = 10\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "16288.95",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "result = principal * (1 + rate) ** years", "visible": true }
+      ]
+    },
+    {
+      "id": "q17_sum_arith",
+      "type": "output",
+      "title": "等差数列求和",
+      "instruction": "计算 1 + 2 + 3 + ... + 100 的和。\n\n期望输出：\n```\n5050\n```",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "5050",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "使用 sum(range(1, 101))", "visible": true },
+        { "text": "或者用公式 n*(n+1)//2", "visible": false }
+      ]
+    },
+    {
+      "id": "q18_geo_area",
+      "type": "output",
+      "title": "几何综合计算",
+      "instruction": "已知正方形边长 `a = 5`，正方形内接最大圆的面积。\n\n提示：内接圆直径 = 正方形边长\n\n打印圆的面积，保留2位小数。\n\n期望输出：\n```\n19.63\n```",
+      "initialCode": "import math\na = 5\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "19.63",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "r = a / 2", "visible": true },
+        { "text": "area = math.pi * r ** 2", "visible": false }
+      ]
+    },
+    {
+      "id": "q19_grade_avg",
+      "type": "output",
+      "title": "学生平均分",
+      "instruction": "已知三科成绩：语文 85，数学 92，英语 78。计算平均分，保留1位小数。\n\n期望输出：\n```\n85.0\n```",
+      "initialCode": "chinese = 85\nmath = 92\nenglish = 78\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "85.0",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "avg = (chinese + math + english) / 3", "visible": true }
+      ]
+    },
+    {
+      "id": "q20_leap_year",
+      "type": "output",
+      "title": "闰年判断",
+      "instruction": "判断 2024 年是否为闰年，打印 True 或 False。\n\n闰年规则：\n1. 能被 4 整除但不能被 100 整除\n2. 或能被 400 整除\n\n期望输出：\n```\nTrue\n```",
+      "initialCode": "year = 2024\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "True",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        { "text": "(year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)", "visible": true }
       ]
     }
   ]

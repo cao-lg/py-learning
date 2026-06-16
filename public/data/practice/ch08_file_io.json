@@ -7,168 +7,510 @@
       "id": "fio01_open_file",
       "type": "output",
       "title": "打开文件",
-      "instruction": "使用 with 语句打开文件 'test.txt'（内容预设为 'Hello'），读取并打印内容。\n\n提示：可以用 StringIO 模拟文件操作。",
+      "instruction": "使用 with 语句打开文件 'test.txt'（内容预设为 'Hello'），读取并打印内容。\n\n提示：可以用 StringIO 模拟文件操作。\n\n期望输出：`Hello`",
       "initialCode": "from io import StringIO\n\n# 模拟文件内容\nfile_content = 'Hello'\n\n# 创建一个模拟文件对象来模拟读取\nf = StringIO(file_content)\ncontent = f.read()\nprint(content)\n",
       "testConfig": {
         "expected": "Hello",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用 StringIO 可以模拟文件操作", "visible": false }
+        {
+          "text": "使用 StringIO 可以模拟文件操作",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio02_write",
       "type": "output",
       "title": "写入模拟",
-      "instruction": "使用 StringIO 模拟写入操作，写入 'World' 并获取结果。",
+      "instruction": "使用 StringIO 模拟写入操作，写入 'World' 并获取结果。\n\n期望输出：`World`",
       "initialCode": "from io import StringIO\n\nf = StringIO()\nf.write('World')\nresult = f.getvalue()\nprint(result)\n",
       "testConfig": {
         "expected": "World",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "write() 写入，getvalue() 获取内容", "visible": false }
+        {
+          "text": "write() 写入，getvalue() 获取内容",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio03_json_dumps",
       "type": "output",
       "title": "Python转JSON",
-      "instruction": "将字典 `{'name': 'Alice', 'age': 20}` 转为 JSON 字符串并打印。",
+      "instruction": "将字典 `{'name': 'Alice', 'age': 20}` 转为 JSON 字符串并打印。\n\n期望输出：`{\"name\": \"Alice\", \"age\": 20}`",
       "initialCode": "import json\n\ndata = {'name': 'Alice', 'age': 20}\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "{\"name\": \"Alice\", \"age\": 20}",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "json.dumps(data)", "visible": false }
+        {
+          "text": "json.dumps(data)",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio04_json_loads",
       "type": "output",
       "title": "JSON转Python",
-      "instruction": "将 JSON 字符串 `'{\"a\": 1, \"b\": 2}'` 转为 Python 字典，获取 'a' 的值。",
+      "instruction": "将 JSON 字符串 `'{\"a\": 1, \"b\": 2}'` 转为 Python 字典，获取 'a' 的值。\n\n期望输出：`1`",
       "initialCode": "import json\n\ns = '{\"a\": 1, \"b\": 2}'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "1",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "json.loads(s)['a']", "visible": false }
+        {
+          "text": "json.loads(s)['a']",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio05_json_indent",
       "type": "output",
       "title": "JSON格式化",
-      "instruction": "将字典 `{'name': 'Bob', 'score': 95}` 转为带缩进的 JSON 字符串（indent=2）。",
+      "instruction": "将字典 `{'name': 'Bob', 'score': 95}` 转为带缩进的 JSON 字符串（indent=2）。\n\n期望输出：`{\\n  \"name\": \"Bob\",\\n  \"score\": 95\\n}`",
       "initialCode": "import json\n\ndata = {'name': 'Bob', 'score': 95}\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "{\\n  \"name\": \"Bob\",\\n  \"score\": 95\\n}",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "json.dumps(data, indent=2)", "visible": false }
+        {
+          "text": "json.dumps(data, indent=2)",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio06_readlines",
       "type": "output",
       "title": "逐行读取",
-      "instruction": "使用 StringIO 模拟读取多行内容 'line1\\nline2\\nline3'，用 readlines() 获取所有行并打印第一行。",
+      "instruction": "使用 StringIO 模拟读取多行内容 'line1\\nline2\\nline3'，用 readlines() 获取所有行并打印第一行。\n\n期望输出：`line1`",
       "initialCode": "from io import StringIO\n\ncontent = 'line1\\nline2\\nline3'\nf = StringIO(content)\nlines = f.readlines()\nprint(lines[0].strip())\n",
       "testConfig": {
         "expected": "line1",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "readlines() 返回列表", "visible": false }
+        {
+          "text": "readlines() 返回列表",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio07_stringio",
       "type": "output",
       "title": "StringIO基本操作",
-      "instruction": "创建一个 StringIO 对象，写入 'test'，然后seek到开头读取。",
+      "instruction": "创建一个 StringIO 对象，写入 'test'，然后seek到开头读取。\n\n期望输出：`test`",
       "initialCode": "from io import StringIO\n\nf = StringIO()\nf.write('test')\nf.seek(0)\nprint(f.read())\n",
       "testConfig": {
         "expected": "test",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "seek(0) 回到开头", "visible": false }
+        {
+          "text": "seek(0) 回到开头",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio08_json_list",
       "type": "output",
       "title": "JSON数组",
-      "instruction": "将列表 `[1, 2, 3, 4, 5]` 转为 JSON 字符串。",
+      "instruction": "将列表 `[1, 2, 3, 4, 5]` 转为 JSON 字符串。\n\n期望输出：`[1, 2, 3, 4, 5]`",
       "initialCode": "import json\n\ndata = [1, 2, 3, 4, 5]\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "[1, 2, 3, 4, 5]",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "json.dumps(data)", "visible": false }
+        {
+          "text": "json.dumps(data)",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio09_nested_json",
       "type": "output",
       "title": "嵌套JSON",
-      "instruction": "将嵌套字典 `{'person': {'name': 'Alice'}}` 转为 JSON，获取 'Alice'。",
+      "instruction": "将嵌套字典 `{'person': {'name': 'Alice'}}` 转为 JSON，获取 'Alice'。\n\n期望输出：`Alice`",
       "initialCode": "import json\n\ndata = {'person': {'name': 'Alice'}}\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "Alice",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "先 dumps 再 loads，然后访问 ['person']['name']", "visible": false }
+        {
+          "text": "先 dumps 再 loads，然后访问 ['person']['name']",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio10_bytes_io",
       "type": "output",
       "title": "BytesIO",
-      "instruction": "使用 BytesIO 写入 b'hello' 并读取。",
+      "instruction": "使用 BytesIO 写入 b'hello' 并读取。\n\n期望输出：`b'hello'`",
       "initialCode": "from io import BytesIO\n\nf = BytesIO()\nf.write(b'hello')\nf.seek(0)\nprint(f.read())\n",
       "testConfig": {
         "expected": "b'hello'",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "BytesIO 用于二进制数据", "visible": false }
+        {
+          "text": "BytesIO 用于二进制数据",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio11_writelines",
       "type": "output",
       "title": "批量写入",
-      "instruction": "使用 StringIO 模拟 writelines()，写入 ['line1\\n', 'line2\\n']。",
+      "instruction": "使用 StringIO 模拟 writelines()，写入 ['line1\\n', 'line2\\n']。\n\n期望输出：\n```\nline1\nline2\n\n```",
       "initialCode": "from io import StringIO\n\nf = StringIO()\nf.writelines(['line1\\n', 'line2\\n'])\nf.seek(0)\nprint(f.read(), end='')\n",
       "testConfig": {
         "expected": "line1\nline2\n",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "writelines() 接收字符串列表", "visible": false }
+        {
+          "text": "writelines() 接收字符串列表",
+          "visible": false
+        }
       ]
     },
     {
       "id": "fio12_json_ensure_ascii",
       "type": "output",
       "title": "JSON中文处理",
-      "instruction": "将 `{'name': '张三'}` 转为 JSON（ensure_ascii=False），直接打印中文字符。",
+      "instruction": "将 `{'name': '张三'}` 转为 JSON（ensure_ascii=False），直接打印中文字符。\n\n期望输出：`{\"name\": \"张三\"}`",
       "initialCode": "import json\n\ndata = {'name': '张三'}\nresult = json.dumps(data, ensure_ascii=False)\nprint(result)\n",
       "testConfig": {
         "expected": "{\"name\": \"张三\"}",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "ensure_ascii=False 保留中文", "visible": false }
+        {
+          "text": "ensure_ascii=False 保留中文",
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "fio13_csv_basic",
+      "type": "output",
+      "title": "CSV 写入",
+      "instruction": "使用 csv 模块将数据写入 StringIO，模拟写入 CSV 文件。\n\n数据：表头 `['name', 'age']` 和行 `[['Alice', 25], ['Bob', 30]]`\n\n期望输出：\n```\nname,age\nAlice,25\nBob,30\n```",
+      "initialCode": "import csv\nfrom io import StringIO\n\nf = StringIO()\nwriter = csv.writer(f)\nwriter.writerow(['name', 'age'])\nwriter.writerow(['Alice', 25])\nwriter.writerow(['Bob', 30])\nprint(f.getvalue(), end='')\n",
+      "testConfig": {
+        "expected": "name,age\r\nAlice,25\r\nBob,30\r\n",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "csv.writer() 创建写入器，writerow() 写入一行",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio14_csv_read",
+      "type": "output",
+      "title": "CSV 读取",
+      "instruction": "使用 csv 模块读取 CSV 字符串 `'name,age\\nAlice,25\\nBob,30'`，打印第一行数据（Alice 那一行）。\n\n期望输出：`['Alice', '25']`",
+      "initialCode": "import csv\nfrom io import StringIO\n\ncontent = 'name,age\\nAlice,25\\nBob,30'\nf = StringIO(content)\nreader = csv.reader(f)\nnext(reader)  # 跳过表头\nprint(next(reader))\n",
+      "testConfig": {
+        "expected": "['Alice', '25']",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "csv.reader() 返回可迭代对象",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio15_path_operations",
+      "type": "output",
+      "title": "路径操作",
+      "instruction": "使用 os.path 模块处理路径 `'/home/user/file.txt'`。\n\n打印：\n1. 目录名\n2. 文件名\n3. 后缀名\n\n期望输出：\n```\n/home/user\nfile.txt\n.txt\n```",
+      "initialCode": "import os\n\npath = '/home/user/file.txt'\n# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "/home/user\nfile.txt\n.txt",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "os.path.dirname(), os.path.basename(), os.path.splitext()",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio16_path_join",
+      "type": "output",
+      "title": "路径拼接",
+      "instruction": "使用 os.path.join() 安全地拼接路径：\n- 目录：`'/home/user'`\n- 子目录：`'documents'`\n- 文件：`'file.txt'`\n\n期望输出：`/home/user/documents/file.txt`",
+      "initialCode": "import os\n\npath = os.path.join('/home/user', 'documents', 'file.txt')\nprint(path)\n",
+      "testConfig": {
+        "expected": "/home/user/documents/file.txt",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "os.path.join() 自动处理分隔符",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio17_glob_files",
+      "type": "output",
+      "title": "glob 文件匹配",
+      "instruction": "使用 glob 模块匹配 `['test.py', 'main.py', 'readme.md', 'app.py']` 中所有 `.py` 文件。\n\n期望输出：`['main.py', 'test.py', 'app.py']`",
+      "initialCode": "import fnmatch\n\nfiles = ['test.py', 'main.py', 'readme.md', 'app.py']\npy_files = [f for f in files if fnmatch.fnmatch(f, '*.py')]\nprint(sorted(py_files))\n",
+      "testConfig": {
+        "expected": "['app.py', 'main.py', 'test.py']",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "fnmatch 支持通配符 * 匹配",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio18_file_size",
+      "type": "output",
+      "title": "文件大小",
+      "instruction": "使用 StringIO 模拟文件，计算文件内容的字节数。\n\n提示：StringIO.getvalue().encode() 获取字节\n\n期望输出：`13`",
+      "initialCode": "from io import StringIO\n\ncontent = 'Hello, World!'\nf = StringIO(content)\nsize = len(f.getvalue().encode('utf-8'))\nprint(size)\n",
+      "testConfig": {
+        "expected": "13",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "UTF-8 编码下 ASCII 字符占 1 字节",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio19_line_count",
+      "type": "output",
+      "title": "行数统计",
+      "instruction": "使用 StringIO 模拟多行文件，统计非空行数。\n\n内容：`'line1\\n\\nline2\\n   \\nline3\\n'`\n\n期望输出：`3`",
+      "initialCode": "from io import StringIO\n\ncontent = 'line1\\n\\nline2\\n   \\nline3\\n'\nf = StringIO(content)\nnon_empty = sum(1 for line in f if line.strip())\nprint(non_empty)\n",
+      "testConfig": {
+        "expected": "3",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "用 line.strip() 判断是否为空行",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio20_yaml_basic",
+      "type": "output",
+      "title": "YAML 解析（模拟）",
+      "instruction": "使用 json 模拟 YAML 解析，将 YAML 格式的字符串 `'name: Alice\\nage: 25'` 转为字典。\n\n注意：YAML 类似 JSON 但语法更宽松。这里我们用 json 模拟严格 YAML。\n\n期望输出：`{'name': 'Alice', 'age': 25}`",
+      "initialCode": "import json\n\nyaml_str = 'name: Alice\\nage: 25'\n# 模拟 YAML 解析：将冒号替换为 JSON 格式\njson_str = '{' + yaml_str.replace(': ', ': \"', 1).replace('\\n', '\", ') + '\"}'\nresult = json.loads(json_str)\nprint(result)\n",
+      "testConfig": {
+        "expected": "{'name': 'Alice', 'age': 25}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "真实项目用 PyYAML 库（pip install pyyaml）",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio21_pickle_dump",
+      "type": "output",
+      "title": "pickle 序列化",
+      "instruction": "使用 pickle 序列化数据 `{'a': 1, 'b': [1, 2, 3]}`，然后反序列化回来。\n\n打印反序列化后的字典。\n\n期望输出：`{'a': 1, 'b': [1, 2, 3]}`",
+      "initialCode": "import pickle\nfrom io import BytesIO\n\ndata = {'a': 1, 'b': [1, 2, 3]}\nf = BytesIO()\npickle.dump(data, f)\nf.seek(0)\nloaded = pickle.load(f)\nprint(loaded)\n",
+      "testConfig": {
+        "expected": "{'a': 1, 'b': [1, 2, 3]}",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "pickle 可以序列化几乎所有 Python 对象",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio22_config_parser",
+      "type": "output",
+      "title": "INI 配置解析（模拟）",
+      "instruction": "使用 ConfigParser 解析类似 INI 格式的字符串。\n\n内容：\n```\n[database]\nhost = localhost\nport = 5432\n```\n\n打印数据库 host 的值。\n\n期望输出：`localhost`",
+      "initialCode": "import configparser\nfrom io import StringIO\n\nconfig = configparser.ConfigParser()\nconfig.read_string('[database]\\nhost = localhost\\nport = 5432\\n')\nprint(config['database']['host'])\n",
+      "testConfig": {
+        "expected": "localhost",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "configparser 是处理 INI 配置文件的标准库",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio23_word_count",
+      "type": "output",
+      "title": "词频统计",
+      "instruction": "使用 StringIO 模拟读取文本文件，统计每个单词出现的次数。\n\n文本：`'apple banana apple cherry banana apple'`\n\n打印 'apple' 出现的次数。\n\n期望输出：`3`",
+      "initialCode": "from io import StringIO\nfrom collections import Counter\n\ntext = 'apple banana apple cherry banana apple'\nf = StringIO(text)\nwords = f.read().split()\ncounter = Counter(words)\nprint(counter['apple'])\n",
+      "testConfig": {
+        "expected": "3",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "Counter 是 dict 的子类，专门用于计数",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio24_context_manager",
+      "type": "output",
+      "title": "上下文管理器",
+      "instruction": "使用 with 语句管理 StringIO，演示资源自动关闭。\n\n写入 'context manager test'，读取并打印。\n\n期望输出：`context manager test`",
+      "initialCode": "from io import StringIO\n\nwith StringIO() as f:\n    f.write('context manager test')\n    f.seek(0)\n    print(f.read())\n",
+      "testConfig": {
+        "expected": "context manager test",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "with 语句自动管理资源的打开和关闭",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio25_zip_files",
+      "type": "output",
+      "title": "ZIP 文件（模拟）",
+      "instruction": "使用 zipfile 模块在内存中创建 ZIP 文件，添加一个文件 'hello.txt'，内容为 'Hello, ZIP!'。\n\n然后读取并打印该文件的内容。\n\n期望输出：`Hello, ZIP!`",
+      "initialCode": "import zipfile\nfrom io import BytesIO\n\nf = BytesIO()\nwith zipfile.ZipFile(f, 'w') as zf:\n    zf.writestr('hello.txt', 'Hello, ZIP!')\n\nf.seek(0)\nwith zipfile.ZipFile(f, 'r') as zf:\n    print(zf.read('hello.txt').decode())\n",
+      "testConfig": {
+        "expected": "Hello, ZIP!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "zipfile 支持读写 ZIP 压缩文件",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio26_file_encoding",
+      "type": "output",
+      "title": "文件编码",
+      "instruction": "演示 UTF-8 编码：将字符串 `'你好'` 编码为字节再解码回来。\n\n打印编码后的字节长度。\n\n期望输出：`6`",
+      "initialCode": "text = '你好'\nencoded = text.encode('utf-8')\nprint(len(encoded))\n",
+      "testConfig": {
+        "expected": "6",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "UTF-8 中中文每个字符占 3 字节",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio27_hash_md5",
+      "type": "output",
+      "title": "文件哈希",
+      "instruction": "使用 hashlib 计算字符串 `'hello'` 的 MD5 哈希值（32字符十六进制）。\n\n期望输出：`5d41402abc4b2a76b9719d911017c592`",
+      "initialCode": "import hashlib\n\nmd5 = hashlib.md5(b'hello').hexdigest()\nprint(md5)\n",
+      "testConfig": {
+        "expected": "5d41402abc4b2a76b9719d911017c592",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "MD5 产生 128 位（32 个十六进制字符）的哈希",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio28_hash_sha256",
+      "type": "output",
+      "title": "SHA-256 哈希",
+      "instruction": "使用 hashlib 计算字符串 `'hello'` 的 SHA-256 哈希值。\n\n期望输出：`2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824`",
+      "initialCode": "import hashlib\n\nsha256 = hashlib.sha256(b'hello').hexdigest()\nprint(sha256)\n",
+      "testConfig": {
+        "expected": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "SHA-256 更安全，产生 256 位（64 个十六进制字符）的哈希",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio29_base64_encode",
+      "type": "output",
+      "title": "Base64 编码",
+      "instruction": "使用 base64 编码字符串 `'Hello, World!'`。\n\n期望输出：`SGVsbG8sIFdvcmxkIQ==`",
+      "initialCode": "import base64\n\ntext = 'Hello, World!'\nencoded = base64.b64encode(text.encode()).decode()\nprint(encoded)\n",
+      "testConfig": {
+        "expected": "SGVsbG8sIFdvcmxkIQ==",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "Base64 是一种常用的二进制到文本编码",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "fio30_base64_decode",
+      "type": "output",
+      "title": "Base64 解码",
+      "instruction": "解码 Base64 字符串 `'SGVsbG8sIFdvcmxkIQ=='`。\n\n期望输出：`Hello, World!`",
+      "initialCode": "import base64\n\nencoded = 'SGVsbG8sIFdvcmxkIQ=='\ndecoded = base64.b64decode(encoded).decode()\nprint(decoded)\n",
+      "testConfig": {
+        "expected": "Hello, World!",
+        "timeout_ms": 5000
+      },
+      "hints": [
+        {
+          "text": "decode() 将字节转换回字符串",
+          "visible": true
+        }
       ]
     }
   ]
