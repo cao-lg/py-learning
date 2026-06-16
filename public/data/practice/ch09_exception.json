@@ -8,7 +8,7 @@
       "type": "output",
       "title": "基本try-except",
       "instruction": "尝试执行 `1/0`，捕获 ZeroDivisionError 并打印 'Error: division by zero'。\n\n期望输出：`Error: division by zero`",
-      "initialCode": "try:\n    result = 1 / 0\nexcept ZeroDivisionError:\n    print('Error: division by zero')\n",
+      "initialCode": "try:\n    # 在下方编写可能出错的代码\n    pass\nexcept:\n    # 在下方处理异常\n    pass\n",
       "testConfig": {
         "expected": "Error: division by zero",
         "timeout_ms": 5000
@@ -25,7 +25,7 @@
       "type": "output",
       "title": "多个except",
       "instruction": "尝试将 'abc' 转为整数，捕获 ValueError 并打印 'Invalid number'。\n\n期望输出：`Invalid number`",
-      "initialCode": "try:\n    num = int('abc')\nexcept ValueError:\n    print('Invalid number')\n",
+      "initialCode": "try:\n    # 在下方编写可能出错的代码\n    pass\nexcept:\n    # 在下方处理异常\n    pass\n",
       "testConfig": {
         "expected": "Invalid number",
         "timeout_ms": 5000
@@ -42,7 +42,7 @@
       "type": "output",
       "title": "捕获异常对象",
       "instruction": "捕获 ValueError 并打印错误信息（使用 as）。\n\n期望输出：`invalid literal for int() with base 10: 'xyz'`",
-      "initialCode": "try:\n    num = int('xyz')\nexcept ValueError as e:\n    print(e)\n",
+      "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "invalid literal for int() with base 10: 'xyz'",
         "timeout_ms": 5000
@@ -59,7 +59,7 @@
       "type": "output",
       "title": "else子句",
       "instruction": "try-except-else 结构，如果没有异常则打印 'Success'。\n\n期望输出：`Success`",
-      "initialCode": "try:\n    x = 10\nexcept:\n    print('Error')\nelse:\n    print('Success')\n",
+      "initialCode": "try:\n    # 在下方编写代码\n    pass\nexcept:\n    pass\nelse:\n    # 在下方编写没有异常时执行的代码\n    pass\n",
       "testConfig": {
         "expected": "Success",
         "timeout_ms": 5000
@@ -76,7 +76,7 @@
       "type": "output",
       "title": "finally子句",
       "instruction": "try-except-finally 结构，无论是否有异常都打印 'Done'。\n\n期望输出：`Done`",
-      "initialCode": "try:\n    x = 1\nexcept:\n    print('Error')\nfinally:\n    print('Done')\n",
+      "initialCode": "try:\n    # 在下方编写代码\n    pass\nexcept:\n    pass\nfinally:\n    # 在下方编写无论如何都执行的代码\n    pass\n",
       "testConfig": {
         "expected": "Done",
         "timeout_ms": 5000
@@ -93,7 +93,7 @@
       "type": "output",
       "title": "索引错误",
       "instruction": "捕获列表的 IndexError，处理后打印 'Out of range'。\n\n期望输出：`Out of range`",
-      "initialCode": "try:\n    lst = [1, 2, 3]\n    print(lst[10])\nexcept IndexError:\n    print('Out of range')\n",
+      "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "Out of range",
         "timeout_ms": 5000
@@ -110,7 +110,7 @@
       "type": "output",
       "title": "键错误",
       "instruction": "捕获字典的 KeyError，处理后打印 'Key not found'。\n\n期望输出：`Key not found`",
-      "initialCode": "try:\n    d = {'a': 1}\n    print(d['b'])\nexcept KeyError:\n    print('Key not found')\n",
+      "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "Key not found",
         "timeout_ms": 5000
@@ -127,7 +127,7 @@
       "type": "output",
       "title": "手动抛出异常",
       "instruction": "手动抛出 ValueError，消息为 'Invalid value'。\n\n期望输出：`Invalid value`",
-      "initialCode": "try:\n    raise ValueError('Invalid value')\nexcept ValueError as e:\n    print(e)\n",
+      "initialCode": "# 在下方编写代码，手动抛出异常\n",
       "testConfig": {
         "expected": "Invalid value",
         "timeout_ms": 5000
@@ -144,7 +144,7 @@
       "type": "output",
       "title": "捕获所有异常",
       "instruction": "用 except Exception as e 捕获所有异常，打印异常类型名称。\n\n期望输出：`ZeroDivisionError`",
-      "initialCode": "try:\n    x = 1 / 0\nexcept Exception as e:\n    print(type(e).__name__)\n",
+      "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "ZeroDivisionError",
         "timeout_ms": 5000
@@ -161,7 +161,7 @@
       "type": "output",
       "title": "类型错误",
       "instruction": "捕获 TypeError（尝试int和str相加），打印 'Type mismatch'。\n\n期望输出：`Type mismatch`",
-      "initialCode": "try:\n    result = 1 + 'a'\nexcept TypeError:\n    print('Type mismatch')\n",
+      "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "Type mismatch",
         "timeout_ms": 5000
@@ -178,7 +178,7 @@
       "type": "output",
       "title": "文件不存在",
       "instruction": "捕获 FileNotFoundError，打印 'File not found'。\n\n期望输出：`File not found`",
-      "initialCode": "try:\n    open('nonexistent.txt')\nexcept FileNotFoundError:\n    print('File not found')\n",
+      "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "File not found",
         "timeout_ms": 5000
@@ -195,7 +195,7 @@
       "type": "output",
       "title": "断言",
       "instruction": "使用 assert 语句断言 1 + 1 == 2，如果为真打印 'Correct'。\n\n期望输出：`Correct`",
-      "initialCode": "assert 1 + 1 == 2\nprint('Correct')\n",
+      "initialCode": "# 在下方编写代码，使用断言\n",
       "testConfig": {
         "expected": "Correct",
         "timeout_ms": 5000

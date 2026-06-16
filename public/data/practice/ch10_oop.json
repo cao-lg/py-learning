@@ -8,7 +8,7 @@
       "type": "output",
       "title": "创建简单类",
       "instruction": "定义类 Person，有 name 属性，实例化后打印 name。\n\n期望输出：`Alice`",
-      "initialCode": "class Person:\n    def __init__(self, name):\n        self.name = name\n\np = Person('Alice')\nprint(p.name)\n",
+      "initialCode": "class MyClass:\n    # 在下方编写类的定义\n    pass\n",
       "testConfig": {
         "expected": "Alice",
         "timeout_ms": 5000
@@ -25,7 +25,7 @@
       "type": "output",
       "title": "实例方法",
       "instruction": "定义类 Dog，有 name 属性和 bark() 方法（打印 'Woof!'），调用 bark()。\n\n期望输出：`Woof!`",
-      "initialCode": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    \n    def bark(self):\n        print('Woof!')\n\nd = Dog('Buddy')\nd.bark()\n",
+      "initialCode": "class MyClass:\n    def my_method(self):\n        # 在下方编写方法实现\n        pass\n",
       "testConfig": {
         "expected": "Woof!",
         "timeout_ms": 5000
@@ -42,7 +42,7 @@
       "type": "output",
       "title": "__str__方法",
       "instruction": "定义类 Book，有 title 属性，实现 __str__ 返回书名，print 打印时应显示书名。\n\n期望输出：`Python Basics`",
-      "initialCode": "class Book:\n    def __init__(self, title):\n        self.title = title\n    \n    def __str__(self):\n        return self.title\n\nb = Book('Python Basics')\nprint(b)\n",
+      "initialCode": "class MyClass:\n    def my_method(self):\n        # 在下方编写方法实现\n        pass\n",
       "testConfig": {
         "expected": "Python Basics",
         "timeout_ms": 5000
@@ -59,7 +59,7 @@
       "type": "output",
       "title": "继承",
       "instruction": "定义父类 Animal（有 name 属性）和子类 Cat（继承 Animal，添加 color 属性），创建 Cat 实例并打印 name。\n\n期望输出：`Tom`",
-      "initialCode": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\nclass Cat(Animal):\n    def __init__(self, name, color):\n        super().__init__(name)\n        self.color = color\n\nc = Cat('Tom', 'Orange')\nprint(c.name)\n",
+      "initialCode": "class Parent:\n    pass\n\nclass Child(Parent):\n    # 在下方编写子类定义\n    pass\n",
       "testConfig": {
         "expected": "Tom",
         "timeout_ms": 5000
@@ -76,7 +76,7 @@
       "type": "output",
       "title": "类属性",
       "instruction": "定义类 Counter，有类属性 count=0，每创建一个实例 count 加 1，打印创建两个实例后的 count。\n\n期望输出：`2`",
-      "initialCode": "class Counter:\n    count = 0\n    def __init__(self):\n        Counter.count += 1\n\nc1 = Counter()\nc2 = Counter()\nprint(Counter.count)\n",
+      "initialCode": "class MyClass:\n    # 在下方编写类的定义\n    pass\n",
       "testConfig": {
         "expected": "2",
         "timeout_ms": 5000
@@ -93,7 +93,7 @@
       "type": "output",
       "title": "私有属性",
       "instruction": "定义类 Account，有私有属性 __balance=100，通过 get_balance() 方法获取并打印。\n\n期望输出：`100`",
-      "initialCode": "class Account:\n    def __init__(self):\n        self.__balance = 100\n    \n    def get_balance(self):\n        return self.__balance\n\nacc = Account()\nprint(acc.get_balance())\n",
+      "initialCode": "class MyClass:\n    # 在下方编写属性定义\n    pass\n",
       "testConfig": {
         "expected": "100",
         "timeout_ms": 5000
@@ -110,7 +110,7 @@
       "type": "output",
       "title": "属性装饰器",
       "instruction": "定义类 Temperature，有摄氏度属性 celsius，添加 @property 返回华氏度（c*9/5+32）。\n\n期望输出：`32.0`",
-      "initialCode": "class Temperature:\n    def __init__(self, celsius):\n        self.celsius = celsius\n    \n    @property\n    def fahrenheit(self):\n        return self.celsius * 9/5 + 32\n\nt = Temperature(0)\nprint(t.fahrenheit)\n",
+      "initialCode": "class MyClass:\n    # 在下方编写属性定义\n    pass\n",
       "testConfig": {
         "expected": "32.0",
         "timeout_ms": 5000
@@ -127,7 +127,7 @@
       "type": "output",
       "title": "加法运算符",
       "instruction": "定义类 Vector，实现 __add__ 方法使两个向量相加，返回新的 Vector。\n\n期望输出：`(4, 6)`",
-      "initialCode": "class Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    \n    def __add__(self, other):\n        return Vector(self.x + other.x, self.y + other.y)\n    \n    def __str__(self):\n        return f'({self.x}, {self.y})'\n\nv1 = Vector(1, 2)\nv2 = Vector(3, 4)\nprint(v1 + v2)\n",
+      "initialCode": "class MyClass:\n    def __add__(self, other):\n        # 在下方实现加法\n        pass\n",
       "testConfig": {
         "expected": "(4, 6)",
         "timeout_ms": 5000
@@ -144,7 +144,7 @@
       "type": "output",
       "title": "len方法",
       "instruction": "定义类 Stack，有 items 列表，实现 __len__ 返回栈中元素个数。\n\n期望输出：`2`",
-      "initialCode": "class Stack:\n    def __init__(self):\n        self.items = []\n    \n    def __len__(self):\n        return len(self.items)\n\ns = Stack()\ns.items.append(1)\ns.items.append(2)\nprint(len(s))\n",
+      "initialCode": "class MyClass:\n    def my_method(self):\n        # 在下方编写方法实现\n        pass\n",
       "testConfig": {
         "expected": "2",
         "timeout_ms": 5000
@@ -161,7 +161,7 @@
       "type": "output",
       "title": "方法重写",
       "instruction": "父类 Animal 有 greet() 返回 'Animal'，子类 Dog 重写 greet() 返回 'Dog'，创建 Dog 实例并调用 greet()。\n\n期望输出：`Dog`",
-      "initialCode": "class Animal:\n    def greet(self):\n        return 'Animal'\n\nclass Dog(Animal):\n    def greet(self):\n        return 'Dog'\n\nd = Dog()\nprint(d.greet())\n",
+      "initialCode": "class MyClass:\n    def my_method(self):\n        # 在下方编写方法实现\n        pass\n",
       "testConfig": {
         "expected": "Dog",
         "timeout_ms": 5000
@@ -178,7 +178,7 @@
       "type": "output",
       "title": "类方法",
       "instruction": "定义类 Math，有类方法 add(x, y)，返回 x + y。\n\n期望输出：`7`",
-      "initialCode": "class Math:\n    @classmethod\n    def add(cls, x, y):\n        return x + y\n\nprint(Math.add(3, 4))\n",
+      "initialCode": "class MyClass:\n    # 在下方编写类的定义\n    pass\n",
       "testConfig": {
         "expected": "7",
         "timeout_ms": 5000
@@ -195,7 +195,7 @@
       "type": "output",
       "title": "静态方法",
       "instruction": "定义类 Math2，有静态方法 multiply(x, y)，返回 x * y。\n\n期望输出：`12`",
-      "initialCode": "class Math2:\n    @staticmethod\n    def multiply(x, y):\n        return x * y\n\nprint(Math2.multiply(3, 4))\n",
+      "initialCode": "class MyClass:\n    def my_method(self):\n        # 在下方编写方法实现\n        pass\n",
       "testConfig": {
         "expected": "12",
         "timeout_ms": 5000
@@ -212,7 +212,7 @@
       "type": "output",
       "title": "索引访问",
       "instruction": "定义类 MyList，有内部列表 [10, 20, 30]，实现 __getitem__ 支持索引访问。\n\n期望输出：`20`",
-      "initialCode": "class MyList:\n    def __init__(self):\n        self.items = [10, 20, 30]\n    \n    def __getitem__(self, index):\n        return self.items[index]\n\nm = MyList()\nprint(m[1])\n",
+      "initialCode": "class MyClass:\n    def __getitem__(self, index):\n        # 在下方实现索引访问\n        pass\n",
       "testConfig": {
         "expected": "20",
         "timeout_ms": 5000
@@ -229,7 +229,7 @@
       "type": "output",
       "title": "多重继承",
       "instruction": "类 A 有方法 foo() 返回 'A'，类 B 有方法 bar() 返回 'B'，类 C 继承 A 和 B，创建 C 实例调用 foo()。\n\n期望输出：`A`",
-      "initialCode": "class A:\n    def foo(self):\n        return 'A'\n\nclass B:\n    def bar(self):\n        return 'B'\n\nclass C(A, B):\n    pass\n\nc = C()\nprint(c.foo())\n",
+      "initialCode": "class Parent:\n    pass\n\nclass Child(Parent):\n    # 在下方编写子类定义\n    pass\n",
       "testConfig": {
         "expected": "A",
         "timeout_ms": 5000
@@ -246,7 +246,7 @@
       "type": "output",
       "title": "可调用对象",
       "instruction": "定义类 Counter，有 count 属性，实现 __call__ 使实例可以像函数一样调用（调用时 count 加 1）。\n\n期望输出：\n```\n1\n2\n```",
-      "initialCode": "class Counter:\n    def __init__(self):\n        self.count = 0\n    \n    def __call__(self):\n        self.count += 1\n        return self.count\n\nc = Counter()\nprint(c())\nprint(c())\n",
+      "initialCode": "class MyClass:\n    def __call__(self):\n        # 在下方实现可调用\n        pass\n",
       "testConfig": {
         "expected": "1\n2",
         "timeout_ms": 5000
