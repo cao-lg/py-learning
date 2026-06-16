@@ -10,14 +10,17 @@
       "id": "ex4_q1",
       "type": "output",
       "title": "奇偶判断",
-      "instruction": "判断数字 7 是奇数还是偶数，如果是奇数打印 'odd'，偶数打印 'even'。\n\n期望输出：odd",
+      "instruction": "判断数字 7 是奇数还是偶数，如果是奇数打印 'odd'，偶数打印 'even'。",
       "initialCode": "num = 7\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "odd",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用 if num % 2 == 1", "visible": false }
+        {
+          "text": "使用 if num % 2 == 1",
+          "visible": false
+        }
       ]
     },
     {
@@ -31,7 +34,10 @@
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "for i in range(1, 6)", "visible": false }
+        {
+          "text": "for i in range(1, 6)",
+          "visible": false
+        }
       ]
     },
     {
@@ -45,7 +51,10 @@
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "for i in range(1, 11): if i == 5: break", "visible": false }
+        {
+          "text": "for i in range(1, 11): if i == 5: break",
+          "visible": false
+        }
       ]
     },
     {
@@ -59,7 +68,10 @@
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "for i in range(1, 6): if i == 3: continue", "visible": false }
+        {
+          "text": "for i in range(1, 6): if i == 3: continue",
+          "visible": false
+        }
       ]
     },
     {
@@ -73,21 +85,27 @@
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "i = 5; while i >= 1:", "visible": false }
+        {
+          "text": "i = 5; while i >= 1:",
+          "visible": false
+        }
       ]
     },
     {
       "id": "ex4_q6",
       "type": "output",
       "title": "else 子句",
-      "instruction": "循环正常执行完毕（不 break），打印 'completed'。\n\n期望输出：completed",
+      "instruction": "循环正常执行完毕（不 break），打印 'completed'。",
       "initialCode": "for i in range(3):\n    pass\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "completed",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "for ... else: else 会在循环正常结束时执行", "visible": false }
+        {
+          "text": "for ... else: else 会在循环正常结束时执行",
+          "visible": false
+        }
       ]
     }
   ]

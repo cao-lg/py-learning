@@ -10,14 +10,17 @@
       "id": "ex8_q1",
       "type": "output",
       "title": "StringIO读取",
-      "instruction": "使用 StringIO 读取字符串 'Hello' 并打印。\n\n期望输出：Hello",
+      "instruction": "使用 StringIO 读取字符串 'Hello' 并打印。",
       "initialCode": "from io import StringIO\n\nf = StringIO('Hello')\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "Hello",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "f.read()", "visible": false }
+        {
+          "text": "f.read()",
+          "visible": false
+        }
       ]
     },
     {
@@ -31,35 +34,44 @@
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "json.dumps(data)", "visible": false }
+        {
+          "text": "json.dumps(data)",
+          "visible": false
+        }
       ]
     },
     {
       "id": "ex8_q3",
       "type": "output",
       "title": "JSON反序列化",
-      "instruction": "将 JSON 字符串 '{\"score\": 95}' 转为字典，获取 score 的值。\n\n期望输出：95",
+      "instruction": "将 JSON 字符串 '{\"score\": 95}' 转为字典，获取 score 的值。",
       "initialCode": "import json\n\ns = '{\"score\": 95}'\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "95",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "json.loads(s)['score']", "visible": false }
+        {
+          "text": "json.loads(s)['score']",
+          "visible": false
+        }
       ]
     },
     {
       "id": "ex8_q4",
       "type": "output",
       "title": "StringIO写入",
-      "instruction": "使用 StringIO 写入 'World'，然后获取并打印内容。\n\n期望输出：World",
+      "instruction": "使用 StringIO 写入 'World'，然后获取并打印内容。",
       "initialCode": "from io import StringIO\n\nf = StringIO()\nf.write('World')\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "World",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "f.getvalue()", "visible": false }
+        {
+          "text": "f.getvalue()",
+          "visible": false
+        }
       ]
     },
     {
@@ -73,21 +85,27 @@
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "json.dumps(data, indent=2)", "visible": false }
+        {
+          "text": "json.dumps(data, indent=2)",
+          "visible": false
+        }
       ]
     },
     {
       "id": "ex8_q6",
       "type": "output",
       "title": "seek操作",
-      "instruction": "StringIO 写入 'test' 后，seek 到开头再读取。\n\n期望输出：test",
+      "instruction": "StringIO 写入 'test' 后，seek 到开头再读取。",
       "initialCode": "from io import StringIO\n\nf = StringIO()\nf.write('test')\nf.seek(0)\n# 在下方编写代码\n",
       "testConfig": {
         "expected": "test",
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "f.read()", "visible": false }
+        {
+          "text": "f.read()",
+          "visible": false
+        }
       ]
     }
   ]
