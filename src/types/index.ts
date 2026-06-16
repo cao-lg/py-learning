@@ -90,14 +90,14 @@ export interface ExamSession {
 
 export interface SyncPayload {
   userId: string;
-  practice: Record<string, {
+  practice?: Record<string, {
     chapterId: string;
     score: number;
     totalQuestions: number;
     completedAt: number;
     answers: Record<string, string>;
   }>;
-  exam: Record<string, {
+  exam?: Record<string, {
     examId: string;
     score: number;
     totalQuestions: number;
@@ -105,7 +105,7 @@ export interface SyncPayload {
     completedAt: number;
     answers: Record<string, string>;
   }>;
-  audit: Record<string, {
+  audit?: Record<string, {
     type: string;
     timestamp: number;
     data?: Record<string, unknown>;
