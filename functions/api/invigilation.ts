@@ -392,8 +392,26 @@ async function ensureIndexes(db: D1Database): Promise<void> {
     `).run();
     
     await db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_audit_logs_exam_user_timestamp 
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_exam_user_timestamp
       ON audit_logs (exam_id, user_id, timestamp DESC)
+    `).run();
+
+    // 优化导出功能中的子查询：获取最新切屏记录
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_tab_switch_latest
+      ON audit_logs (user_id, exam_id, event_type, timestamp DESC)
+    `).run();
+
+    // 优化按exam_id查询后按时间排序
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_exam_timestamp
+      ON audit_logs (exam_id, timestamp DESC)
+    `).run();
+
+    // 优化 exam_records 按 exam_id 排序查询
+    await db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_exam_records_exam_completed
+      ON exam_records (exam_id, completed_at DESC)
     `).run();
   } catch (error) {
     console.warn('Index creation failed (may already exist):', error);
