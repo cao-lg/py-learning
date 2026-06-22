@@ -58,6 +58,7 @@ const examTitles: Record<string, string> = {
 
 interface ExamData {
   id: string;
+  version?: string;
   title: string;
   description: string;
   duration: number;
@@ -85,6 +86,7 @@ export function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedExam, setSelectedExam] = useState<string>('all');
   const [previewExam, setPreviewExam] = useState<ExamData | null>(null);
+  const [previewVersions, setPreviewVersions] = useState<ExamData[]>([]);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
@@ -113,9 +115,29 @@ export function AdminPage() {
     try {
       setPreviewLoading(true);
       setShowPreviewModal(true);
-      const response = await fetch(`/data/exam/${examId}.json`);
-      const examData = await response.json();
-      setPreviewExam(examData);
+      setPreviewExam(null);
+      setPreviewVersions([]);
+
+      // 如果是期末考试（多版本）
+      if (examId === 'final_exam') {
+        const versions = ['final_exam_A', 'final_exam_B', 'final_exam_C'];
+        const versionData: ExamData[] = [];
+
+        for (const versionId of versions) {
+          const response = await fetch(`/data/exam/${versionId}.json`);
+          if (response.ok) {
+            const data = await response.json();
+            versionData.push(data);
+          }
+        }
+
+        setPreviewVersions(versionData);
+      } else {
+        // 单版本考试
+        const response = await fetch(`/data/exam/${examId}.json`);
+        const examData = await response.json();
+        setPreviewExam(examData);
+      }
     } catch (err) {
       console.error('Failed to load exam data:', err);
       alert('加载考试内容失败');
@@ -691,7 +713,7 @@ export function AdminPage() {
       {/* 预览考试模态框 */}
       {showPreviewModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 预览考试内容
@@ -700,6 +722,7 @@ export function AdminPage() {
                 onClick={() => {
                   setShowPreviewModal(false);
                   setPreviewExam(null);
+                  setPreviewVersions([]);
                 }}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold"
               >
@@ -712,7 +735,91 @@ export function AdminPage() {
                 <div className="flex items-center justify-center h-64">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
                 </div>
+              ) : previewVersions.length > 0 ? (
+                // 多版本考试预览
+                <div className="space-y-6">
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-200 dark:border-yellow-800">
+                    <h4 className="text-lg font-semibold text-yellow-800 dark:text-yellow-300 mb-2 flex items-center gap-2">
+                      <span>⚠️</span>
+                      <span>多版本考试说明</span>
+                    </h4>
+                    <p className="text-yellow-700 dark:text-yellow-400 text-sm">
+                      此考试包含 A、B、C 三套试卷，系统会根据学生ID随机分配其中一套。每套试卷各有 {previewVersions[0]?.questions.length || 12} 题，考试时长 {previewVersions[0]?.duration || 90} 分钟。
+                    </p>
+                  </div>
+
+                  {previewVersions.map((version, vIndex) => (
+                    <div key={version.id} className="border border-gray-200 dark:border-gray-700 rounded-lg">
+                      <div className="bg-gray-100 dark:bg-gray-900 p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            vIndex === 0 ? 'bg-red-100 text-red-800' :
+                            vIndex === 1 ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {version.version || ['A', 'B', 'C'][vIndex]} 卷
+                          </span>
+                          <span>{version.title}</span>
+                        </h4>
+                        <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm">
+                          {version.description}
+                        </p>
+                        <div className="flex flex-wrap gap-4 mt-2 text-sm">
+                          <span className="flex items-center gap-1">
+                            <span>⏱️</span>
+                            <span>{version.duration} 分钟</span>
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <span>📝</span>
+                            <span>{version.questions.length} 题</span>
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <span>🏆</span>
+                            <span>{version.totalScore} 分</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-4 space-y-3">
+                        {version.questions.map((question, qIndex) => (
+                          <div
+                            key={question.id}
+                            className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700"
+                          >
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full text-xs font-medium">
+                                第 {qIndex + 1} 题
+                              </span>
+                              <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                question.type === 'output' ? 'bg-blue-100 text-blue-800' :
+                                question.type === 'function' ? 'bg-green-100 text-green-800' :
+                                question.type === 'interactive' ? 'bg-yellow-100 text-yellow-800' :
+                                question.type === 'unittest' ? 'bg-orange-100 text-orange-800' :
+                                question.type === 'constraint' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {question.type === 'output' ? '输出题' :
+                                 question.type === 'function' ? '函数题' :
+                                 question.type === 'interactive' ? '交互题' :
+                                 question.type === 'unittest' ? '单元测试' :
+                                 question.type === 'constraint' ? '约束题' :
+                                 '调试题'}
+                              </span>
+                              <span className="font-medium text-gray-900 dark:text-white text-sm">
+                                {question.title}
+                              </span>
+                            </div>
+                            <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap line-clamp-2">
+                              {question.instruction}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               ) : previewExam ? (
+                // 单版本考试预览
                 <div className="space-y-6">
                   <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
                     <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -817,6 +924,7 @@ export function AdminPage() {
                 onClick={() => {
                   setShowPreviewModal(false);
                   setPreviewExam(null);
+                  setPreviewVersions([]);
                 }}
                 className="px-6 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition-colors"
               >
