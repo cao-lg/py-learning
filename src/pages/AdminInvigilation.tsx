@@ -12,6 +12,28 @@ interface ExamSessionInfo {
   lastActive?: number;
 }
 
+interface ExportRecord {
+  userId: string;
+  userName: string;
+  startedAt: string | null;
+  completedAt: string | null;
+  duration: number;
+  durationFormatted: string;
+  score: number;
+  totalQuestions: number;
+  tabSwitchCount: number;
+  status: string;
+  answers: Record<string, string>;
+}
+
+interface ExportStats {
+  totalStudents: number;
+  submitted: number;
+  ongoing: number;
+  avgScore: number;
+  totalTabSwitches: number;
+}
+
 const examTitles: Record<string, string> = {
   ch01_basics: '第一章测验',
   ch02_variables: '第二章测验',
@@ -33,6 +55,14 @@ const examTitles: Record<string, string> = {
 export function AdminInvigilationPage() {
   const [sessions, setSessions] = useState<ExamSessionInfo[]>([]);
   const [selectedExam, setSelectedExam] = useState<string>('all');
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportData, setExportData] = useState<{
+    stats: ExportStats;
+    records: ExportRecord[];
+    examId: string;
+    exportedAt: string;
+  } | null>(null);
+  const [showExportModal, setShowExportModal] = useState(false);
 
   useEffect(() => {
     fetchSessions();
@@ -106,6 +136,76 @@ export function AdminInvigilationPage() {
 
   const getExamList = () => {
     return Object.entries(examTitles).map(([id, title]) => ({ id, title }));
+  };
+
+  const handleExport = async () => {
+    if (selectedExam === 'all') {
+      alert('请先选择一场具体的考试');
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      const response = await fetch(`/api/invigilation/export?examId=${selectedExam}`);
+      const data = await response.json();
+      
+      if (data.ok) {
+        setExportData({
+          stats: data.stats,
+          records: data.records,
+          examId: data.examId,
+          exportedAt: data.exportedAt
+        });
+        setShowExportModal(true);
+      } else {
+        alert('导出失败：' + (data.error || '未知错误'));
+      }
+    } catch (err) {
+      console.error('Export failed:', err);
+      alert('导出失败：网络错误');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const downloadCSV = () => {
+    if (!exportData) return;
+
+    const examTitle = examTitles[exportData.examId] || exportData.examId;
+    
+    // 创建 CSV 内容
+    const headers = ['学生姓名', '学生ID', '开始时间', '提交时间', '用时', '成绩', '总分', '切屏次数', '状态'];
+    const rows = exportData.records.map(r => [
+      r.userName,
+      r.userId,
+      r.startedAt ? new Date(r.startedAt).toLocaleString('zh-CN') : '-',
+      r.completedAt ? new Date(r.completedAt).toLocaleString('zh-CN') : '-',
+      r.durationFormatted,
+      r.score.toString(),
+      r.totalQuestions.toString(),
+      r.tabSwitchCount.toString(),
+      r.status
+    ]);
+
+    const csvContent = [
+      `# ${examTitle} 考试数据导出`,
+      `# 导出时间：${new Date(exportData.exportedAt).toLocaleString('zh-CN')}`,
+      `# 统计：总人数 ${exportData.stats.totalStudents}，已提交 ${exportData.stats.submitted}，进行中 ${exportData.stats.ongoing}，平均分 ${exportData.stats.avgScore}，总切屏 ${exportData.stats.totalTabSwitches}`,
+      '',
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // 下载文件
+    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${examTitle}_考试数据_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const filteredSessions = selectedExam === 'all'
@@ -186,6 +286,27 @@ export function AdminInvigilationPage() {
           >
             <span>🔄</span>
             <span>刷新</span>
+          </button>
+          <button
+            onClick={handleExport}
+            disabled={selectedExam === 'all' || isExporting}
+            className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors ${
+              selectedExam === 'all' 
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                : 'bg-green-600 text-white hover:bg-green-700'
+            }`}
+          >
+            {isExporting ? (
+              <>
+                <span>⏳</span>
+                <span>导出中...</span>
+              </>
+            ) : (
+              <>
+                <span>📊</span>
+                <span>导出数据</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -295,8 +416,118 @@ export function AdminInvigilationPage() {
           <li>• 点击"重置切屏"可清零该学生的切屏计数（适用于误判情况）</li>
           <li>• 点击"清除违规"可移除学生的违规记录，允许其重新参加考试</li>
           <li>• 页面每30秒自动刷新一次，也可手动点击刷新按钮</li>
+          <li>• 选择具体考试后可点击"导出数据"下载该场考试的详细数据</li>
         </ul>
       </div>
+
+      {/* 导出模态框 */}
+      {showExportModal && exportData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  📊 {examTitles[exportData.examId] || exportData.examId} - 考试数据导出
+                </h3>
+                <button
+                  onClick={() => setShowExportModal(false)}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              <p className="text-sm text-gray-500 mt-1">
+                导出时间：{new Date(exportData.exportedAt).toLocaleString('zh-CN')}
+              </p>
+            </div>
+
+            {/* 统计卡片 */}
+            <div className="p-6 bg-gray-50 dark:bg-gray-900">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-purple-600">{exportData.stats.totalStudents}</div>
+                  <div className="text-sm text-gray-500">总人数</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600">{exportData.stats.submitted}</div>
+                  <div className="text-sm text-gray-500">已提交</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600">{exportData.stats.ongoing}</div>
+                  <div className="text-sm text-gray-500">进行中</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-orange-600">{exportData.stats.avgScore}</div>
+                  <div className="text-sm text-gray-500">平均分</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-red-600">{exportData.stats.totalTabSwitches}</div>
+                  <div className="text-sm text-gray-500">总切屏</div>
+                </div>
+              </div>
+            </div>
+
+            {/* 数据表格 */}
+            <div className="p-6 overflow-y-auto max-h-[50vh]">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0">
+                  <tr>
+                    <th className="px-4 py-3 text-left">学生姓名</th>
+                    <th className="px-4 py-3 text-left">用时</th>
+                    <th className="px-4 py-3 text-left">成绩</th>
+                    <th className="px-4 py-3 text-left">切屏</th>
+                    <th className="px-4 py-3 text-left">状态</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {exportData.records.map((record, idx) => (
+                    <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-900">
+                      <td className="px-4 py-3 font-medium">{record.userName}</td>
+                      <td className="px-4 py-3">{record.durationFormatted}</td>
+                      <td className="px-4 py-3">{record.score} / {record.totalQuestions}</td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          record.tabSwitchCount >= 3 ? 'bg-red-100 text-red-800' :
+                          record.tabSwitchCount >= 1 ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {record.tabSwitchCount}次
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          record.status === '已提交' ? 'bg-green-100 text-green-800' :
+                          record.status === '进行中' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {record.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* 操作按钮 */}
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+              <button
+                onClick={() => setShowExportModal(false)}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+              >
+                关闭
+              </button>
+              <button
+                onClick={downloadCSV}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+              >
+                <span>📥</span>
+                <span>下载CSV</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   );
 }
