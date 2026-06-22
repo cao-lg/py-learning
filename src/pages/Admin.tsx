@@ -56,11 +56,37 @@ const examTitles: Record<string, string> = {
   final_exam: '期末考试',
 };
 
+interface ExamData {
+  id: string;
+  title: string;
+  description: string;
+  duration: number;
+  totalScore: number;
+  passingScore: number;
+  questions: {
+    id: string;
+    type: string;
+    title: string;
+    instruction: string;
+    initialCode: string;
+    testConfig: {
+      timeout_ms: number;
+    };
+    hints?: {
+      text: string;
+      visible: boolean;
+    }[];
+  }[];
+}
+
 export function AdminPage() {
   const [stats, setStats] = useState<StatsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedExam, setSelectedExam] = useState<string>('all');
+  const [previewExam, setPreviewExam] = useState<ExamData | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -80,6 +106,22 @@ export function AdminPage() {
       setError('Failed to connect to API');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePreviewExam = async (examId: string) => {
+    try {
+      setPreviewLoading(true);
+      setShowPreviewModal(true);
+      const response = await fetch(`/data/exam/${examId}.json`);
+      const examData = await response.json();
+      setPreviewExam(examData);
+    } catch (err) {
+      console.error('Failed to load exam data:', err);
+      alert('加载考试内容失败');
+      setShowPreviewModal(false);
+    } finally {
+      setPreviewLoading(false);
     }
   };
 
@@ -482,6 +524,7 @@ export function AdminPage() {
                     <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">尝试次数</th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">平均得分</th>
                     <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">通过率</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">操作</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -501,6 +544,15 @@ export function AdminPage() {
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-medium ${exam.passRate >= 70 ? 'bg-green-100 text-green-800' : exam.passRate >= 50 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
                           {exam.passRate}%
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        <button
+                          onClick={() => handlePreviewExam(exam.examId)}
+                          className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-1"
+                        >
+                          <span>👁️</span>
+                          <span>预览</span>
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -587,6 +639,9 @@ export function AdminPage() {
                 <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
                   平均分数
                 </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500 dark:text-gray-400">
+                  操作
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -606,11 +661,20 @@ export function AdminPage() {
                       {stat.avgScore.toFixed(1)}%
                     </span>
                   </td>
+                  <td className="px-6 py-4 text-sm">
+                    <button
+                      onClick={() => handlePreviewExam(stat.examId)}
+                      className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors flex items-center gap-1"
+                    >
+                      <span>👁️</span>
+                      <span>预览</span>
+                    </button>
+                  </td>
                 </tr>
               ))}
               {filteredStats.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     <div className="flex flex-col items-center">
                       <span className="text-4xl mb-2">📊</span>
                       <p>暂无考试数据</p>
@@ -623,6 +687,145 @@ export function AdminPage() {
           </table>
         </div>
       </div>
+
+      {/* 预览考试模态框 */}
+      {showPreviewModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                预览考试内容
+              </h3>
+              <button
+                onClick={() => {
+                  setShowPreviewModal(false);
+                  setPreviewExam(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl font-bold"
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+              {previewLoading ? (
+                <div className="flex items-center justify-center h-64">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+                </div>
+              ) : previewExam ? (
+                <div className="space-y-6">
+                  <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      {previewExam.title}
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 mb-3">
+                      {previewExam.description}
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 dark:text-gray-400">⏱️</span>
+                        <span className="text-gray-900 dark:text-white">考试时长：{previewExam.duration} 分钟</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 dark:text-gray-400">📝</span>
+                        <span className="text-gray-900 dark:text-white">总题数：{previewExam.questions.length} 题</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 dark:text-gray-400">🏆</span>
+                        <span className="text-gray-900 dark:text-white">总分：{previewExam.totalScore} 分</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-500 dark:text-gray-400">✅</span>
+                        <span className="text-gray-900 dark:text-white">及格线：{previewExam.passingScore} 分</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                      题目列表
+                    </h4>
+                    <div className="space-y-4">
+                      {previewExam.questions.map((question, index) => (
+                        <div
+                          key={question.id}
+                          className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                              <span className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-sm font-medium">
+                                第 {index + 1} 题
+                              </span>
+                              <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                question.type === 'output' ? 'bg-blue-100 text-blue-800' :
+                                question.type === 'function' ? 'bg-green-100 text-green-800' :
+                                question.type === 'interactive' ? 'bg-yellow-100 text-yellow-800' :
+                                question.type === 'unittest' ? 'bg-orange-100 text-orange-800' :
+                                question.type === 'constraint' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {question.type === 'output' ? '输出题' :
+                                 question.type === 'function' ? '函数题' :
+                                 question.type === 'interactive' ? '交互题' :
+                                 question.type === 'unittest' ? '单元测试' :
+                                 question.type === 'constraint' ? '约束题' :
+                                 '调试题'}
+                              </span>
+                            </div>
+                          </div>
+                          <h5 className="font-medium text-gray-900 dark:text-white mb-2">
+                            {question.title}
+                          </h5>
+                          <p className="text-gray-600 dark:text-gray-400 mb-3 whitespace-pre-wrap">
+                            {question.instruction}
+                          </p>
+                          <div className="bg-gray-900/90 rounded-lg p-3">
+                            <pre className="text-sm text-green-400 overflow-x-auto">
+                              <code>{question.initialCode}</code>
+                            </pre>
+                          </div>
+                          {question.hints && question.hints.length > 0 && (
+                            <div className="mt-3">
+                              <h6 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                提示：
+                              </h6>
+                              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                                {question.hints.map((hint, idx) => (
+                                  <li key={idx} className="flex items-start gap-2">
+                                    <span>•</span>
+                                    <span>{hint.text}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <span className="text-4xl mb-2">📋</span>
+                  <p className="text-gray-500">暂无考试内容</p>
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+              <button
+                onClick={() => {
+                  setShowPreviewModal(false);
+                  setPreviewExam(null);
+                }}
+                className="px-6 py-2 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition-colors"
+              >
+                关闭
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   );
 }
