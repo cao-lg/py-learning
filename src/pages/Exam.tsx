@@ -135,9 +135,40 @@ export function ExamPage() {
         return;
       }
 
-      const response = await fetch(`/data/exam/${versionId}.json`);
-      if (!response.ok) throw new Error('Failed to load exam');
-      const data: ExamSet = await response.json();
+      // 尝试从API获取考试数据
+      let data: ExamSet;
+      try {
+        const apiUrl = `/api/exam-paper?examId=${examId}&userId=${userId}`;
+        const apiResponse = await fetch(apiUrl);
+
+        if (apiResponse.ok) {
+          const apiData = await apiResponse.json();
+          if (apiData.ok && apiData.examPaper) {
+            // 从API获取的数据
+            data = {
+              id: apiData.examPaper.id,
+              title: apiData.examPaper.title,
+              description: apiData.examPaper.description,
+              duration: apiData.examPaper.duration,
+              totalScore: apiData.examPaper.totalScore,
+              passingScore: apiData.examPaper.passingScore,
+              version: apiData.examPaper.version,
+              questions: apiData.examPaper.questions
+            };
+            console.log('ExamPage - Loaded from API:', data.id);
+          } else {
+            throw new Error(apiData.error || 'API returned no data');
+          }
+        } else {
+          throw new Error('API request failed');
+        }
+      } catch (apiError) {
+        console.warn('ExamPage - API failed, falling back to JSON:', apiError);
+        // API失败时回退到JSON文件
+        const response = await fetch(`/data/exam/${versionId}.json`);
+        if (!response.ok) throw new Error('Failed to load exam');
+        data = await response.json();
+      }
 
       const seed = await generateDeterministicSeed(userId, versionId);
       const shuffledQuestions = shuffleArray(data.questions, seed);

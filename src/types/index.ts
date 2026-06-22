@@ -4,7 +4,12 @@ export interface TestConfig {
   weight?: number;
   timeout_ms: number;
   constraints?: Record<string, unknown>;
-  hiddenCases?: unknown[];
+  hiddenCases?: HiddenTestCase[];
+}
+
+export interface HiddenTestCase {
+  input?: string;
+  expected: string;
 }
 
 export interface Hint {
@@ -39,6 +44,9 @@ export interface ExamSet {
   title: string;
   description: string;
   duration: number;
+  totalScore: number;
+  passingScore: number;
+  version?: string;
   questions: ExamQuestion[];
   deterministicSeed?: string;
   startTime?: string;
