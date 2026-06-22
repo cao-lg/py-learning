@@ -41,7 +41,10 @@ interface ExamDetail {
     instruction: string;
     initialCode: string;
     testConfig: {
+      expected?: string | null;
       timeout_ms: number;
+      mockInputs?: string[];
+      weight?: number;
     };
     hints?: {
       text: string;
@@ -511,9 +514,31 @@ export function AdminSettingsPage() {
                                 {question.title}
                               </span>
                             </div>
-                            <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap line-clamp-2">
+                            <p className="text-gray-600 dark:text-gray-400 text-sm whitespace-pre-wrap line-clamp-2 mb-2">
                               {question.instruction}
                             </p>
+                            {/* 评分标准 */}
+                            {question.testConfig.expected && (
+                              <div className="mt-2 bg-blue-50 dark:bg-blue-900/20 rounded p-2 border border-blue-200 dark:border-blue-800">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <span className="text-blue-600 dark:text-blue-400 text-xs font-medium">📋 评分标准：</span>
+                                </div>
+                                <pre className="text-xs text-blue-800 dark:text-blue-300 whitespace-pre-wrap overflow-x-auto">
+                                  {question.testConfig.expected}
+                                </pre>
+                              </div>
+                            )}
+                            {/* 测试用例输入 */}
+                            {question.testConfig.mockInputs && question.testConfig.mockInputs.length > 0 && (
+                              <div className="mt-2 bg-green-50 dark:bg-green-900/20 rounded p-2 border border-green-200 dark:border-green-800">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <span className="text-green-600 dark:text-green-400 text-xs font-medium">📥 测试输入：</span>
+                                </div>
+                                <pre className="text-xs text-green-800 dark:text-green-300 whitespace-pre-wrap overflow-x-auto">
+                                  {question.testConfig.mockInputs.join('\n')}
+                                </pre>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -588,10 +613,36 @@ export function AdminSettingsPage() {
                           <p className="text-gray-600 dark:text-gray-400 mb-3 whitespace-pre-wrap">
                             {question.instruction}
                           </p>
-                          <div className="bg-gray-900/90 rounded-lg p-3">
+                          <div className="bg-gray-900/90 rounded-lg p-3 mb-3">
                             <pre className="text-sm text-green-400 overflow-x-auto">
                               <code>{question.initialCode}</code>
                             </pre>
+                          </div>
+                          {/* 评分标准 */}
+                          {question.testConfig.expected && (
+                            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-200 dark:border-blue-800 mb-3">
+                              <div className="flex items-center gap-1 mb-2">
+                                <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">📋 评分标准（期望输出）：</span>
+                              </div>
+                              <pre className="text-sm text-blue-800 dark:text-blue-300 whitespace-pre-wrap overflow-x-auto bg-white dark:bg-gray-900 rounded p-2">
+                                {question.testConfig.expected}
+                              </pre>
+                            </div>
+                          )}
+                          {/* 测试用例输入 */}
+                          {question.testConfig.mockInputs && question.testConfig.mockInputs.length > 0 && (
+                            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800 mb-3">
+                              <div className="flex items-center gap-1 mb-2">
+                                <span className="text-green-600 dark:text-green-400 text-sm font-medium">📥 测试输入：</span>
+                              </div>
+                              <pre className="text-sm text-green-800 dark:text-green-300 whitespace-pre-wrap overflow-x-auto bg-white dark:bg-gray-900 rounded p-2">
+                                {question.testConfig.mockInputs.join('\n')}
+                              </pre>
+                            </div>
+                          )}
+                          {/* 超时时间 */}
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                            ⏱️ 超时限制：{question.testConfig.timeout_ms / 1000} 秒
                           </div>
                           {question.hints && question.hints.length > 0 && (
                             <div className="mt-3">
