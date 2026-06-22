@@ -22,7 +22,9 @@ interface ExamQuestionData {
 
 /**
  * 初始化考试数据库API
- * 调用方式：POST /api/init-exam-db
+ * 调用方式：
+ * - POST /api/init-exam-db（推荐）
+ * - GET /api/init-exam-db（浏览器直接访问）
  * 
  * 步骤：
  * 1. 创建exam_questions表
@@ -30,7 +32,8 @@ interface ExamQuestionData {
  * 3. 从JSON文件读取数据并插入
  */
 export async function onRequest({ request, env }: { request: Request; env: Env }): Promise<Response> {
-  if (request.method !== "POST") {
+  // 支持GET和POST请求
+  if (request.method !== "POST" && request.method !== "GET") {
     return new Response(JSON.stringify({ ok: false, error: "Method not allowed" }), {
       status: 405,
       headers: { "Content-Type": "application/json" },
