@@ -6,6 +6,122 @@
   "duration": 90,
   "totalScore": 100,
   "passingScore": 60,
+  "examInstructions": {
+    "考试须知": [
+      "考试科目：Python基础",
+      "考试地址：https://py-learning.pages.dev/",
+      "考试时长：90分钟",
+      "总分：100分，及格分数：60分"
+    ],
+    "答题要求": [
+      "在网页上直接编写Python代码并提交答案",
+      "每道题目有独立的代码编辑区域",
+      "认真阅读题目要求，确保输出格式完全匹配"
+    ],
+    "考试纪律": [
+      "考试期间禁止切屏（切换到其他浏览器标签或应用）",
+      "系统会检测切屏次数，切屏超过3次将自动提交试卷",
+      "切屏3次以上视为作弊，试卷成绩记为零分",
+      "不得使用任何外部资料或他人协助答题"
+    ],
+    "交卷说明": [
+      "考试时间结束，系统将自动提交试卷",
+      "提前完成可手动提交",
+      "提交后无法修改答案，请谨慎操作"
+    ]
+  },
+  "scoringCriteria": {
+    "总分": 100,
+    "及格分": 60,
+    "分值分布": {
+      "函数定义与基础操作": {
+        "说明": "第一题至第八题，主要测试函数定义和基础数据结构操作",
+        "总分": 60,
+        "题目分值": {
+          "q1": {
+            "名称": "列表交集",
+            "分值": 8,
+            "评分要点": "正确返回两个列表的交集"
+          },
+          "q2": {
+            "名称": "字典值排序",
+            "分值": 8,
+            "评分要点": "正确返回按值排序的字典键的列表"
+          },
+          "q3": {
+            "名称": "首字母大写",
+            "分值": 8,
+            "评分要点": "正确将字符串中每个单词的首字母大写"
+          },
+          "q4": {
+            "名称": "列表元素筛选",
+            "分值": 8,
+            "评分要点": "正确筛选出列表中的偶数"
+          },
+          "q5": {
+            "名称": "字符串小写",
+            "分值": 8,
+            "评分要点": "正确将字符串转换为小写"
+          },
+          "q6": {
+            "名称": "计算最大值",
+            "分值": 8,
+            "评分要点": "正确找出列表中的最大值"
+          },
+          "q7": {
+            "名称": "字符串长度",
+            "分值": 6,
+            "评分要点": "正确返回字符串的长度"
+          },
+          "q8": {
+            "名称": "列表元素求和",
+            "分值": 6,
+            "评分要点": "正确计算列表中所有元素的总和"
+          }
+        }
+      },
+      "输出结果与综合应用": {
+        "说明": "第九题至第十二题，测试输出结果和综合应用能力",
+        "总分": 40,
+        "题目分值": {
+          "q9": {
+            "名称": "列表元素求和",
+            "分值": 8,
+            "评分要点": "正确计算列表中所有元素的总和（第二个测试）"
+          },
+          "q10": {
+            "名称": "字符串替换",
+            "分值": 8,
+            "评分要点": "正确替换字符串中的指定子串"
+          },
+          "q11": {
+            "名称": "判断奇数",
+            "分值": 8,
+            "评分要点": "正确判断整数是否为奇数"
+          },
+          "q12": {
+            "名称": "斐波那契数列",
+            "分值": 16,
+            "评分要点": "正确输出前8个斐波那契数列数字"
+          }
+        }
+      }
+    },
+    "评分细则": {
+      "功能正确性": {
+        "占比": "70%",
+        "说明": "程序能正常运行，输出结果与预期完全匹配"
+      },
+      "代码质量": {
+        "占比": "20%",
+        "说明": "代码结构清晰，逻辑正确，变量命名规范"
+      },
+      "边界情况": {
+        "占比": "10%",
+        "说明": "能正确处理空输入和边界值"
+      }
+    }
+  },
   "questions": [
     {
       "id": "feC_q1",
@@ -15,11 +131,66 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "[2, 3]",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                2,
+                3,
+                4
+              ]
+            ],
+            "expected": [
+              2,
+              3
+            ]
+          },
+          {
+            "args": [
+              [
+                "a",
+                "b",
+                "c"
+              ],
+              [
+                "c",
+                "d",
+                "e"
+              ]
+            ],
+            "expected": [
+              "c"
+            ]
+          },
+          {
+            "args": [
+              [],
+              [
+                1,
+                2,
+                3
+              ]
+            ],
+            "expected": []
+          }
+        ]
       },
       "hints": [
-        { "text": "使用集合的交集运算", "visible": false }
-      ]
+        {
+          "text": "使用集合的交集运算",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 8,
+        "criteria": "正确返回两个列表的交集"
+      }
     },
     {
       "id": "feC_q2",
@@ -29,11 +200,48 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "['b', 'c', 'a']",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              {
+                "a": 3,
+                "b": 1,
+                "c": 2
+              }
+            ],
+            "expected": [
+              "b",
+              "c",
+              "a"
+            ]
+          },
+          {
+            "args": [
+              {
+                "x": 10,
+                "y": 5,
+                "z": 15
+              }
+            ],
+            "expected": [
+              "y",
+              "x",
+              "z"
+            ]
+          }
+        ]
       },
       "hints": [
-        { "text": "使用 sorted() 配合 key 参数", "visible": false }
-      ]
+        {
+          "text": "使用 sorted() 配合 key 参数",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 8,
+        "criteria": "正确返回按值排序的字典键的列表"
+      }
     },
     {
       "id": "feC_q3",
@@ -43,11 +251,38 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "'Hello World'",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              "hello world"
+            ],
+            "expected": "Hello World"
+          },
+          {
+            "args": [
+              "python programming"
+            ],
+            "expected": "Python Programming"
+          },
+          {
+            "args": [
+              ""
+            ],
+            "expected": ""
+          }
+        ]
       },
       "hints": [
-        { "text": "使用 title() 方法或自行实现", "visible": false }
-      ]
+        {
+          "text": "使用 title() 方法或自行实现",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 8,
+        "criteria": "正确将字符串中每个单词的首字母大写"
+      }
     },
     {
       "id": "feC_q4",
@@ -57,11 +292,57 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "[2, 4, 6]",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ]
+            ],
+            "expected": [
+              2,
+              4,
+              6
+            ]
+          },
+          {
+            "args": [
+              [
+                10,
+                15,
+                20,
+                25
+              ]
+            ],
+            "expected": [
+              10,
+              20
+            ]
+          },
+          {
+            "args": [
+              []
+            ],
+            "expected": []
+          }
+        ]
       },
       "hints": [
-        { "text": "使用列表推导式或 filter() 函数", "visible": false }
-      ]
+        {
+          "text": "使用列表推导式或 filter() 函数",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 8,
+        "criteria": "正确筛选出列表中的偶数"
+      }
     },
     {
       "id": "feC_q5",
@@ -71,53 +352,175 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "'hello'",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              "HELLO"
+            ],
+            "expected": "hello"
+          },
+          {
+            "args": [
+              "Python"
+            ],
+            "expected": "python"
+          },
+          {
+            "args": [
+              ""
+            ],
+            "expected": ""
+          }
+        ]
       },
       "hints": [
-        { "text": "使用 lower() 方法", "visible": false }
-      ]
+        {
+          "text": "使用 lower() 方法",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 8,
+        "criteria": "正确将字符串转换为小写"
+      }
     },
     {
       "id": "feC_q6",
-      "type": "output",
-      "title": "奇数打印",
-      "instruction": "输出 1 到 19 之间的所有奇数，用空格分隔。\n\n例如：1 3 5 7 9 11 13 15 17 19",
-      "initialCode": "# 在下方编写代码\n",
-      "testConfig": {
-        "expected": "1 3 5 7 9 11 13 15 17 19",
-        "timeout_ms": 5000
-      },
-      "hints": [
-        { "text": "使用循环和条件判断", "visible": false }
-      ]
-    },
-    {
-      "id": "feC_q7",
       "type": "function",
       "title": "计算最大值",
       "instruction": "定义函数 `find_max(lst)` 找出列表中的最大值。\n\n例如：\n[1, 5, 3, 9, 2] → 9\n[-5, -1, -3] → -1\n[] → None",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "9",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              [
+                1,
+                5,
+                3,
+                9,
+                2
+              ]
+            ],
+            "expected": 9
+          },
+          {
+            "args": [
+              [
+                -5,
+                -1,
+                -3
+              ]
+            ],
+            "expected": -1
+          }
+        ]
       },
       "hints": [
-        { "text": "使用 max() 函数或循环比较", "visible": false }
-      ]
+        {
+          "text": "使用 max() 函数或循环比较",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 8,
+        "criteria": "正确找出列表中的最大值"
+      }
     },
     {
-      "id": "feC_q8",
+      "id": "feC_q7",
       "type": "function",
       "title": "字符串长度",
       "instruction": "定义函数 `string_length(s)` 返回字符串的长度。\n\n例如：\n'hello' → 5\n'python' → 6\n'' → 0",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "5",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              "hello"
+            ],
+            "expected": 5
+          },
+          {
+            "args": [
+              "python"
+            ],
+            "expected": 6
+          },
+          {
+            "args": [
+              ""
+            ],
+            "expected": 0
+          }
+        ]
       },
       "hints": [
-        { "text": "使用 len() 函数", "visible": false }
-      ]
+        {
+          "text": "使用 len() 函数",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 6,
+        "criteria": "正确返回字符串的长度"
+      }
+    },
+    {
+      "id": "feC_q8",
+      "type": "function",
+      "title": "列表元素求和",
+      "instruction": "定义函数 `sum_elements(lst)` 计算列表中所有元素的总和。\n\n例如：\n[1, 2, 3, 4, 5] → 15\n[10, -5, 3] → 8\n[] → 0",
+      "initialCode": "# 在下方编写代码\n",
+      "testConfig": {
+        "expected": "15",
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            ],
+            "expected": 15
+          },
+          {
+            "args": [
+              [
+                10,
+                -5,
+                3
+              ]
+            ],
+            "expected": 8
+          },
+          {
+            "args": [
+              []
+            ],
+            "expected": 0
+          }
+        ]
+      },
+      "hints": [
+        {
+          "text": "使用 sum() 函数或循环累加",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 6,
+        "criteria": "正确计算列表中所有元素的总和"
+      }
     },
     {
       "id": "feC_q9",
@@ -127,11 +530,48 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "15",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              [
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            ],
+            "expected": 15
+          },
+          {
+            "args": [
+              [
+                10,
+                -5,
+                3
+              ]
+            ],
+            "expected": 8
+          },
+          {
+            "args": [
+              []
+            ],
+            "expected": 0
+          }
+        ]
       },
       "hints": [
-        { "text": "使用 sum() 函数或循环累加", "visible": false }
-      ]
+        {
+          "text": "使用 sum() 函数或循环累加",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 6,
+        "criteria": "正确计算列表中所有元素的总和（第二个测试）"
+      }
     },
     {
       "id": "feC_q10",
@@ -141,11 +581,36 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "'hello python'",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              "hello world",
+              "world",
+              "python"
+            ],
+            "expected": "hello python"
+          },
+          {
+            "args": [
+              "123-456-789",
+              "-",
+              ""
+            ],
+            "expected": "123456789"
+          }
+        ]
       },
       "hints": [
-        { "text": "使用 replace() 方法", "visible": false }
-      ]
+        {
+          "text": "使用 replace() 方法",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 6,
+        "criteria": "正确替换字符串中的指定子串"
+      }
     },
     {
       "id": "feC_q11",
@@ -155,11 +620,38 @@
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
         "expected": "True",
-        "timeout_ms": 5000
+        "timeout_ms": 5000,
+        "mockInputs": [
+          {
+            "args": [
+              3
+            ],
+            "expected": true
+          },
+          {
+            "args": [
+              6
+            ],
+            "expected": false
+          },
+          {
+            "args": [
+              -1
+            ],
+            "expected": true
+          }
+        ]
       },
       "hints": [
-        { "text": "使用取模运算符 %", "visible": false }
-      ]
+        {
+          "text": "使用取模运算符 %",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 6,
+        "criteria": "正确判断整数是否为奇数"
+      }
     },
     {
       "id": "feC_q12",
@@ -172,8 +664,15 @@
         "timeout_ms": 5000
       },
       "hints": [
-        { "text": "使用循环或递归生成斐波那契数列", "visible": false }
-      ]
+        {
+          "text": "使用循环或递归生成斐波那契数列",
+          "visible": false
+        }
+      ],
+      "scoring": {
+        "points": 16,
+        "criteria": "正确输出前8个斐波那契数列数字"
+      }
     }
   ]
 }

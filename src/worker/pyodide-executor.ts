@@ -79,7 +79,7 @@ function getAllTestCases(config: TestConfig, examId?: string, questionId?: strin
 // 计算得分
 function calculateScore(passedCount: number, totalCount: number, weight: number): number {
   const ratio = passedCount / totalCount;
-  return Math.round(ratio * weight * 10); // 每权重10分
+  return Math.round(ratio * weight); // 每权重对应实际分值
 }
 
 async function evaluateOutput(code: string, config: TestConfig, examId?: string, questionId?: string): Promise<EvalResult> {
@@ -280,18 +280,36 @@ _output
   }
 }
 
-async function evaluateFunction(code: string, config: TestConfig, examId?: string, _questionId?: string): Promise<EvalResult> {
+// 从instruction中提取函数名
+function extractFunctionName(instruction: string): string | null {
+  const match = instruction.match(/定义函数\s+`(\w+)\s*\(/);
+  if (match) {
+    return match[1];
+  }
+  return null;
+}
+
+async function evaluateFunction(code: string, config: TestConfig, examId?: string, _questionId?: string, instruction?: string): Promise<EvalResult> {
   if (!pyodide) {
     return { passed: false, score: 0, message: 'Pyodide not initialized' };
   }
 
   const testCases = getAllTestCases(config, examId, _questionId);
 
+  // 从instruction提取函数名
+  const funcName = extractFunctionName(instruction || '') || '_student_func';
+
   // 准备函数测试用例（使用mockInputs）
   const functionTestCases = (config.mockInputs || []).map((tc: any) => ({
     args: tc.args || [],
     expected: tc.expected
   }));
+
+  // 如果没有mockInputs，尝试从expected推断简单测试
+  if (functionTestCases.length === 0 && config.expected) {
+    // 对于简单返回值，创建一个空参数测试
+    functionTestCases.push({ args: [], expected: config.expected });
+  }
 
   try {
     const testCode = `
@@ -304,7 +322,7 @@ def _test_function():
         try:
             args = case.get('args', [])
             expected = case.get('expected')
-            result = _student_func(*args)
+            result = ${funcName}(*args)
             if str(result) == str(expected):
                 results.append(True)
             else:
@@ -388,7 +406,7 @@ _test_function()
 }
 
 self.onmessage = async (e: MessageEvent<PyodideWorkerMessage>) => {
-  const { type, code, testConfig, questionType, id, examId, questionId } = e.data;
+  const { type, code, testConfig, questionType, id, examId, questionId, instruction } = e.data;
 
   if (type === 'init') {
     try {
@@ -414,7 +432,7 @@ self.onmessage = async (e: MessageEvent<PyodideWorkerMessage>) => {
         result = await evaluateInteractive(code, testConfig, examId, questionId);
         break;
       case 'function':
-        result = await evaluateFunction(code, testConfig, examId, questionId);
+        result = await evaluateFunction(code, testConfig, examId, questionId, instruction);
         break;
       default:
         result = await evaluateOutput(code, testConfig, examId, questionId);

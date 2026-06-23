@@ -128,6 +128,7 @@ export interface PyodideWorkerMessage {
   id?: string;
   examId?: string;
   questionId?: string;
+  instruction?: string;
 }
 
 export interface PyodideWorkerResponse {

@@ -71,6 +71,7 @@ export class EvaluatorRouter {
       questionType: question.type,
       examId,
       questionId,
+      instruction: question.instruction,
     });
   }
 
