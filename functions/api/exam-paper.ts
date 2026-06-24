@@ -118,7 +118,8 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
         hints: row.hints ? JSON.parse(row.hints) : [],
         testConfig: {
           timeout_ms: JSON.parse(row.test_config).timeout_ms || 5000,
-          weight: JSON.parse(row.test_config).weight || 1
+          weight: JSON.parse(row.test_config).weight || 1,
+          mockInputs: row.mock_inputs ? JSON.parse(row.mock_inputs) : []
         }
       };
 
