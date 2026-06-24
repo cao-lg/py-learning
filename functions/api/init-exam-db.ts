@@ -95,15 +95,24 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
           continue;
         }
 
-        // 确定版本
+        // 确定版本和exam_id
         let version: string | null = null;
-        if (examId.includes('_A') || examData.version === 'A') version = 'A';
-        else if (examId.includes('_B') || examData.version === 'B') version = 'B';
-        else if (examId.includes('_C') || examData.version === 'C') version = 'C';
+        let finalExamId = examId;
+        if (examId.includes('_A') || examData.version === 'A') {
+          version = 'A';
+          finalExamId = 'final_exam'; // 所有版本统一用 final_exam 作为 exam_id
+        } else if (examId.includes('_B') || examData.version === 'B') {
+          version = 'B';
+          finalExamId = 'final_exam';
+        } else if (examId.includes('_C') || examData.version === 'C') {
+          version = 'C';
+          finalExamId = 'final_exam';
+        }
 
         // 插入每道题目
         for (const question of examData.questions) {
           const questionId = question.id;
+          // 使用 examId + version + questionId 作为唯一标识
           const id = version ? `${examId}_${questionId}_${version}` : `${examId}_${questionId}`;
 
           const testConfig = {
@@ -113,7 +122,7 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
 
           const row: ExamQuestionData = {
             id,
-            exam_id: examId.replace(/_[ABC]$/, ''), // 去除版本后缀
+            exam_id: finalExamId, // 使用 finalExamId 而不是 examId
             question_id: questionId,
             version,
             type: question.type,
