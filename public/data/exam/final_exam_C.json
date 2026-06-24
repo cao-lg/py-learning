@@ -85,9 +85,9 @@
         "总分": 40,
         "题目分值": {
           "q9": {
-            "名称": "列表元素求和",
+            "名称": "字典值求和",
             "分值": 8,
-            "评分要点": "正确计算列表中所有元素的总和（第二个测试）"
+            "评分要点": "正确计算字典中所有值的总和"
           },
           "q10": {
             "名称": "字符串替换",
@@ -525,38 +525,35 @@
     {
       "id": "feC_q9",
       "type": "function",
-      "title": "列表元素求和",
-      "instruction": "定义函数 `sum_elements(lst)` 计算列表中所有元素的总和。\n\n例如：\n[1, 2, 3, 4, 5] → 15\n[10, -5, 3] → 8\n[] → 0",
+      "title": "字典值求和",
+      "instruction": "定义函数 `sum_dict_values(d)` 计算字典中所有值的总和。\n\n例如：\n{'a': 1, 'b': 2, 'c': 3} → 6\n{'x': 10, 'y': 20} → 30\n{} → 0",
       "initialCode": "# 在下方编写代码\n",
       "testConfig": {
-        "expected": "15",
+        "expected": "6",
         "timeout_ms": 5000,
         "mockInputs": [
           {
             "args": [
-              [
-                1,
-                2,
-                3,
-                4,
-                5
-              ]
+              {
+                "a": 1,
+                "b": 2,
+                "c": 3
+              }
             ],
-            "expected": 15
+            "expected": 6
           },
           {
             "args": [
-              [
-                10,
-                -5,
-                3
-              ]
+              {
+                "x": 10,
+                "y": 20
+              }
             ],
-            "expected": 8
+            "expected": 30
           },
           {
             "args": [
-              []
+              {}
             ],
             "expected": 0
           }
@@ -564,13 +561,13 @@
       },
       "hints": [
         {
-          "text": "使用 sum() 函数或循环累加",
+          "text": "使用 sum(d.values())",
           "visible": false
         }
       ],
       "scoring": {
-        "points": 6,
-        "criteria": "正确计算列表中所有元素的总和（第二个测试）"
+        "points": 8,
+        "criteria": "正确计算字典中所有值的总和"
       }
     },
     {
