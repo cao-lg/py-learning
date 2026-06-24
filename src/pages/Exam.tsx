@@ -435,6 +435,11 @@ export function ExamPage() {
       initialCode: question.initialCode,
       testConfig: {
         timeout_ms: testConfig.timeout_ms,
+        weight: testConfig.weight,
+        expected: testConfig.expected,
+        mockInputs: testConfig.mockInputs || [],
+        hiddenCases: testConfig.hiddenCases,
+        constraints: testConfig.constraints,
       },
     };
     evaluatorRouter.evaluate(
