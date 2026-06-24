@@ -48,7 +48,14 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
       avgScore: Math.round(row.avg_score * 100) / 100,
     }));
 
-    const studentStatsRaw = await env.DB.prepare(`
+    const activeStudentsResult = await env.DB.prepare(`
+      SELECT COUNT(DISTINCT user_id) as count
+      FROM exam_records
+    `).first<{ count: number }>();
+
+    const activeStudents = activeStudentsResult?.count || 0;
+
+    const topStudentsRaw = await env.DB.prepare(`
       SELECT u.id as user_id, u.name as user_name,
              COUNT(DISTINCT e.id) as exam_count,
              COALESCE(SUM(e.score), 0) as total_score
@@ -59,11 +66,10 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
       LIMIT 10
     `).all<{ user_id: string; user_name: string; exam_count: number; total_score: number }>();
 
-    const activeStudents = studentStatsRaw.results?.length || 0;
     const studentStats = {
       activeStudents,
       avgExamPerStudent: activeStudents > 0 ? (totalExam?.count || 0) / activeStudents : 0,
-      topStudents: (studentStatsRaw.results || []).map((row) => ({
+      topStudents: (topStudentsRaw.results || []).map((row) => ({
         userId: row.user_id,
         userName: row.user_name,
         examCount: row.exam_count,
