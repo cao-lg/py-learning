@@ -40,6 +40,43 @@ export function ExamPage() {
   const tabSwitchCountRef = useRef<number>(0);
   const violationRef = useRef<boolean>(false);
 
+  const syncServerStatus = async (versionId: string, userId: string) => {
+    try {
+      const statusResponse = await fetch(`/api/invigilation/status?userId=${userId}&examId=${versionId}`);
+      if (statusResponse.ok) {
+        const statusData = await statusResponse.json();
+        if (statusData.ok) {
+          if (statusData.tabSwitchCount !== undefined) {
+            setTabSwitchCount(statusData.tabSwitchCount);
+            tabSwitchCountRef.current = statusData.tabSwitchCount;
+            audit.tab_switch = statusData.tabSwitchCount;
+            audit.focus_loss = statusData.tabSwitchCount;
+          }
+          if (statusData.hasViolation) {
+            setViolation(true);
+            setViolationMessage(statusData.violationReason || '您因违反考试规则已被禁止参加本次考试');
+            await storage.saveExamViolation(versionId, {
+              reason: statusData.violationReason || '违规',
+              timestamp: Date.now(),
+              tabSwitchCount: statusData.tabSwitchCount || 3,
+            });
+            return true;
+          } else {
+            const localViolation = await storage.getExamViolation(versionId);
+            if (localViolation) {
+              await storage.clearExamViolation(versionId);
+              setViolation(false);
+              setViolationMessage(null);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Failed to sync server status:', err);
+    }
+    return false;
+  };
+
   const loadExam = async () => {
     setLoading(true);
     setError(null);
@@ -65,8 +102,12 @@ export function ExamPage() {
       let scheduleData: Record<string, { startTime: string | null; endTime: string | null }> = {};
       
       if (scheduleResponse.ok) {
-        const scheduleJson = await scheduleResponse.json();
-        scheduleData = scheduleJson.schedule || {};
+        try {
+          const scheduleJson = await scheduleResponse.json();
+          scheduleData = scheduleJson.schedule || {};
+        } catch {
+          // 忽略schedule解析错误
+        }
       }
       
       if (examIndexResponse.ok) {
@@ -125,6 +166,13 @@ export function ExamPage() {
       }
 
       versionIdRef.current = versionId;
+
+      // 先从服务端同步最新状态
+      const hasViolationFromServer = await syncServerStatus(versionId, userId);
+      if (hasViolationFromServer) {
+        setLoading(false);
+        return;
+      }
 
       // 检查是否因违规被禁止参加考试
       const violationCheck = await storage.getExamViolation(versionId);
@@ -265,7 +313,7 @@ export function ExamPage() {
   };
 
   const setupAuditListeners = () => {
-    const handleVisibilityChange = () => {
+    const handleVisibilityChange = async () => {
       if (document.hidden && !violationRef.current) {
         audit.focus_loss++;
         audit.tab_switch++;
@@ -279,6 +327,12 @@ export function ExamPage() {
         } else {
           const remaining = MAX_TAB_SWITCHES - newCount;
           alert(`⚠️ 切屏警告！\n\n您已离开考试页面 ${newCount} 次。\n再离开 ${remaining} 次将自动终止考试！\n\n请保持在本页面进行考试。`);
+        }
+      } else if (!document.hidden && !violationRef.current) {
+        const userId = localStorage.getItem('userId');
+        const versionId = versionIdRef.current;
+        if (userId && versionId) {
+          await syncServerStatus(versionId, userId);
         }
       }
     };
@@ -351,16 +405,26 @@ export function ExamPage() {
   }, [violation]);
 
   useEffect(() => {
-    if (!loading && !violation) {
+    if (!loading && !violation && examSet) {
       const cleanup = setupAuditListeners();
       syncQueue.startAutoSync(30000);
 
+      const userId = localStorage.getItem('userId');
+      const versionId = versionIdRef.current;
+      
+      const statusInterval = setInterval(() => {
+        if (userId && versionId && !violationRef.current) {
+          syncServerStatus(versionId, userId);
+        }
+      }, 30000);
+
       return () => {
         syncQueue.stopAutoSync();
+        clearInterval(statusInterval);
         if (cleanup) cleanup();
       };
     }
-  }, [loading, violation]);
+  }, [loading, violation, examSet]);
 
   const handleAnswerChange = (questionId: string, code: string) => {
     setAnswers((prev) => {

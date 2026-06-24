@@ -6,9 +6,17 @@ interface Env {
 
 // GET /api/invigilation - 获取监考概览
 // GET /api/invigilation?examId=xxx - 导出指定考试的详细数据
+// GET /api/invigilation/status?userId=xxx&examId=xxx - 获取指定学生的考试状态
 export async function onRequestGet(context: { request: Request; env: Env }) {
   const { env, request } = context;
   const url = new URL(request.url);
+  
+  // 检查是否查询单个学生状态
+  const statusUserId = url.searchParams.get('userId');
+  const statusExamId = url.searchParams.get('examId');
+  if (statusUserId && statusExamId && url.pathname.endsWith('/status')) {
+    return handleGetStudentStatus(request, env, statusUserId, statusExamId);
+  }
   
   // 检查是否需要导出数据
   const examId = url.searchParams.get('examId');
@@ -155,6 +163,62 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   );
 }
 
+async function handleGetStudentStatus(request: Request, env: Env, userId: string, examId: string) {
+  try {
+    // 获取最新的切屏次数
+    const auditResult = await env.DB.prepare(`
+      SELECT event_type, event_data, timestamp
+      FROM audit_logs
+      WHERE user_id = ? AND exam_id = ? AND event_type = 'tab_switch'
+      ORDER BY timestamp DESC
+      LIMIT 1
+    `).bind(userId, examId).all();
+
+    let tabSwitchCount = 0;
+    if (auditResult.results && auditResult.results.length > 0) {
+      try {
+        const eventData = typeof auditResult.results[0].event_data === 'string'
+          ? JSON.parse(auditResult.results[0].event_data)
+          : auditResult.results[0].event_data;
+        tabSwitchCount = eventData.count || 0;
+      } catch {
+        tabSwitchCount = 0;
+      }
+    }
+
+    // 检查是否有违规记录
+    const violationResult = await env.DB.prepare(`
+      SELECT reason, timestamp
+      FROM exam_violations
+      WHERE user_id = ? AND exam_id = ?
+      LIMIT 1
+    `).bind(userId, examId).all();
+
+    let hasViolation = false;
+    let violationReason = null;
+    if (violationResult.results && violationResult.results.length > 0) {
+      hasViolation = true;
+      violationReason = violationResult.results[0].reason;
+    }
+
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        tabSwitchCount,
+        hasViolation,
+        violationReason,
+      }),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error getting student status:', error);
+    return new Response(
+      JSON.stringify({ ok: false, error: '获取状态失败' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}
+
 async function handleResetTabSwitch(request: Request, env: Env) {
   try {
     const body = await request.json();
@@ -167,6 +231,13 @@ async function handleResetTabSwitch(request: Request, env: Env) {
       );
     }
 
+    // 先删除该用户该考试的所有切屏记录
+    await env.DB.prepare(`
+      DELETE FROM audit_logs 
+      WHERE user_id = ? AND exam_id = ? AND event_type = 'tab_switch'
+    `).bind(userId, examId).run();
+
+    // 然后插入一条重置记录（count=0）
     await env.DB.prepare(`
       INSERT INTO audit_logs (user_id, exam_id, event_type, event_data, timestamp)
       VALUES (?, ?, 'tab_switch', ?, ?)

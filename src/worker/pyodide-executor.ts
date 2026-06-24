@@ -317,6 +317,27 @@ async function evaluateFunction(code: string, config: TestConfig, examId?: strin
 import json
 ${code}
 
+def _deep_equal(a, b):
+    if isinstance(a, dict) and isinstance(b, dict):
+        a_keys = set(str(k) for k in a.keys())
+        b_keys = set(str(k) for k in b.keys())
+        if a_keys != b_keys:
+            return False
+        a_norm = {str(k): v for k, v in a.items()}
+        b_norm = {str(k): v for k, v in b.items()}
+        return all(_deep_equal(a_norm[k], b_norm[k]) for k in a_keys)
+    if isinstance(a, (list, tuple)) and isinstance(b, (list, tuple)):
+        if len(a) != len(b):
+            return False
+        return all(_deep_equal(x, y) for x, y in zip(a, b))
+    if isinstance(a, bool) or isinstance(b, bool):
+        return a == b
+    if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+        return float(a) == float(b)
+    if type(a) == type(b):
+        return a == b
+    return str(a) == str(b)
+
 def _test_function():
     results = []
     test_cases = json.loads(${JSON.stringify(testCasesJson)})
@@ -325,7 +346,7 @@ def _test_function():
             args = case.get('args', [])
             expected = case.get('expected')
             result = ${funcName}(*args)
-            if str(result) == str(expected):
+            if _deep_equal(result, expected):
                 results.append(True)
             else:
                 results.append({'expected': expected, 'actual': result})
