@@ -66,9 +66,19 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
     // 获取考试题目列表
     let query = "SELECT * FROM exam_questions WHERE exam_id = ? ORDER BY question_id";
     const params: any[] = [examId];
+    let examIdForTitle = examId;
 
+    // 如果是期末考试版本（final_exam_A/B/C），提取版本并调整查询
+    const finalExamVersionMatch = examId.match(/^final_exam_([ABC])$/);
+    if (finalExamVersionMatch) {
+      const version = finalExamVersionMatch[1];
+      examIdForTitle = "final_exam";
+      query = "SELECT * FROM exam_questions WHERE exam_id = ? AND version = ? ORDER BY question_id";
+      params[0] = "final_exam"; // 使用标准 exam_id
+      params.push(version); // 添加版本参数
+    }
     // 如果是期末考试，根据用户ID随机分配版本
-    if (examId === "final_exam" && userId) {
+    else if (examId === "final_exam" && userId) {
       // 使用用户ID的哈希值来决定分配哪个版本
       const hash = hashCode(userId);
       const versions = ["A", "B", "C"];
@@ -89,7 +99,7 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
 
     // 构建考试试卷（不包含答案）
     const examPaper: ExamPaper = {
-      id: examId,
+      id: examIdForTitle,
       title: "",
       description: "",
       duration: 60,
@@ -105,7 +115,7 @@ export async function onRequest({ request, env }: { request: Request; env: Env }
       // 从第一条记录获取考试基本信息
       if (!examPaper.title) {
         // 从 question title 推断考试标题
-        examPaper.title = formatExamTitle(examId);
+        examPaper.title = formatExamTitle(examIdForTitle);
       }
 
       // 构建题目（不包含答案）
@@ -174,6 +184,11 @@ function formatExamTitle(examId: string): string {
     "final_exam": "期末考试",
     "quiz_ch01": "第一章小测"
   };
+
+  // 处理期末考试版本（A/B/C）
+  if (examId.match(/^final_exam$/)) {
+    return "期末考试";
+  }
 
   return titleMap[examId] || examId;
 }
