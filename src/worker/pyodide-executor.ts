@@ -335,7 +335,13 @@ _test_function()
 `;
 
     const result = await pyodide.runPythonAsync(testCode);
-    const resultArray = Array.isArray(result) ? result : [];
+    let resultArray: any[] = [];
+    if (Array.isArray(result)) {
+      resultArray = result;
+    } else if (result && typeof result === 'object' && 'toJs' in result) {
+      const converted = (result as any).toJs();
+      resultArray = Array.isArray(converted) ? converted : [];
+    }
     
     // 统计通过数量
     let passedCount = 0;
