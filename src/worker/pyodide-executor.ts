@@ -312,12 +312,14 @@ async function evaluateFunction(code: string, config: TestConfig, examId?: strin
   }
 
   try {
+    const testCasesJson = JSON.stringify(functionTestCases);
     const testCode = `
+import json
 ${code}
 
 def _test_function():
     results = []
-    test_cases = ${JSON.stringify(functionTestCases)}
+    test_cases = json.loads(${JSON.stringify(testCasesJson)})
     for case in test_cases:
         try:
             args = case.get('args', [])
