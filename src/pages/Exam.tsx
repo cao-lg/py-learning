@@ -51,6 +51,20 @@ export function ExamPage() {
             tabSwitchCountRef.current = statusData.tabSwitchCount;
             audit.tab_switch = statusData.tabSwitchCount;
             audit.focus_loss = statusData.tabSwitchCount;
+            
+            const currentSession = await storage.getExamSession(versionId, userId);
+            if (currentSession) {
+              const updatedSession = {
+                ...currentSession,
+                audit: {
+                  ...currentSession.audit,
+                  tab_switch: statusData.tabSwitchCount,
+                  focus_loss: statusData.tabSwitchCount,
+                }
+              };
+              await storage.saveExamSession(updatedSession);
+              setSession(updatedSession);
+            }
           }
           if (statusData.hasViolation) {
             setViolation(true);
@@ -67,6 +81,7 @@ export function ExamPage() {
               await storage.clearExamViolation(versionId);
               setViolation(false);
               setViolationMessage(null);
+              violationRef.current = false;
             }
           }
         }
@@ -226,14 +241,28 @@ export function ExamPage() {
       setStartTime(Date.now());
 
       const existingSession = await storage.getExamSession(versionId, userId);
-      if (existingSession && existingSession.status !== 'ongoing') {
-        setIsSubmitted(true);
-        setSession(existingSession);
-        if (existingSession.score !== undefined) {
-          setResults({});
+      if (existingSession) {
+        if (existingSession.audit) {
+          audit.focus_loss = existingSession.audit.focus_loss || 0;
+          audit.tab_switch = existingSession.audit.tab_switch || 0;
+          audit.paste_attempts = existingSession.audit.paste_attempts || 0;
+          audit.fullscreen_change = existingSession.audit.fullscreen_change || 0;
+          setTabSwitchCount(existingSession.audit.tab_switch || 0);
+          tabSwitchCountRef.current = existingSession.audit.tab_switch || 0;
         }
-        const draft = await storage.getExamDraft(versionId);
-        if (draft) setAnswers(draft);
+        if (existingSession.status !== 'ongoing') {
+          setIsSubmitted(true);
+          setSession(existingSession);
+          if (existingSession.score !== undefined) {
+            setResults({});
+          }
+          const draft = await storage.getExamDraft(versionId);
+          if (draft) setAnswers(draft);
+        } else {
+          setSession(existingSession);
+          const draft = await storage.getExamDraft(versionId);
+          if (draft) setAnswers(draft);
+        }
       } else {
         const newSession: ExamSession = {
           exam_id: versionId,
@@ -321,6 +350,21 @@ export function ExamPage() {
         const newCount = tabSwitchCountRef.current;
         setTabSwitchCount(newCount);
         triggerSync(true);
+
+        if (session) {
+          const updatedSession = {
+            ...session,
+            audit: {
+              ...session.audit,
+              focus_loss: audit.focus_loss,
+              tab_switch: audit.tab_switch,
+              paste_attempts: audit.paste_attempts,
+              fullscreen_change: audit.fullscreen_change,
+            }
+          };
+          await storage.saveExamSession(updatedSession);
+          setSession(updatedSession);
+        }
 
         if (newCount >= MAX_TAB_SWITCHES) {
           handleAutoSubmit(`切屏次数过多（${newCount}次），考试自动终止`);
