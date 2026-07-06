@@ -554,8 +554,10 @@ export function ExamPage() {
       questionForEval,
       answers[questionId] || question.initialCode,
       (result) => {
+        // 考试模式下 worker 已经不返回 details，保留防御性清理
         if (result.details) {
           delete result.details.expected;
+          delete result.details.actual;
         }
         setResults((prev) => ({ ...prev, [questionId]: result }));
       },

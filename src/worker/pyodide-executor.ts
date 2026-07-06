@@ -89,15 +89,6 @@ async function evaluateOutput(code: string, config: TestConfig, examId?: string,
 
   const testCases = getAllTestCases(config, examId, questionId);
   
-  // 如果没有任何测试用例
-  if (testCases.length === 0) {
-    return {
-      passed: true,
-      score: config.weight ?? 1,
-      message: 'Code executed successfully (no test cases)'
-    };
-  }
-
   try {
     const wrappedCode = `
 import sys
@@ -109,9 +100,21 @@ _output = sys.stdout.getvalue()
 sys.stdout = _old_stdout
 _output
 `;
-    
+
     const result = await pyodide.runPythonAsync(wrappedCode);
     const capturedOutput = typeof result === 'string' ? result : String(result || '');
+
+    // 如果没有任何测试用例（自由运行模式），直接返回执行结果
+    if (testCases.length === 0) {
+      return {
+        passed: true,
+        score: config.weight ?? 1,
+        message: '执行完成',
+        details: {
+          actual: capturedOutput,
+        }
+      };
+    }
 
     let passedCount = 0;
     let diffLines = 0;
@@ -153,7 +156,7 @@ _output
       }
     }
 
-    // 考试模式不展示期望输出
+    // 考试模式不展示期望输出，也不泄露实际输出
     if (allPassed) {
       return {
         passed: true,
@@ -165,10 +168,7 @@ _output
     return {
       passed: false,
       score: totalScore,
-      message: `${passedCount}/${testCases.length} 个测试用例通过。${diffLines > 0 ? `${diffLines} 行不匹配。` : ''}`,
-      details: {
-        actual: capturedOutput,
-      }
+      message: `${passedCount}/${testCases.length} 个测试用例通过。`,
     };
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
@@ -187,15 +187,6 @@ async function evaluateInteractive(code: string, config: TestConfig, examId?: st
 
   const testCases = getAllTestCases(config, examId, questionId);
   
-  // 如果没有任何测试用例
-  if (testCases.length === 0) {
-    return {
-      passed: true,
-      score: config.weight ?? 1,
-      message: 'Code executed successfully (no test cases)'
-    };
-  }
-
   // 使用第一个测试用例的mockInputs进行测试
   const mockSetup = generateMockInputTemplate(config.mockInputs || []);
 
@@ -209,9 +200,21 @@ ${code}
 _output = sys.stdout.getvalue()
 _output
 `;
-    
+
     const result = await pyodide.runPythonAsync(wrappedCode);
     const stdout = typeof result === 'string' ? result : String(result || '');
+
+    // 如果没有任何测试用例（自由运行模式），直接返回执行结果
+    if (testCases.length === 0) {
+      return {
+        passed: true,
+        score: config.weight ?? 1,
+        message: '执行完成',
+        details: {
+          actual: stdout,
+        }
+      };
+    }
 
     let passedCount = 0;
     let diffLines = 0;
@@ -253,7 +256,7 @@ _output
       }
     }
 
-    // 考试模式
+    // 考试模式不展示期望输出，也不泄露实际输出
     if (allPassed) {
       return {
         passed: true,
@@ -265,10 +268,7 @@ _output
     return {
       passed: false,
       score: totalScore,
-      message: `${passedCount}/${testCases.length} 个测试用例通过。${diffLines > 0 ? `${diffLines} 行不匹配。` : ''}`,
-      details: {
-        actual: stdout,
-      }
+      message: `${passedCount}/${testCases.length} 个测试用例通过。`,
     };
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
@@ -407,7 +407,7 @@ _test_function()
       }
     }
 
-    // 考试模式
+    // 考试模式不泄露实际输出
     if (allPassed) {
       return {
         passed: true,
@@ -420,9 +420,6 @@ _test_function()
       passed: false,
       score: totalScore,
       message: `${passedCount}/${totalTestCases} 个测试用例通过。`,
-      details: {
-        actual: JSON.stringify(resultArray),
-      }
     };
   } catch (e) {
     const error = e instanceof Error ? e.message : String(e);
