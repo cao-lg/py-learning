@@ -52,7 +52,7 @@ export function ExamPage() {
             tabSwitchCountRef.current = statusData.tabSwitchCount;
             audit.tab_switch = statusData.tabSwitchCount;
             audit.focus_loss = statusData.tabSwitchCount;
-            
+
             const currentSession = await storage.getExamSession(versionId, userId);
             if (currentSession) {
               const updatedSession = {
@@ -77,12 +77,28 @@ export function ExamPage() {
             });
             return true;
           } else {
+            // 服务器没有违规记录，清除本地违规记录
             const localViolation = await storage.getExamViolation(versionId);
             if (localViolation) {
               await storage.clearExamViolation(versionId);
               setViolation(false);
               setViolationMessage(null);
               violationRef.current = false;
+            }
+            // 如果服务器也没有已提交记录，重置本地session允许重新考试
+            if (!statusData.hasSubmittedRecord) {
+              const localSession = await storage.getExamSession(versionId, userId);
+              if (localSession && localSession.status !== 'ongoing') {
+                await storage.clearExamDraft(versionId);
+                // 重置本地session为全新状态，让学生有完整的考试时长
+                await storage.saveExamSession({
+                  ...localSession,
+                  status: 'ongoing',
+                  score: undefined,
+                  submitted_at: undefined,
+                  startedAt: Date.now(),
+                });
+              }
             }
           }
         }
@@ -115,8 +131,8 @@ export function ExamPage() {
 
       let examInfo: any = null;
       let hasMultipleVersions = false;
-      let scheduleData: Record<string, { startTime: string | null; endTime: string | null }> = {};
-      
+      let scheduleData: Record<string, { startTime: string | null; endTime: string | null; duration?: number | null }> = {};
+
       if (scheduleResponse.ok) {
         try {
           const scheduleJson = await scheduleResponse.json();
@@ -125,13 +141,13 @@ export function ExamPage() {
           // 忽略schedule解析错误
         }
       }
-      
+
       if (examIndexResponse.ok) {
         const examIndex = await examIndexResponse.json();
         examInfo = examIndex.exams.find((e: ExamInfo) => e.id === examId);
         if (examInfo) {
           hasMultipleVersions = examInfo.hasMultipleVersions;
-          
+
           const examSchedule = scheduleData[examId || ''];
           if (examSchedule) {
             if (examSchedule.startTime) {
@@ -139,6 +155,9 @@ export function ExamPage() {
             }
             if (examSchedule.endTime) {
               examInfo.endTime = examSchedule.endTime;
+            }
+            if (examSchedule.duration !== undefined && examSchedule.duration !== null) {
+              examInfo.duration = examSchedule.duration;
             }
           }
           
@@ -232,6 +251,12 @@ export function ExamPage() {
         const response = await fetch(`/data/exam/${versionId}.json`);
         if (!response.ok) throw new Error('Failed to load exam');
         data = await response.json();
+      }
+
+      // 如果管理员设置了时长，覆盖JSON中的默认时长
+      const examSchedule = scheduleData[examId || ''];
+      if (examSchedule?.duration !== undefined && examSchedule?.duration !== null) {
+        data.duration = examSchedule.duration;
       }
 
       const seed = await generateDeterministicSeed(userId, versionId);

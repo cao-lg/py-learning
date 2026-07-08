@@ -201,12 +201,19 @@ async function handleGetStudentStatus(request: Request, env: Env, userId: string
       violationReason = violationResult.results[0].reason;
     }
 
+    // 检查是否有已提交的考试记录
+    const recordResult = await env.DB.prepare(`
+      SELECT completed_at FROM exam_records WHERE user_id = ? AND exam_id = ?
+    `).bind(userId, examId).first();
+    const hasSubmittedRecord = !!recordResult?.completed_at;
+
     return new Response(
       JSON.stringify({
         ok: true,
         tabSwitchCount,
         hasViolation,
         violationReason,
+        hasSubmittedRecord,
       }),
       { headers: { 'Content-Type': 'application/json' } }
     );
@@ -268,12 +275,21 @@ async function handleClearViolation(request: Request, env: Env) {
       );
     }
 
+    // 同时清除违规记录、考试记录和审计日志，让学生可以重新考试
     await env.DB.prepare(`
       DELETE FROM exam_violations WHERE exam_id = ? AND user_id = ?
     `).bind(examId, userId).run();
 
+    await env.DB.prepare(`
+      DELETE FROM exam_records WHERE exam_id = ? AND user_id = ?
+    `).bind(examId, userId).run();
+
+    await env.DB.prepare(`
+      DELETE FROM audit_logs WHERE exam_id = ? AND user_id = ?
+    `).bind(examId, userId).run();
+
     return new Response(
-      JSON.stringify({ ok: true, message: '违规记录已清除' }),
+      JSON.stringify({ ok: true, message: '违规记录已清除，学生可以重新参加考试' }),
       { headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {

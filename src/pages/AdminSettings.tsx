@@ -17,12 +17,14 @@ interface ExamInfo {
 interface ExamSchedule {
   startTime: string | null;
   endTime: string | null;
+  duration: number | null;
 }
 
 interface ExamInputValues {
   [examId: string]: {
     startTime: string;
     endTime: string;
+    duration: string;
   };
 }
 
@@ -90,9 +92,11 @@ export function AdminSettingsPage() {
     const initialValues: ExamInputValues = {};
     exams.forEach(exam => {
       const examSchedule = scheduleData[exam.id];
+      const scheduledDuration = examSchedule?.duration;
       initialValues[exam.id] = {
         startTime: formatDateTime(examSchedule?.startTime) || formatDateTime(exam.startTime) || '',
         endTime: formatDateTime(examSchedule?.endTime) || formatDateTime(exam.endTime) || '',
+        duration: scheduledDuration ? String(scheduledDuration) : String(exam.duration),
       };
     });
     return initialValues;
@@ -167,7 +171,7 @@ export function AdminSettingsPage() {
     }
   };
 
-  const handleInputChange = (examId: string, field: 'startTime' | 'endTime', value: string) => {
+  const handleInputChange = (examId: string, field: 'startTime' | 'endTime' | 'duration', value: string) => {
     setInputValues(prev => ({
       ...prev,
       [examId]: {
@@ -199,8 +203,9 @@ export function AdminSettingsPage() {
 
     const startTime = parseLocalDateTime(inputs.startTime);
     const endTime = parseLocalDateTime(inputs.endTime);
+    const duration = inputs.duration ? parseInt(inputs.duration, 10) : null;
 
-    console.log('Saving exam schedule:', { examId, startTime, endTime });
+    console.log('Saving exam schedule:', { examId, startTime, endTime, duration });
     console.log('Original input values:', inputs);
 
     try {
@@ -210,7 +215,7 @@ export function AdminSettingsPage() {
           'Content-Type': 'application/json',
           'X-Admin-Password': ADMIN_PASSWORD
         },
-        body: JSON.stringify({ examId, startTime, endTime }),
+        body: JSON.stringify({ examId, startTime, endTime, duration }),
       });
 
       const responseData = await response.json().catch(() => ({}));
@@ -219,7 +224,7 @@ export function AdminSettingsPage() {
       if (response.ok && responseData.ok) {
         setSchedule(prev => ({
           ...prev,
-          [examId]: { startTime, endTime }
+          [examId]: { startTime, endTime, duration }
         }));
         setMessage({ type: 'success', text: `${exams.find(e => e.id === examId)?.title || '考试'}设置已保存` });
       } else {
@@ -235,13 +240,15 @@ export function AdminSettingsPage() {
   };
 
   const handleClear = async (examId: string) => {
-    if (window.confirm('确定要清除此考试的时间限制吗？')) {
-      // 清空输入值
+    if (window.confirm('确定要清除此考试的时间限制吗？（考试时长不会清除）')) {
+      const exam = exams.find(e => e.id === examId);
+      // 清空时间输入但保留时长
       setInputValues(prev => ({
         ...prev,
         [examId]: {
           startTime: '',
-          endTime: ''
+          endTime: '',
+          duration: exam ? String(exam.duration) : prev[examId]?.duration || ''
         }
       }));
       await handleSave(examId);
@@ -343,7 +350,7 @@ export function AdminSettingsPage() {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     开始时间
@@ -375,6 +382,21 @@ export function AdminSettingsPage() {
                       {new Date(examSchedule.endTime).toLocaleString('zh-CN')}
                     </p>
                   )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    考试时长（分钟）
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={inputs.duration}
+                    onChange={(e) => handleInputChange(exam.id, 'duration', e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                  />
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    默认：{exam.duration} 分钟
+                  </p>
                 </div>
               </div>
 

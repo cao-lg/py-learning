@@ -24,6 +24,7 @@ interface ExamSchedule {
   [examId: string]: {
     startTime: string | null;
     endTime: string | null;
+    duration?: number | null;
   };
 }
 
@@ -148,13 +149,14 @@ export function ExamListPage() {
             console.error('Failed to fetch exam schedule:', scheduleRes.status);
           }
           
-          // 合并数据：将管理员设置的考试时间覆盖到考试数据中
+          // 合并数据：将管理员设置的考试时间和时长覆盖到考试数据中
           const examsWithSchedule = data.exams.map(exam => {
             const examSchedule = schedule[exam.id];
             return {
               ...exam,
               startTime: examSchedule?.startTime || exam.startTime,
               endTime: examSchedule?.endTime || exam.endTime,
+              duration: examSchedule?.duration ?? exam.duration,
             };
           });
           

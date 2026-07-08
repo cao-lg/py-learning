@@ -19,12 +19,21 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       );
     }
 
+    // 同时清除违规记录、考试记录和审计日志，让学生可以重新考试
     await env.DB.prepare(`
       DELETE FROM exam_violations WHERE exam_id = ? AND user_id = ?
     `).bind(examId, userId).run();
 
+    await env.DB.prepare(`
+      DELETE FROM exam_records WHERE exam_id = ? AND user_id = ?
+    `).bind(examId, userId).run();
+
+    await env.DB.prepare(`
+      DELETE FROM audit_logs WHERE exam_id = ? AND user_id = ?
+    `).bind(examId, userId).run();
+
     return new Response(
-      JSON.stringify({ ok: true, message: '违规记录已清除' }),
+      JSON.stringify({ ok: true, message: '违规记录已清除，学生可以重新参加考试' }),
       { headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
