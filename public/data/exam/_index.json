@@ -125,7 +125,7 @@
       "id": "final_exam",
       "title": "期末考试",
       "description": "Python 基础知识全面考核，请选择试卷版本",
-      "duration": 100,
+      "duration": 120,
       "totalScore": 100,
       "questionCount": 12,
       "difficulty": "medium",

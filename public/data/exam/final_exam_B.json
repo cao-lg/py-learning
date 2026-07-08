@@ -3,7 +3,7 @@
   "version": "B",
   "title": "期末考试 B卷",
   "description": "全面测试 Python 基础知识，包括数据结构、文件操作、异常处理和面向对象编程",
-  "duration": 90,
+  "duration": 120,
   "totalScore": 100,
   "passingScore": 60,
   "examInstructions": {
