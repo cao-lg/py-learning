@@ -87,6 +87,7 @@ export interface ExamSession {
   seed: string;
   status: 'ongoing' | 'submitted' | 'expired';
   score?: number;
+  startedAt?: number;
   audit: {
     focus_loss: number;
     tab_switch: number;

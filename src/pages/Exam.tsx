@@ -239,7 +239,6 @@ export function ExamPage() {
 
       setExamSet(data);
       setQuestions(shuffledQuestions);
-      setStartTime(Date.now());
 
       const existingSession = await storage.getExamSession(versionId, userId);
       if (existingSession) {
@@ -264,16 +263,21 @@ export function ExamPage() {
           const draft = await storage.getExamDraft(versionId);
           if (draft) setAnswers(draft);
         }
+        // 使用已有session的开始时间，保证刷新页面后计时器继续
+        setStartTime(existingSession.startedAt || Date.now());
       } else {
+        const now = Date.now();
         const newSession: ExamSession = {
           exam_id: versionId,
           user_id: userId,
           seed,
           status: 'ongoing',
+          startedAt: now,
           audit,
         };
         await storage.saveExamSession(newSession);
         setSession(newSession);
+        setStartTime(now);
       }
 
       const savedDraft = await storage.getExamDraft(versionId);
