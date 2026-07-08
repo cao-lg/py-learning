@@ -188,15 +188,17 @@ export function AdminSettingsPage() {
       return;
     }
 
-    // 将 datetime-local 格式转换为 ISO 字符串
-    // datetime-local 格式: "2026-06-01T09:00"
-    // 需要添加秒和毫秒
-    const startTimeStr = inputs.startTime ? `${inputs.startTime}:00.000Z` : null;
-    const endTimeStr = inputs.endTime ? `${inputs.endTime}:00.000Z` : null;
+    const parseLocalDateTime = (dateTimeStr: string | undefined): string | null => {
+      if (!dateTimeStr) return null;
+      const [datePart, timePart] = dateTimeStr.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hours, minutes] = timePart.split(':').map(Number);
+      const localDate = new Date(year, month - 1, day, hours, minutes, 0, 0);
+      return localDate.toISOString();
+    };
 
-    // 使用正确的日期格式
-    const startTime = startTimeStr ? new Date(startTimeStr).toISOString() : null;
-    const endTime = endTimeStr ? new Date(endTimeStr).toISOString() : null;
+    const startTime = parseLocalDateTime(inputs.startTime);
+    const endTime = parseLocalDateTime(inputs.endTime);
 
     console.log('Saving exam schedule:', { examId, startTime, endTime });
     console.log('Original input values:', inputs);
