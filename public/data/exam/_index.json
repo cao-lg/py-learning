@@ -124,12 +124,13 @@
     {
       "id": "final_exam",
       "title": "期末考试",
-      "description": "Python 基础知识全面考核，随机分配A、B、C卷",
+      "description": "Python 基础知识全面考核，请选择试卷版本",
       "duration": 100,
       "totalScore": 100,
       "questionCount": 12,
       "difficulty": "medium",
-      "hasMultipleVersions": true
+      "hasMultipleVersions": true,
+      "openVersions": ["A", "C"]
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Editor } from '../components/Editor';
 import { Terminal } from '../components/Terminal';
 import { ExamTimer } from '../components/ExamTimer';
@@ -14,6 +14,7 @@ const MAX_TAB_SWITCHES = 3;
 
 export function ExamPage() {
   const { examId } = useParams<{ examId?: string }>();
+  const navigate = useNavigate();
   const [examSet, setExamSet] = useState<ExamSet | null>(null);
   const [questions, setQuestions] = useState<ExamQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -161,22 +162,22 @@ export function ExamPage() {
       
       // 如果有多版本考试
       if (hasMultipleVersions && examId === 'final_exam') {
+        const openVersions = (examInfo as any)?.openVersions as string[] | undefined;
+        
+        // 如果配置了开放版本，跳回考试列表让学生选择
+        if (openVersions && openVersions.length > 0) {
+          navigate('/exams');
+          return;
+        }
+        
         if (existingSessionCheck && existingSessionCheck.exam_id !== examId) {
-          // 已有会话，使用之前的版本
           versionId = existingSessionCheck.exam_id;
         } else {
-          // 随机选择A、B、C卷
-      const versions = ['final_exam_A', 'final_exam_B', 'final_exam_C'];
-      console.log('ExamPage - versions:', versions);
-      const seed = await generateDeterministicSeed(userId, examId || 'final_exam');
-      console.log('ExamPage - seed:', seed);
-      // 确保seed是数字
-      const seedNumber = parseInt(seed, 16) || 0;
-      console.log('ExamPage - seedNumber:', seedNumber);
-      const versionIndex = Math.abs(seedNumber % 3);
-      console.log('ExamPage - versionIndex:', versionIndex);
-      versionId = versions[versionIndex];
-      console.log('ExamPage - versionId:', versionId);
+          const versions = ['final_exam_A', 'final_exam_B', 'final_exam_C'];
+          const seed = await generateDeterministicSeed(userId, examId || 'final_exam');
+          const seedNumber = parseInt(seed, 16) || 0;
+          const versionIndex = Math.abs(seedNumber % 3);
+          versionId = versions[versionIndex];
         }
       }
 

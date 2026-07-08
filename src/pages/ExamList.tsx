@@ -12,6 +12,8 @@ interface ExamInfo {
   difficulty: 'easy' | 'medium' | 'hard';
   startTime?: string;
   endTime?: string;
+  hasMultipleVersions?: boolean;
+  openVersions?: string[];
 }
 
 interface ExamIndex {
@@ -301,6 +303,20 @@ export function ExamListPage() {
     navigate(`/exam/${exam.id}`);
   };
 
+  const handleVersionClick = (exam: ExamInfo, version: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const availability = checkExamAvailability(exam);
+    if (availability.status === 'not_started') {
+      alert(`考试尚未开始\n开始时间：${formatDateTime(availability.startsAt!)}`);
+      return;
+    }
+    if (availability.status === 'ended') {
+      alert('考试已结束');
+      return;
+    }
+    navigate(`/exam/${exam.id}_${version}`);
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-10">
@@ -315,11 +331,14 @@ export function ExamListPage() {
       <div className="grid gap-6">
         {exams.map((exam) => {
           const isAvailable = examStatus[exam.id] === 'available' || examStatus[exam.id] === 'no_schedule';
+          const hasOpenVersions = exam.hasMultipleVersions && exam.openVersions && exam.openVersions.length > 0;
           return (
             <div
               key={exam.id}
-              onClick={() => handleExamClick(exam)}
-              className={`block bg-white dark:bg-gray-800 rounded-xl border p-6 hover:shadow-lg transition-all duration-200 group cursor-pointer ${
+              onClick={() => !hasOpenVersions && handleExamClick(exam)}
+              className={`block bg-white dark:bg-gray-800 rounded-xl border p-6 hover:shadow-lg transition-all duration-200 group ${
+                hasOpenVersions ? 'cursor-default' : 'cursor-pointer'
+              } ${
                 isAvailable 
                   ? 'border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600' 
                   : 'border-gray-200 dark:border-gray-700 opacity-60'
@@ -355,6 +374,24 @@ export function ExamListPage() {
                       </span>
                     )}
                   </div>
+                  {hasOpenVersions && (
+                    <div className="mt-4 flex gap-3 flex-wrap">
+                      {exam.openVersions!.map((version) => (
+                        <button
+                          key={version}
+                          onClick={(e) => handleVersionClick(exam, version, e)}
+                          disabled={!isAvailable}
+                          className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                            isAvailable
+                              ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-md hover:shadow-lg'
+                              : 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
+                          }`}
+                        >
+                          {version}卷
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="ml-4">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
